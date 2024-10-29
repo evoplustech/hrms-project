@@ -13,11 +13,11 @@ const attendanceSchema = new mongoose.Schema(
       index: true // Index for faster querying
     },
     checkInTime: {
-      type: Date,
+      type: String,
       required: true
     },
     checkOutTime: {
-      type: Date
+      type: String
     },
     status: {
       type: String,
@@ -25,8 +25,8 @@ const attendanceSchema = new mongoose.Schema(
       default: 'Present'
     },
     totalHours: {
-      type: Number, // Total hours worked
-      default: 0
+      type: String, // Total hours worked
+      default: '0:0'
     },
     Late :{
       type:String,

@@ -4,11 +4,12 @@ import dbConnection from './config/dbConnection.js';
 import cors from 'cors'
 import AttendanceRouter from './routers/biometricattendance/biometric.attendance.route.js';
 import employeeRouter from './routers/employees/employee.route.js';
+import shiftRouter from './routers/shift/shift.route.js';
 
 const app = express();
 dotenv.config();
 app.use(cors()); // to sort out the cross origin error
-app.use(express.json());
+app.use(express.json()); // to Access the form body data
 
 
 
@@ -23,8 +24,10 @@ app.get('/',(req,res)=>{
 app.use('/biometric',AttendanceRouter);
 
 // endpoint to create and manage employee
-
 app.use('/employee',employeeRouter);
+
+// endpoint to create and manage employee Shifts
+app.use('/shift',shiftRouter);
 
 
 app.listen(PORT,()=>{

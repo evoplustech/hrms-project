@@ -10,11 +10,11 @@ const fetchAttendance = async (request,response)=>{
         if(!ip || !port)
           return response.status(400).send("Bad Request Try Again!");
         
-        const attendanceData = await  biometricModel.find();
+        const attendanceData = await  attendanceModel.find();
       
       // condition to check device configured or not 
        if(attendanceData.length)
-          return response.status(200).json(attendanceData);
+          return response.status(200).json({"message":"Device Already Connected"});
 
       // static user 
       const userId = [208];
@@ -105,7 +105,7 @@ const groupAttendance = async (attendanceList)=>{
 
     });
 
-    await createAttendance.save();
+    // await createAttendance.save();
 
   })
   console.log(finalAttendanceObject);

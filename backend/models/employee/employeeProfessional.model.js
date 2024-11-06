@@ -6,6 +6,7 @@ const employeeProfessionalSchema = new mongoose.Schema({
     ref: 'Employee_personal_detail', // Reference to the Employee collection
     required: true
   },
+// Biometric userID for integration 
 employeeId: {
   type: String,
   required: true,
@@ -49,7 +50,7 @@ experience: [
   }
 ],
 skills: [String],
-status: { type: String, enum: ['Active', 'Inactive', 'Resigned'], default: 'Active' },
+// status: { type: String, enum: ['Active', 'Inactive', 'Resigned'], default: 'Active' },
 
 // User Authentication Details
 email: {
@@ -61,7 +62,7 @@ email: {
   match: [/.+\@.+\..+/, 'Please enter a valid email address']
 },
 password: { type: String, required: true, minlength: 6 },
-role: { type: String, enum: ['admin', 'employee', 'hr','manager','tl'], default: 'employee' },
+role: { type: String, enum: ['admin', 'employee', 'hr','manager','tl'],required:true, default: 'employee' },
 
  // Leave Balance Tracking
 leaveBalances: {
@@ -84,7 +85,7 @@ conformation: {
 },
 
 // Biometric userID for integration 
-userId: { type: String, unique: true },
+// userId: { type: String, unique: true },
 
 isActive: { type: Boolean, default: true }, // Logical delete flag
 

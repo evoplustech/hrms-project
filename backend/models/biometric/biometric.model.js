@@ -26,18 +26,6 @@ const biometricSchema = new mongoose.Schema(
       enum: ['Online', 'Offline', 'Maintenance'], // Current status of the device
       default: 'Online'
     },
-    lastSync: {
-      type: Date, // Timestamp of the last successful sync
-      default: Date.now
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now // Record creation timestamp
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now // Last updated timestamp
-    },
     isActive: { type: Boolean, default: true } // Logical delete flag
   }, { timestamps: true }
 );

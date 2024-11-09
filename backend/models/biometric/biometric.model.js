@@ -30,13 +30,10 @@ const biometricSchema = new mongoose.Schema(
       type: Date, // Timestamp of the last successful sync
       default: Date.now
     },
-    createdAt: {
-      type: Date,
-      default: Date.now // Record creation timestamp
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now // Last updated timestamp
+    adminId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Employee_professional_detail",
+      required: true
     },
     isActive: { type: Boolean, default: true } // Logical delete flag
   }, { timestamps: true }

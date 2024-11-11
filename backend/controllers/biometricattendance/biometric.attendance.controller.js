@@ -176,7 +176,7 @@ const getBiometricDevice = async (req,res) =>{
       return res.status(400).json({success:false,message:`Permission denied: You are not authorized to access biometric device details.`})
     }
 
-    const biometricDeviceDetails = await biometricModel.find({isActive:true,adminId:adminId._id});
+    const biometricDeviceDetails = await biometricModel.find({ isActive:true, adminId:adminId._id });
 
     if(!biometricDeviceDetails.length){
       return res.status(400).json({success:false,message:`No Device Details Avaliable.`})

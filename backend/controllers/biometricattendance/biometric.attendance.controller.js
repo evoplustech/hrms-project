@@ -63,13 +63,6 @@ const fetchAttendance = async (request,response)=>{
       }
 }
 
-
-
-
-
-
-
-
 const groupAttendance = async (attendanceList,empid)=>{
   
       const attendanceListObj = {}; // formted attendance Object List
@@ -122,6 +115,79 @@ const groupAttendance = async (attendanceList,empid)=>{
 }
 
 
+const addBiometricDevice = async (req,res) =>{
+
+  try {
+
+    const { deviceName, ipAddress, port, connectionType, status, isActive, method, id } = req.body;
+
+    // const adminId = {_id:"672b0a57de2599055050bbfd",type:"admin"};
+    const adminId = {_id:"6729ff2f40e30ad8370fa0a6",type:"admin"};
+
+    if(adminId.type !== 'admin'){
+      return res.status(400).json({success:false,message:`Permission denied: You are not authorized to ${method} a biometric device.`})
+    }
+
+    if(method === 'add'){
+      const deviceExist = await biometricModel.findOne({ipAddress,port,isActive:true,adminId:adminId._id})
+
+      if(deviceExist){
+        return res.status(200).json({success:false,error:"Device Already Exist"})
+      }
+
+      const newbiometricModel = new biometricModel({ deviceName, ipAddress, port, connectionType, status, isActive,adminId: adminId._id });
+      await newbiometricModel.save();
+
+      return res.status(200).json({success:true,message:"Device Added Successfully."})
+    }else if(method === 'update' && id !== ''){
+
+      const deviceExist = await biometricModel.findOne({_id:id,isActive:true})
+
+      if(!deviceExist){
+        return res.status(200).json({success:false,error:"Unable to find the Device."})
+      }
+      await biometricModel.findOneAndUpdate({_id:id}, { deviceName, ipAddress, port, connectionType, status, isActive });
+      return res.status(200).json({success:true,message:"Device Updated Successfully."})
+
+    }else if(method === 'delete' && id !== ''){
+      const deviceExist = await biometricModel.findOne({_id:id,isActive:true})
+
+      if(!deviceExist){
+        return res.status(200).json({success:false,error:"Unable to find the Device."})
+      }
+
+      await biometricModel.findOneAndUpdate({_id:id}, { isActive:false });
+      return res.status(200).json({ success:true, message:"Device Deleted Successfully." })
+    }
+  } catch (error) {
+    console.log("Error in addBiometricDevice controller :: ",error.message);
+    res.status(400).json({success:false, error:"Internal server Error"})
+  }
+}
 
 
-export {fetchAttendance}
+const getBiometricDevice = async (req,res) =>{ 
+  try {
+
+    // const adminId = {_id:"672b0a57de2599055050bbfd",type:"admin"};
+    const adminId = {_id:"6729ff2f40e30ad8370fa0a6",type:"admin"};
+    
+    if(adminId.type !== 'admin'){
+      return res.status(400).json({success:false,message:`Permission denied: You are not authorized to access biometric device details.`})
+    }
+
+    const biometricDeviceDetails = await biometricModel.find({isActive:true,adminId:adminId._id});
+
+    if(!biometricDeviceDetails.length){
+      return res.status(400).json({success:false,message:`No Device Details Avaliable.`})
+    }
+    return res.status(200).json({ success: true, data: biometricDeviceDetails });
+
+  } catch (error) {
+    console.log(`Error in getBiometricDevice controller :: ${error.message}`);
+    res.status(400).json({success:false, error: "Internal Server Error"})
+  }
+}
+
+
+export { fetchAttendance, addBiometricDevice, getBiometricDevice }

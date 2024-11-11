@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 8000;
 
 // testing end points
 app.get('/',(req,res)=>{
-    res.send('this is get request');
+  res.send('this is get request');
 })
 
 // endpoint to add bio-metric data to our db

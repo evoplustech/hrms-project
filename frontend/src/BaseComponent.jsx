@@ -1,9 +1,13 @@
-import React from 'react'
+import React ,{Suspense} from 'react'
 import { createBrowserRouter,RouterProvider } from 'react-router-dom';
-import App from './App';
-import Home from './Home';
-import Test from './Test';
+// import App from './App';
+// import Home from './Home';
+// import Test from './Test';
 import ErrorBoundary from '../utils/ErrorBoundary';
+
+const App = React.lazy(()=>import('./App'));
+const Home = React.lazy(()=>import('./Home'));
+const Test = React.lazy(()=>import('./Test'));
 
 
 const BaseComponent = ()=>{
@@ -11,14 +15,14 @@ const BaseComponent = ()=>{
   const Router = createBrowserRouter([
     {
     path:'/',
-    element : <ErrorBoundary><App/></ErrorBoundary>,
+    element : <Suspense fallback={<p ClassName="font-semibold text-xl">Loading...</p>}><App/></Suspense>,
     children : [
         {
           path:'/',
-          element:<ErrorBoundary><Home/></ErrorBoundary>
+          element:<Suspense><Home/></Suspense>
         },{
           path:'/test',
-          element:<ErrorBoundary><Test/></ErrorBoundary>
+          element:<Suspense><Test/></Suspense>
         }
     ]
     }

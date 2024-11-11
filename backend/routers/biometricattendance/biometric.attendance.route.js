@@ -1,5 +1,5 @@
 import express from 'express'
-import { fetchAttendance, fetchAttendance, getBiometricDevice } from '../../controllers/biometricattendance/biometric.attendance.controller.js';
+import { addBiometricDevice, fetchAttendance, getBiometricDevice } from '../../controllers/biometricattendance/biometric.attendance.controller.js';
 import { authenticate } from '../../helpers/authenticateEmployee.js';
 
 const AttendanceRouter = express.Router();

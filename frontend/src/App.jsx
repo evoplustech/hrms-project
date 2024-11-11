@@ -4,8 +4,7 @@ import './App.css'
 import Home from './Home'
 
 function App() {
- if(true)
-  throw new Error('Cusomt Error');
+ 
 
   return (
     <>

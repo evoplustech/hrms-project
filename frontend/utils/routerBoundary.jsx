@@ -1,15 +1,14 @@
 // import React from 'react'
+import React from 'react'
 import { useLocation } from 'react-router-dom'
 
-export   const routerBoundary=(ErrorBoundarys)=>{
+
+export const routerBoundary=(UpdatedErrorBoundary)=>{
 
     const  UpdatedBoundary=(props)=>{
         const location = useLocation();
-        console.log(location);
         return (
-          <>
-          <ErrorBoundarys location = {location} {...props}></ErrorBoundarys>
-          </>
+          <UpdatedErrorBoundary location = {location} {...props} />
         )
     }
     return UpdatedBoundary;

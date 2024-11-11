@@ -44,12 +44,12 @@ const updatePersonalDetail = async (request,response)=>{
 
     // Updating the employee records in the Db
     
-    const udatedRecord = await employeePersonalModel.findByIdAndUpdate(empID,formField,{new:true});
+    const updatedRecord = await employeePersonalModel.findByIdAndUpdate(empID,formField,{new:true});
     
-    if(!udatedRecord)
+    if(!updatedRecord)
       return response.status(404).json({"error":"User Not Found,updation Failed"});
 
-    response.status(200).json(udatedRecord);
+    response.status(200).json(updatedRecord);
 
   }catch(error){
     console.log(error.message);
@@ -65,16 +65,16 @@ const deletePersonalDetail = async(request,response)=>{
     const {empID} = request.params;
 
     if(!empID)
-      return response.status(400).json({"error":"Employee To Delete Need To Be Specified"});
+      return response.status(400).json({"error":"Employee To Delete Need To Be Specified","success": false});
 
     const empData = await  employeePersonalModel.findById(empID);
 
     if(!empData)
-      return response.status(404).json({"error":"User not found"});
+      return response.status(404).json({"error":"User not found",success: false});
 
       await employeePersonalModel.updateOne({_id:empID},{isActive:false});
 
-      return response.status(200).json({"message":"Employee Deleted Successfully"});
+      return response.status(200).json({"message":"Employee Deleted Successfully","success": true});
 
   }catch(error){
     console.log(error.message);
@@ -92,13 +92,13 @@ const getAllPersonalDetail = async (request,response)=>{
     const getAllData = await  employeePersonalModel.find();
 
     if(!getAllData)
-      return response.status(200).json({"message":"No Employee Data Found"});
+      return response.status(200).json({"message":"No Employee Data Found","success": true});
 
-    response.status(200).json(getAllData);
+    response.status(200).json({getAllData,"success": true});
 
   }catch(error){
     console.log(error.message);
-    response.status(500).json({"error":"Internal Server Error"});
+    response.status(500).json({"error":"Internal Server Error","success": false});
   }
 
 }

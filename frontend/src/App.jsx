@@ -1,23 +1,18 @@
 
-import { Route, Routes } from 'react-router-dom'
+import { Outlet, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Home from './Home'
 
 function App() {
- 
+ if(true)
+  throw new Error('Cusomt Error');
 
   return (
     <>
-
-    <Routes>
-        <Route path="/" element={<Home />} >
-
-        </Route>
-    </Routes>
-      <h1 className="text-3xl font-bold underline">
-       Hello world!
-      </h1>
-    
+    <div className="container">
+      <h1>This is App Component</h1>
+        <Outlet></Outlet>
+    </div>
     </>
   )
 }

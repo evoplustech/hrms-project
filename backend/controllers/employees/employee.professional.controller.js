@@ -128,7 +128,7 @@ try{
   if(reportingList.length === 0)
     return response.status(404).json({ "message": 'No Reporting Employees Found',"success": false});
 
-  response.status(200).json({reportingList,"success": true});
+  response.status(200).json({"data":reportingList,"success": true});
 
 }catch(error){
   console.log(error.message);

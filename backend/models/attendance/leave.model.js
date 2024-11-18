@@ -4,13 +4,13 @@ import mongoose from "mongoose";
 const leaveSchema = new mongoose.Schema({
 
   employee: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee_professional_detail', // Refers to the employee professional details
     required: true
   },
   leaveType: {
-    type: String,
-    enum: ['Sick', 'Casual', 'Paid', 'Unpaid', 'Maternity', 'Paternity', 'Compensatory Off', 'Others'],
+    type: mongoose.Schema.Types.ObjectId,
+    enum: 'LeaveType',  // Refers to the Leave Type Model details
     required: true
   },
   startDate: {

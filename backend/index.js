@@ -24,16 +24,17 @@ app.get('/',(req,res)=>{
 })
 
 // endpoint to add bio-metric data to our db
-app.use('/biometric',AttendanceRouter);
+app.use('/api/biometric',AttendanceRouter);
 
 // endpoint to create and manage employee
-app.use('/employee',employeeRouter);
+app.use('/api/employee',employeeRouter);
 
 // endpoint to create and manage employee Shifts
-app.use('/shift',shiftRouter);
+app.use('/api/shift',shiftRouter);
 
 // end point for authorization
-app.use('/authorize',authRouter);
+app.use('/api/authorize',authRouter);
+
 
 
 app.listen(PORT,()=>{

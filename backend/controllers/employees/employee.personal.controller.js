@@ -10,7 +10,7 @@ const createPersonalDetail = async (request,response)=>{
       const {firstName,lastName} = formField;
 
       if(!formField.isValid)
-        return response.status(422).json({"error":"Validation failed Form Fields Missing"});
+        return response.status(422).json({"error":"Validation failed Form Fields Missing","success":false});
 
       delete formField.isValid;
 
@@ -21,11 +21,11 @@ const createPersonalDetail = async (request,response)=>{
       
       await createEmployee.save();
 
-      response.status(201).json(createEmployee);
+      response.status(201).json({"data":createEmployee,"success":true});
 
     }catch(error){
       console.log(error.message);
-      response.status(500).json({"error":"Internal Server Error"});
+      response.status(500).json({"error":"Internal Server Error","success":false});
     }
 
 }
@@ -38,7 +38,7 @@ const updatePersonalDetail = async (request,response)=>{
     const {empID} = request.params;
 
     if(!formField.isValid)
-      return response.status(422).json({"error":"Validation failed Form Fields Missing"});
+      return response.status(422).json({"error":"Validation failed Form Fields Missing","success":false});
 
     delete formField.isValid;
 
@@ -47,13 +47,13 @@ const updatePersonalDetail = async (request,response)=>{
     const updatedRecord = await employeePersonalModel.findByIdAndUpdate(empID,formField,{new:true});
     
     if(!updatedRecord)
-      return response.status(404).json({"error":"User Not Found,updation Failed"});
+      return response.status(404).json({"error":"User Not Found,updation Failed","success":false});
 
-    response.status(200).json(updatedRecord);
+    response.status(200).json({"data":updatedRecord,"success":true});
 
   }catch(error){
     console.log(error.message);
-    response.status(500).json({"error":"Internal Server Error"});
+    response.status(500).json({"error":"Internal Server Error","success":false});
   }
 }
 
@@ -78,7 +78,7 @@ const deletePersonalDetail = async(request,response)=>{
 
   }catch(error){
     console.log(error.message);
-    response.status(500).send({"error":"Internal Server Error"});
+    response.status(500).send({"error":"Internal Server Error","success":false});
   }
 
 

@@ -40,7 +40,7 @@ const leaveSchema = new mongoose.Schema({
     default: Date.now
   },
   approvedBy: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee_professional_detail', // Refers to the approver (e.g., manager)
     required: false
   },

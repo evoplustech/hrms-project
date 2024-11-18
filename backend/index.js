@@ -6,7 +6,9 @@ import AttendanceRouter from './routers/biometricattendance/biometric.attendance
 import employeeRouter from './routers/employees/employee.route.js';
 import shiftRouter from './routers/shift/shift.route.js';
 import authRouter from './routers/authorization/auth.router.js';
+import leaveRouter from './routers/leaves/leave.route.js';
 import cookieParser from 'cookie-parser';
+import policyRouter from './routers/policy/policy.route.js';
 
 const app = express();
 dotenv.config();
@@ -35,11 +37,14 @@ app.use('/api/shift',shiftRouter);
 // end point for authorization
 app.use('/api/authorize',authRouter);
 
+// end point for Add/Delete/Update and get the Policies
+app.use('/policy',policyRouter)
 
+// end point for Leaves apply
+app.use('/leaves',leaveRouter)
 
 app.listen(PORT,()=>{
   console.log(`server started to listern on port ${PORT}`);
   dbConnection();
 });
-
 

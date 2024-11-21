@@ -4,11 +4,17 @@ import dbConnection from './config/dbConnection.js';
 import cors from 'cors'
 import AttendanceRouter from './routers/biometricattendance/biometric.attendance.route.js';
 import employeeRouter from './routers/employees/employee.route.js';
+import shiftRouter from './routers/shift/shift.route.js';
+import authRouter from './routers/authorization/auth.router.js';
+import leaveRouter from './routers/leaves/leave.route.js';
+import cookieParser from 'cookie-parser';
+import policyRouter from './routers/policy/policy.route.js';
 
 const app = express();
 dotenv.config();
 app.use(cors()); // to sort out the cross origin error
-app.use(express.json());
+app.use(express.json()); // to Access the form body data
+app.use(cookieParser()); // to Access the request Cookie
 
 
 
@@ -20,12 +26,22 @@ app.get('/',(req,res)=>{
 })
 
 // endpoint to add bio-metric data to our db
-app.use('/biometric',AttendanceRouter);
+app.use('/api/biometric',AttendanceRouter);
 
 // endpoint to create and manage employee
+app.use('/api/employee',employeeRouter);
 
-app.use('/employee',employeeRouter);
+// endpoint to create and manage employee Shifts
+app.use('/api/shift',shiftRouter);
 
+// end point for authorization
+app.use('/api/authorize',authRouter);
+
+// end point for Add/Delete/Update and get the Policies
+app.use('/policy',policyRouter)
+
+// end point for Leaves apply
+app.use('/leaves',leaveRouter)
 
 app.listen(PORT,()=>{
   console.log(`server started to listern on port ${PORT}`);

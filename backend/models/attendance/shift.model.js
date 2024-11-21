@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-const ShiftSchema = new Schema({
+const ShiftSchema = new mongoose.Schema({
   shiftName: {
     type: String,
     required: true,
@@ -26,4 +26,6 @@ const ShiftSchema = new Schema({
   }
 }, { timestamps: true });  // Automatically adds `createdAt` and `updatedAt`
 
-module.exports = mongoose.model('Shift', ShiftSchema);
+const shiftModel =  mongoose.model('Shift', ShiftSchema);
+
+export default shiftModel;

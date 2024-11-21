@@ -49,6 +49,10 @@ const employeePersonalSchema = new mongoose.Schema({
     passportNumber: { type: String, unique: true },
     panCard: { type: String, unique: true }
   },
+  profilepic :{
+    type:String,
+    required:true
+  },
   isActive: { type: Boolean, default: true } // Logical delete flag
 }, { timestamps: true });
 

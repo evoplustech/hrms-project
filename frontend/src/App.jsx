@@ -1,23 +1,21 @@
 
-import { Route, Routes } from 'react-router-dom'
-import './App.css'
-import Home from './Home'
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import  { Toaster } from 'react-hot-toast';
+
+
 
 function App() {
  
+  const url = useLocation();
+ console.log(url.pathname);
 
   return (
     <>
-
-    <Routes>
-        <Route path="/" element={<Home />} >
-
-        </Route>
-    </Routes>
-      <h1 className="text-3xl font-bold underline">
-       Hello world!
-      </h1>
-    
+    {/* url.pathname=='/' || url.pathname=='/forget-password' || url.pathname=='/reset-password' */}
+    <div className={`ms-auto h-screen ${(url.pathname!=='/home')?'login':''}`}>
+        <Outlet></Outlet>
+        <Toaster/>
+    </div>
     </>
   )
 }

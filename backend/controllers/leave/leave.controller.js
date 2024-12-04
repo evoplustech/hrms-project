@@ -99,6 +99,21 @@ const leaveAction = async (req, res) => {
                 success: false,
                 message: "You are not authorized to approve your own leave request."
             });
+        }else if(role.toLowerCase() === 'employee'){
+            // Check if leave exists and has "Pending" status in one query
+            const leaveExist = await leaveModel.findOneAndUpdate(
+                { _id: leaveId, status: "Pending" }, // Query
+                { $set: { status: "Cancelled" } },    // Update operation
+                { new: true }                         // Return the updated document
+            );
+
+            // If no document is found, return an error
+            if (!leaveExist) {
+                return res.status(400).json({ success: false, message: "The leave request could not be found." });
+            }
+
+            // Return success message with updated leave data
+            return res.status(200).json({ success: true, message: "Your leave has been cancelled successfully." });
         }
 
         // Find leave details
@@ -157,20 +172,7 @@ const cancelLeave = async (req, res) => {
     try {
         const { leaveId } = req.body;
 
-        // Check if leave exists and has "Pending" status in one query
-        const leaveExist = await leaveModel.findOneAndUpdate(
-            { _id: leaveId, status: "Pending" }, // Query
-            { $set: { status: "Cancelled" } },    // Update operation
-            { new: true }                         // Return the updated document
-        );
-
-        // If no document is found, return an error
-        if (!leaveExist) {
-            return res.status(400).json({ success: false, message: "The leave request could not be found." });
-        }
-
-        // Return success message with updated leave data
-        return res.status(200).json({ success: true, message: "Your leave has been cancelled successfully." });
+        
     } catch (error) {
         console.log(`Error in the Cancel Leave Controller :: ${error.message}`);
         return res.status(500).json({ success: false, message: "Internal server error." });

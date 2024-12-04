@@ -26,7 +26,7 @@ const ForgetPassword = () => {
 
   return (
     <>
-    <div className="flex flex-col justify-center items-center login-page">
+    <div className="flex flex-col justify-center items-center login-page pt-10">
      <LoginHeader/>
       <div className="flex flex-col items-center justify-center ">
         <div  className=' max-w-md w-full p-6 rounded-lg shadow-md bg-gray-100 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-0'>

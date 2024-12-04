@@ -12,8 +12,8 @@ employeeId: {
   required: true,
   unique: true // Unique Employee ID
 },
-department: { type: String, required: true },
-designation: { type: String, required: true },
+department: { type: mongoose.Schema.Types.ObjectId,ref:'Department', required: true },
+designation: { type: mongoose.Schema.Types.ObjectId,ref:'Designation',required: true },
 
 // department: {
 //   type: mongoose.Schema.Types.ObjectId,
@@ -38,8 +38,13 @@ workLocation: {
   city: String
 },
 reportingManager: {
-  managerId: { type: String },
-  managerName: { type: String }
+  managerId: { 
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Employee_professional_detail',
+    required : true
+
+   }
+  // ,managerName: { type: String }
 },
 experience: [
   {
@@ -62,7 +67,8 @@ email: {
   match: [/.+\@.+\..+/, 'Please enter a valid email address']
 },
 password: { type: String, required: true, minlength: 6 },
-role: { type: String, enum: ['admin', 'employee', 'hr','manager','tl'], required:true, default: 'employee' },
+role: { type:mongoose.Schema.Types.ObjectId,ref:'Role',required:true},
+// role: { type:String,required:true},
 
  // Leave Balance Tracking
 leaveBalances: {

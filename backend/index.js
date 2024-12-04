@@ -1,5 +1,5 @@
 import express from 'express'
-import  dotenv   from 'dotenv';
+import dotenv   from 'dotenv';
 import dbConnection from './config/dbConnection.js';
 import cors from 'cors'
 import AttendanceRouter from './routers/biometricattendance/biometric.attendance.route.js';
@@ -9,6 +9,7 @@ import authRouter from './routers/authorization/auth.router.js';
 import leaveRouter from './routers/leaves/leave.route.js';
 import cookieParser from 'cookie-parser';
 import policyRouter from './routers/policy/policy.route.js';
+import picklistRouter from './routers/configuration/picklist.route.js';
 
 const app = express();
 dotenv.config();
@@ -34,11 +35,11 @@ app.use('/api/employee',employeeRouter);
 // endpoint to create and manage employee Shifts
 app.use('/api/shift',shiftRouter);
 
-// end point for authorization
+// endpoint for authorization
 app.use('/api/authorize',authRouter);
 
-// end point for Add/Delete/Update and get the Policies
-app.use('/policy',policyRouter)
+// endpoint for picklist
+app.use('/api/configure',picklistRouter);
 
 // end point for Leaves apply
 app.use('/leaves',leaveRouter)

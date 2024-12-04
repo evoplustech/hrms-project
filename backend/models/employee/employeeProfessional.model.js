@@ -70,7 +70,8 @@ leaveBalances: {
   casualLeave: { type: Number, max:12, default: 0 },
   paidLeave: { type: Number,  max:2, default: 0 },
   unpaidLeave: { type: Number,  default: 0 }, // Unpaid leave doesn't affect balance
-  compensatoryOff: { type: Number, default: 0 }
+  compensatoryOff: { type: Number, default: 0 },
+  Others: { type: Number, default: 0 }
 },
 
 shift: {

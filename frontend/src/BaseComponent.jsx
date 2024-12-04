@@ -20,7 +20,7 @@ const ResetPassword = React.lazy(()=>import('./components/Login/ResetPassword'))
 const BaseComponent = ()=>{
 
   const {isLogged} = useSelectorHook('authenticateUser');
-console.log(isLogged);
+  console.log(isLogged);
   const Router = createBrowserRouter([
     {
     path:'/',

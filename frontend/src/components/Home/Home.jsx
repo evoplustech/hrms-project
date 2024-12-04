@@ -1,13 +1,33 @@
 import React from 'react'
-import Header from './Header'
-import Sidebar from './Sidebar'
+import Header from '../layouts/Header'
+import Sidebar from '../layouts/Sidebar'
+import Footer from '../layouts/Footer'
+import Catogary from '../layouts/Catogary'
+import { Outlet } from 'react-router-dom'
+import useActiveTab from '../../hooks/useActiveTab'
 
 const Home = () => {
+  const [tab,subCatagory] = useActiveTab();
+
+  console.log(useActiveTab());
+  
   return (
-    <div>
-        <Header/>
-        <Sidebar/>
-    </div>
+    <>
+      <div className="">
+        <div className="flex flex-row ">
+          <Header/>
+          <Catogary subCatagory = {subCatagory}/>
+          <Sidebar tab = {tab}/>
+          <Outlet></Outlet>
+        </div>
+        <Footer/>
+      </div>
+      
+      
+
+  
+      </>   
+   
   )
 }
 

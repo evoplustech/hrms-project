@@ -49,26 +49,26 @@ const ResetPassword = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center login-page">
+      <div className="flex flex-col justify-center items-center login-page pt-10">
       <LoginHeader/>
         <div className="flex flex-col items-center justify-center ">
           <div  className=' max-w-md w-full p-6 rounded-lg shadow-md bg-gray-100 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-0'>
           <h1 className="mb-6 p-2 text-gray-600 text-2xl font-semibold">HRMS Employee Portal</h1>
           <p className="mb-6 mt-0 pb-2 flex justify-center items-center text-gray-600 text-xl font-semibold">Reset Password</p>
             <form className="space-y-4" onSubmit = {createPasswordHandler}>
-              <div className="mx-0">
+              <div className="mx-0 relative w-full">
                 <label className="block text-base font-semibold text-gray-700 mb-1">
                     password
                 </label>
-                <input ref={passref} onChange={(e)=>(setPassword(e.target.value))} value={password}  type="password" placeholder='create Password' className="m-2 ps-3 pr-10 w-full h-10 rounded-md relative" /><span className="absolute transform  -translate-x-10 translate-y-5">{
+                <input ref={passref} onChange={(e)=>(setPassword(e.target.value))} value={password}  type="password" placeholder='create Password' className="m-2 ps-3 pr-10 w-full h-10 rounded-md relative" /><span className="absolute top-1/2 -right-1 transform mt-4  -translate-y-1/2">{
                     passtoggle?<RiEyeLine className='hover:cursor-pointer w-5 h-5 z-50' onClick = {()=>(togglePasswordType(!passtoggle))} />:<RiEyeOffLine className='hover:cursor-pointer w-5 h-5 z-50' onClick = {()=>(togglePasswordType(!passtoggle))} />
                   }</span>
               </div>
-              <div className="mx-0">
+              <div className="mx-0 relative w-full">
                 <label className="block text-base font-semibold text-gray-700 mb-1">
                     Confirm password
                 </label>
-                <input ref={confpassref} onChange={(e)=>(setConfirmPassword(e.target.value))} value={confirmpassword}  type="password" placeholder='Confirm Password' className="m-2 ps-3 pr-10 w-full h-10 rounded-md" /><span className="absolute transform  -translate-x-10 translate-y-5">
+                <input ref={confpassref} onChange={(e)=>(setConfirmPassword(e.target.value))} value={confirmpassword}  type="password" placeholder='Confirm Password' className="m-2 ps-3 pr-10 w-full h-10 rounded-md" /><span className="absolute top-1/2 -right-1 transform mt-4  -translate-y-1/2">
                   {
                     conPasstoggle?<RiEyeLine className='hover:cursor-pointer w-5 h-5 z-50' onClick = {()=>(toggleConfirmPassType(!conPasstoggle))} />:<RiEyeOffLine className='hover:cursor-pointer w-5 h-5 z-50' onClick = {()=>(toggleConfirmPassType(!conPasstoggle))} />
                   }</span>

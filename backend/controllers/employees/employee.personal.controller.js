@@ -10,7 +10,7 @@ const createPersonalDetail = async (request,response)=>{
       const {firstName,lastName} = formField;
 
       if(!formField.isValid)
-        return response.status(422).json({"error":"Validation failed Form Fields Missing","success":false});
+        return response.status(422).json({error:"Validation failed Form Fields Missing",success:false});
 
       delete formField.isValid;
 
@@ -21,11 +21,11 @@ const createPersonalDetail = async (request,response)=>{
       
       await createEmployee.save();
 
-      response.status(201).json({"data":createEmployee,"success":true});
+      response.status(201).json({message:"Record Created Successfully",success:true,data:createEmployee});
 
     }catch(error){
       console.log(error.message);
-      response.status(500).json({"error":"Internal Server Error","success":false});
+      response.status(500).json({error:"Internal Server Error",success:false});
     }
 
 }
@@ -38,7 +38,7 @@ const updatePersonalDetail = async (request,response)=>{
     const {empID} = request.params;
 
     if(!formField.isValid)
-      return response.status(422).json({"error":"Validation failed Form Fields Missing","success":false});
+      return response.status(422).json({error:"Validation failed Form Fields Missing",success:false});
 
     delete formField.isValid;
 
@@ -47,13 +47,13 @@ const updatePersonalDetail = async (request,response)=>{
     const updatedRecord = await employeePersonalModel.findByIdAndUpdate(empID,formField,{new:true});
     
     if(!updatedRecord)
-      return response.status(404).json({"error":"User Not Found,updation Failed","success":false});
+      return response.status(404).json({error:"User Not Found,updation Failed",success:false});
 
-    response.status(200).json({"data":updatedRecord,"success":true});
+    response.status(200).json({data:updatedRecord,success:true});
 
   }catch(error){
     console.log(error.message);
-    response.status(500).json({"error":"Internal Server Error","success":false});
+    response.status(500).json({error:"Internal Server Error",success:false});
   }
 }
 
@@ -65,20 +65,20 @@ const deletePersonalDetail = async(request,response)=>{
     const {empID} = request.params;
 
     if(!empID)
-      return response.status(400).json({"error":"Employee To Delete Need To Be Specified","success": false});
+      return response.status(400).json({error:"Employee To Delete Need To Be Specified",success: false});
 
     const empData = await  employeePersonalModel.findById(empID);
 
     if(!empData)
-      return response.status(404).json({"error":"User not found",success: false});
+      return response.status(404).json({error:"User not found",success: false});
 
       await employeePersonalModel.updateOne({_id:empID},{isActive:false});
 
-      return response.status(200).json({"message":"Employee Deleted Successfully","success": true});
+      return response.status(200).json({message:"Employee Deleted Successfully",success: true});
 
   }catch(error){
     console.log(error.message);
-    response.status(500).send({"error":"Internal Server Error","success":false});
+    response.status(500).send({error:"Internal Server Error",success:false});
   }
 
 
@@ -92,13 +92,13 @@ const getAllPersonalDetail = async (request,response)=>{
     const getAllData = await  employeePersonalModel.find();
 
     if(!getAllData)
-      return response.status(200).json({"message":"No Employee Data Found","success": true});
+      return response.status(200).json({message:"No Employee Data Found",success: true});
 
-    response.status(200).json({getAllData,"success": true});
+    response.status(200).json({data:getAllData,"success": true});
 
   }catch(error){
     console.log(error.message);
-    response.status(500).json({"error":"Internal Server Error","success": false});
+    response.status(500).json({error:"Internal Server Error",success: false});
   }
 
 }

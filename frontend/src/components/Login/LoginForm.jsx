@@ -50,12 +50,12 @@ const LoginForm = () => {
             </label>
             <input onChange={(e)=>(setUsername(e.target.value))} value={username}  type="text" placeholder='Enter username' className="m-2 p-4 w-full h-10 rounded-md" />
           </div>
-          <div>
+          <div className="relative w-full">
             <label className="block text-base font-semibold text-gray-700 mb-1">
               Password
             </label>
-            <input ref={passref} onChange={(e)=>(setPassword(e.target.value))} value={password} type="password" placeholder='Enter password' className="m-2 p-4 w-full h-10 rounded-md" />
-              <span className="absolute transform  -translate-x-10 translate-y-5">{
+            <input ref={passref} onChange={(e)=>(setPassword(e.target.value))} value={password} type="password" placeholder='Enter password' className="m-2 ps-2 pe-6 w-full h-10 rounded-md" />
+              <span className="absolute top-1/2 -right-1 transform mt-4  -translate-y-1/2">{
                 togglehide?<RiEyeLine className='hover:cursor-pointer w-5 h-5 z-50' onClick = {()=>(toggleHandler(!togglehide))} />:<RiEyeOffLine className='hover:cursor-pointer w-5 h-5 z-50' onClick = {()=>(toggleHandler(!togglehide))} />
               }</span>
           </div>

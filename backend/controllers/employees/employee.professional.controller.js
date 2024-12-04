@@ -6,7 +6,9 @@ const createProfDetail = async (request,response)=>{
     
     const {empPersonalId,employeeId,department,designation,dateOfJoining,employmentType,reportingManager,email,password,confirmPassword,role,shift} = request.body;
     const {role:empRole} = request;
-      if(empRole !=='admin')
+    console.log(role);
+    console.log(empRole);
+      if(empRole.toLowerCase() !=='admin')
          return response.status(403).json({ "error": "Access denied. You do not have permission to perform this action.","success":false });
 
     if(!empPersonalId || !employeeId || !department || !designation || !dateOfJoining || !employmentType  || !reportingManager  || !email || !password || !confirmPassword || !role || !shift ){
@@ -29,7 +31,7 @@ const createProfDetail = async (request,response)=>{
 
     // Validate confirm Password
     if(confirmPassword!==password)
-      return response.status(400).json({"error":"Pssword and confirm password mismatch","success": false});
+      return response.status(400).json({"error":"Password and confirm password mismatch","success": false});
 
     // encrypting the password
       const saltValue = await bcrypt.genSalt(10);

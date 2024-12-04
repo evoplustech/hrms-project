@@ -7,6 +7,7 @@ import employeeRouter from './routers/employees/employee.route.js';
 import shiftRouter from './routers/shift/shift.route.js';
 import authRouter from './routers/authorization/auth.router.js';
 import cookieParser from 'cookie-parser';
+import picklistRouter from './routers/configuration/picklist.route.js';
 
 const app = express();
 dotenv.config();
@@ -32,8 +33,11 @@ app.use('/api/employee',employeeRouter);
 // endpoint to create and manage employee Shifts
 app.use('/api/shift',shiftRouter);
 
-// end point for authorization
+// endpoint for authorization
 app.use('/api/authorize',authRouter);
+
+// endpoint for picklist
+app.use('/api/configure',picklistRouter);
 
 
 

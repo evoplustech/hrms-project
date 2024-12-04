@@ -7,12 +7,14 @@ import  { Toaster } from 'react-hot-toast';
 function App() {
  
   const url = useLocation();
- console.log(url.pathname);
+  const urlparam = url.pathname.split('/');
+  
+
 
   return (
     <>
     {/* url.pathname=='/' || url.pathname=='/forget-password' || url.pathname=='/reset-password' */}
-    <div className={`ms-auto h-screen ${(url.pathname!=='/home')?'login':''}`}>
+    <div className={`ms-auto h-screen ${(urlparam[1]!=='home')?'login':''}`}>
         <Outlet></Outlet>
         <Toaster/>
     </div>

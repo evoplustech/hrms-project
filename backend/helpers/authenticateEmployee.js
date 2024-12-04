@@ -10,13 +10,13 @@ const authenticate = async (request,response,next)=>{
         // validate JWT token
         const {_id} = jwt.verify(webtoken,process.env.SIGN);
 
-        const employeeRecord = await employeeProfessionalModel.findOne({_id,isActive:true}).select('role');
-       
+        const employeeRecord = await employeeProfessionalModel.findOne({_id,isActive:true}).populate('role','name');
+       console.log(employeeRecord);
         // if(verifiedData?.role)
         if(!employeeRecord)
           return response.status(401).json({"error":"Authentication failed. Invalid or missing token","success":false});
 
-        request.role = employeeRecord.role;
+        request.role = employeeRecord.role.name;
         request.empId = _id;
 
         next();

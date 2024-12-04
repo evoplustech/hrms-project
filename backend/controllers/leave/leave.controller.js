@@ -90,92 +90,68 @@ const applyLeave = async (req, res) => {
 const leaveAction = async (req, res) => {
     try {
         const { leaveId, action } = req.body;
-        const role = (req.role).toLowerCase();
-        const empId = req.empId;
-        console.log(empId+'ROLE ::'+role)
-        // Check if the role is authorized to perform the action
-        const allowedRoles = ['hr', 'admin', 'manager', 'tl'];
-        if (!allowedRoles.includes(role)) {
+        // const { role } = req;
+        const  role = 'hr';
+        if(!['pending','cancelled','rejected','approved'].includes(action.toLowerCase())) return res.status(409).json({success:false, message: "Invalid Action or leave Status." })
+        // Check role authorization
+        if (!['hr', 'admin', 'manager', 'tl'].includes(role.toLowerCase())) {
             return res.status(401).json({
-                role,
                 success: false,
-                message: "You are not authorized to approve your own leave request. Please contact your manager or HR for approval."
+                message: "You are not authorized to approve your own leave request."
             });
         }
 
-        const leaveDetails = await leaveModel.findOne({ _id: leaveId});
-
-
+        // Find leave details
+        const leaveDetails = await leaveModel.findById(leaveId);
         if (!leaveDetails) {
-            return res.status(400).json({
-                success: false,
-                message: "Cannot perform action. Leave request not found or is not pending."
-            });
+            return res.status(400).json({ success: false, message: "Leave request not found or not pending." });
         }
 
-        if((leaveDetails?.status).toLowerCase() === action.toLowerCase()){
-            return res.status(400).json({
-                success: false,
-                message: `This leave request has already been ${action}.`
-            });
+        // Prevent duplicate actions
+        if ((leaveDetails.status).toLowerCase() === action.toLowerCase()) {
+            return res.status(400).json({ success: false, message: `This leave request has already been ${action}.` });
         }
 
         const { employeeId, daysCount, leaveTypeId, status } = leaveDetails;
 
-        // Fetch employee and leaveType details in parallel
+        // Fetch employee and leave type in parallel
         const [empDetail, leaveType] = await Promise.all([
             employeeProfessionalModel.findOne({ _id: employeeId, isActive: true }),
-            leaveTypeModel.findOne({ _id: leaveTypeId })
+            leaveTypeModel.findById(leaveTypeId)
         ]);
-        console.log(leaveType.leaveType);
-        // Validate employee and leaveType
-        if (!empDetail) {
-            return res.status(404).json({ success: false, message: "Employee not found or inactive." });
-        }
-        if (!leaveType) {
-            return res.status(400).json({ success: false, message: "Leave type not found." });
+
+        if (!empDetail || !leaveType) {
+            return res.status(404).json({ success: false, message: "Employee or Leave type not found." });
         }
 
-        // Adjust leave balance based on leave type
-        const { leaveBalances } = empDetail;
-        const availableLeave = leaveBalances[leaveType.leaveType] || 0;
-        let leaveAdjustment = null;
-        
-        if(action.toLowerCase() === 'approved'){
+        // Adjust leave balance based on action
+        const availableLeave = empDetail.leaveBalances[leaveType.leaveType] || 0;
+        let leaveAdjustment=null;
+
+        if (['approved', 'rejected', 'cancelled'].includes(action.toLowerCase())) {
             leaveAdjustment = ['sickLeave', 'casualLeave'].includes(leaveType.leaveType)
-            ? availableLeave - daysCount
-            : availableLeave + daysCount;
-        }else if((['cancelled','pending','rejected']).includes(action.toLowerCase())){
-            leaveAdjustment = ['sickLeave', 'casualLeave'].includes(leaveType.leaveType)
-            ? availableLeave + daysCount
-            : availableLeave - daysCount;
+                ? (action.toLowerCase() === 'approved' ? availableLeave - daysCount : availableLeave + daysCount)
+                : (action.toLowerCase() === 'approved' ? availableLeave + daysCount : availableLeave - daysCount);
         }
 
-        if( (status.toLowerCase() === 'pending' && action.toLowerCase() === 'approved') || (status.toLowerCase() === 'approved' && action.toLowerCase() !== 'approved') ){
-            // If the action is approved, update leave balance
-            await employeeProfessionalModel.findOneAndUpdate(
-                { _id: employeeId },
-                { [`leaveBalances.${leaveType.name}`]: leaveAdjustment }
-            );
+        // Update leave balance if needed
+        if ((status.toLowerCase() === 'pending' && action.toLowerCase() === 'approved') || 
+            (status.toLowerCase() === 'approved' && action.toLowerCase() !== 'approved')) {
+            await employeeProfessionalModel.findByIdAndUpdate(employeeId, {
+                $set: { [`leaveBalances.${leaveType.name}`]: leaveAdjustment }
+            });
         }
 
-        // Update the leave request status (approved, rejected, or cancelled)
-        await leaveModel.findOneAndUpdate(
-            { _id: leaveId },  // Ensure status is still 'Pending'
-            { $set: { status: action } },        // Set the new status
-            { new: true }                         // Return the updated document
-        );
+        // Update leave request status
+        await leaveModel.findByIdAndUpdate(leaveId, { $set: { status: action } });
 
-        return res.status(200).json({
-            success: true,
-            message: `Leave status updated successfully.`
-        });
-
+        return res.status(200).json({ success: true, message: "Leave status updated successfully." });
     } catch (error) {
-        console.error(`Leave Action Error: ${error.message}`);
+        console.error("Leave Action Error:", error);
         return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
 
 const cancelLeave = async (req, res) => {
     try {

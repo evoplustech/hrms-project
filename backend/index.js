@@ -8,11 +8,7 @@ import shiftRouter from './routers/shift/shift.route.js';
 import authRouter from './routers/authorization/auth.router.js';
 import leaveRouter from './routers/leaves/leave.route.js';
 import cookieParser from 'cookie-parser';
-<<<<<<< HEAD
-import policyRouter from './routers/policy/policy.route.js';
-=======
 import picklistRouter from './routers/configuration/picklist.route.js';
->>>>>>> 0f95254014af67d6a800100ac16e633f4c590e56
 
 const app = express();
 dotenv.config();
@@ -41,14 +37,9 @@ app.use('/api/shift',shiftRouter);
 // endpoint for authorization
 app.use('/api/authorize',authRouter);
 
-<<<<<<< HEAD
-// end point for Add/Delete/Update and get the Policies
-app.use('/policy',policyRouter)
-=======
 // endpoint for picklist
 app.use('/api/configure',picklistRouter);
 
->>>>>>> 0f95254014af67d6a800100ac16e633f4c590e56
 
 // end point for Leaves apply
 app.use('/leaves',leaveRouter)

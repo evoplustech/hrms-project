@@ -8,7 +8,7 @@ const designationSchema = new mongoose.Schema({
     required:true
   },
   isActive : {type:Boolean,default:true}
-});
+},{timestamps:true});
 
 const designationModel = mongoose.model('Designation',designationSchema);
 

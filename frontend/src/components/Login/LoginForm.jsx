@@ -6,6 +6,7 @@ import LoadingIcons from 'react-loading-icons'
 import useSelectorHook from '../../../utils/useSelectorHook';
 import { Link, Navigate } from 'react-router-dom';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
+import { fetchAllEmployees } from '../../slices/employeeSlice';
 
 const LoginForm = () => {
 
@@ -16,20 +17,23 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const {status} = useSelectorHook('authenticateUser'); 
   
-  console.log(useSelectorHook('authenticateUser'));
-  console.log(username,password,status);
+  // console.log(useSelectorHook('authenticateUser'));
+  // console.log(username,password,status);
 
   const loginFormSubmit = async (e)=>{
-    e.preventDefault();
+    try{
+        e.preventDefault();
+      if(!username || !password)
+        return toast.error('Credentials Missing ! Please Enter Username And Password');
 
-    if(!username || !password)
-      return toast.error('Credentials Missing ! Please Enter Username And Password');
+      const response = await dispatch(LoginMiddleware({username,password}));
+      if(response.payload.error)
+        return toast.error('Login Failed! Invalid Credentials');
 
-    const response = await dispatch(LoginMiddleware({username,password}));
-    
-    if(response.payload.error)
-      return toast.error('Login Failed! Invalid Credentials');
-
+      
+    }catch(error){
+      console.log(error.message);
+    }
   }
 
   const toggleHandler = (param)=>{

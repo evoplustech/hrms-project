@@ -5,6 +5,7 @@ import { IoChevronBackCircleOutline,IoChevronForwardCircleOutline  } from "react
 import { AiOutlinePieChart } from "react-icons/ai";
 import { GiTimeBomb,GiIsland } from "react-icons/gi";
 import { IoFingerPrint } from "react-icons/io5";
+import { TbSettingsCog } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({tab}) => {
@@ -61,6 +62,8 @@ const sideWidth = {
           {sidebarToggle ? '':'Bio-Metric'}</Link>
           <Link to="/home/leaves" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='leaves' ? active:''}`}><GiIsland  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Leave'}</Link>
+          <Link to="/home/configuration" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='configuration' ? active:''}`}><TbSettingsCog  className="w-6 h-6 me-2 text-orange-600"/>
+          {sidebarToggle ? '':'Configuration'}</Link>
         </div>
       </nav>
     </aside>

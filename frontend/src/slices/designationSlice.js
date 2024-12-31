@@ -4,9 +4,9 @@ import httpRequest from "../../utils/httpRequest";
 
 
 
-export const fetchAllEmployees = createAsyncThunk('/employee/getAll', async ()=>{
-  try{    
-      const response = await httpRequest({path:'/api/employee/getAllRecords',method:'get'});
+export const fetchAllDesignation = createAsyncThunk('/designation/getAll', async ()=>{
+  try{      
+      const response = await httpRequest({path:'/api/configure/picklist/designation/getAll',method:'get'});
       console.log(response);
       return response;
   }catch(error){
@@ -16,21 +16,21 @@ export const fetchAllEmployees = createAsyncThunk('/employee/getAll', async ()=>
 
 
 const initialState = {
-  data : {},
+  data : [],
   status : 'idle',
   error: null
 }
 
-const employeeSlice = createSlice({
-  name:'empSlice',
+const designationSlice = createSlice({
+  name:'designationSlice',
   initialState,
   reducers:{},
   extraReducers:(builder)=>{
-    builder.addCase(fetchAllEmployees.pending,(state,action)=>{
-      console.log('fetchAllEmployees.pending');
+    builder.addCase(fetchAllDesignation.pending,(state,action)=>{
+      console.log('fetchAllDesignationSlice.pending');
        state.status= 'pending'
-    }).addCase(fetchAllEmployees.fulfilled,(state,action)=>{
-      console.log('fetchAllEmployees.fulfilled');
+    }).addCase(fetchAllDesignation.fulfilled,(state,action)=>{
+      console.log('fetchAllDesignationSlice.fulfilled');
       state.status= 'success';
        if(action.payload.success){
         state.data = action.payload.data;
@@ -40,8 +40,8 @@ const employeeSlice = createSlice({
           state.data = {};
           state.error = action.payload.error;
        }
-    }).addCase(fetchAllEmployees.rejected,(state,action)=>{
-      console.log('fetchAllEmployees.rejected');
+    }).addCase(fetchAllDesignation.rejected,(state,action)=>{
+      console.log('fetchAllDesignationSlice.rejected');
       // state.error = null;
       // state.status= 'failed';
       // state.data={};
@@ -50,7 +50,7 @@ const employeeSlice = createSlice({
 });
 
 
-export default employeeSlice.reducer;
+export default designationSlice.reducer;
 
 
 

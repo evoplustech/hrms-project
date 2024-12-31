@@ -4,9 +4,9 @@ import httpRequest from "../../utils/httpRequest";
 
 
 
-export const fetchAllEmployees = createAsyncThunk('/employee/getAll', async ()=>{
+export const fetchAllRoles = createAsyncThunk('/role/getAll', async ()=>{
   try{    
-      const response = await httpRequest({path:'/api/employee/getAllRecords',method:'get'});
+      const response = await httpRequest({path:'/api/configure/picklist/role/getAll',method:'get'});
       console.log(response);
       return response;
   }catch(error){
@@ -16,21 +16,21 @@ export const fetchAllEmployees = createAsyncThunk('/employee/getAll', async ()=>
 
 
 const initialState = {
-  data : {},
+  data : [],
   status : 'idle',
   error: null
 }
 
-const employeeSlice = createSlice({
-  name:'empSlice',
+const roleSlice = createSlice({
+  name:'roleSlice',
   initialState,
   reducers:{},
   extraReducers:(builder)=>{
-    builder.addCase(fetchAllEmployees.pending,(state,action)=>{
-      console.log('fetchAllEmployees.pending');
+    builder.addCase(fetchAllRoles.pending,(state,action)=>{
+      console.log('fetchAllRoles.pending');
        state.status= 'pending'
-    }).addCase(fetchAllEmployees.fulfilled,(state,action)=>{
-      console.log('fetchAllEmployees.fulfilled');
+    }).addCase(fetchAllRoles.fulfilled,(state,action)=>{
+      console.log('fetchAllRoles.fulfilled');
       state.status= 'success';
        if(action.payload.success){
         state.data = action.payload.data;
@@ -40,8 +40,8 @@ const employeeSlice = createSlice({
           state.data = {};
           state.error = action.payload.error;
        }
-    }).addCase(fetchAllEmployees.rejected,(state,action)=>{
-      console.log('fetchAllEmployees.rejected');
+    }).addCase(fetchAllRoles.rejected,(state,action)=>{
+      console.log('fetchAllRoles.rejected');
       // state.error = null;
       // state.status= 'failed';
       // state.data={};
@@ -50,7 +50,7 @@ const employeeSlice = createSlice({
 });
 
 
-export default employeeSlice.reducer;
+export default roleSlice.reducer;
 
 
 

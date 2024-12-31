@@ -7,7 +7,7 @@ import employeeRouter from './routers/employees/employee.route.js';
 import shiftRouter from './routers/shift/shift.route.js';
 import authRouter from './routers/authorization/auth.router.js';
 import cookieParser from 'cookie-parser';
-import picklistRouter from './routers/configuration/picklist.route.js';
+import picklistRouter from './routers/configuration/config.route.js';
 
 const app = express();
 dotenv.config();
@@ -20,8 +20,8 @@ app.use(cookieParser()); // to Access the request Cookie
 const PORT = process.env.PORT || 8000;
 
 // testing end points
-app.get('/',(req,res)=>{
-  res.send('this is get request');
+app.get('/ten/one',(req,res)=>{
+  res.redirect(301,'https://localhost:6500/api/authorize/logout');
 })
 
 // endpoint to add bio-metric data to our db

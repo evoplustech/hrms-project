@@ -1,4 +1,5 @@
 import employeePersonalModel from "../../models/employee/employeePersonal.model.js";
+import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
 
 // Function To Create New Employee In The Db
 const createPersonalDetail = async (request,response)=>{
@@ -63,18 +64,18 @@ const deletePersonalDetail = async(request,response)=>{
   try{
 
     const {empID} = request.params;
-
     if(!empID)
       return response.status(400).json({error:"Employee To Delete Need To Be Specified",success: false});
 
-    const empData = await  employeePersonalModel.findById(empID);
+    // const empData = await  employeePersonalModel.findById(empID);
+    // const empProfessionalData = await  employeeProfessionalModel.findById(empId);
+    const [empData,empProfessionalData]=  await Promise.all([employeePersonalModel.findById(empID),employeeProfessionalModel.findOne({empPersonalId:empID})]);
 
-    if(!empData)
+    if(!empData || !empProfessionalData)
       return response.status(404).json({error:"User not found",success: false});
 
-      await employeePersonalModel.updateOne({_id:empID},{isActive:false});
-
-      return response.status(200).json({message:"Employee Deleted Successfully",success: true});
+    await Promise.all([employeePersonalModel.updateOne({_id:empID},{$set:{isActive:false}}),employeeProfessionalModel.updateOne({_id:empProfessionalData._id},{$set:{isActive:false}})])
+    return response.status(200).json({message:"Employee Deleted Successfully",success: true});
 
   }catch(error){
     console.log(error.message);
@@ -111,7 +112,7 @@ const validateFormFields = (request)=>{
   let formField = {}; 
   // ,idProofs
   console.log(request.body);
-  const {firstName,lastName,dateOfBirth,gender,contactInfo,address,maritalStatus,emergencyContact,nationality} = request.body;
+  const {firstName,lastName,dateOfBirth,gender,contactInfo,maritalStatus,emergencyContact,nationality,idProofs} = request.body;
   
   const {phone,email} = contactInfo;
   const {name,relationship,phone:emgphone} = emergencyContact;
@@ -122,15 +123,15 @@ const validateFormFields = (request)=>{
     dateOfBirth : new Date(dateOfBirth),
     gender,
     contactInfo,
-    address,
     maritalStatus,
     emergencyContact,
-    nationality
+    nationality,
+    idProofs
   }
 
   formField.isValid = true;
 
-  if(!firstName || !lastName || !dateOfBirth || !gender  || !address || !maritalStatus  || !nationality || (!phone || !email) || (!name || !relationship || !emgphone))
+  if(!firstName || !lastName || !dateOfBirth || !gender   || !maritalStatus  || !nationality || !contactInfo.phone || !contactInfo.email || !name || !relationship || !emgphone)
     formField.isValid = false;
 
   return formField;

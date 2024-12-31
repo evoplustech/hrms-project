@@ -17,6 +17,23 @@ const getAllDesig = async(request,response)=>{
   }
 }
 
+const getRevelentDesig = async(request,response)=>{
+  try{
+    const {role:empRole} = request;  
+    const {department} = request.params;
+
+    if(empRole.toLowerCase() !== 'admin')
+      return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false});
+
+    const allRecords = await designationModel.find({department});
+    response.status(200).json({data:allRecords,success:true})
+
+  }catch(error){
+    console.error(`Error Message : ${error.message}`);
+    response.status(500).json({error:"Internal Server Error",success:false})
+  }
+}
+
 const createDesig = async(request,response)=>{
   try{
     const {role:empRole} = request;
@@ -97,4 +114,4 @@ const deleteAndRestoreDesig = async(request,response)=>{
   }
 }
 
-export {getAllDesig,createDesig,updateDesig,deleteAndRestoreDesig}
+export {getAllDesig,getRevelentDesig,createDesig,updateDesig,deleteAndRestoreDesig}

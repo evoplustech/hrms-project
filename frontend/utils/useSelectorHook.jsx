@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 const useSelectorHook = (param) => {
+  
     try{
       const stateData = pickStateSelector(param);
       const selectState = useSelector(stateData);
@@ -13,9 +14,16 @@ const useSelectorHook = (param) => {
 
 const pickStateSelector = (param)=>{
   const slice = param.toLowerCase();
-  
+
   switch(slice){
     case 'authenticateuser' : return (state)=>(state.authenticate);
+    case 'employee' : return (state)=>(state.employee);
+    case 'role' : return (state)=>(state.role);
+    case 'department' : return (state)=>(state.department);
+    case 'designation' : return (state)=>(state.designation);
+    case 'shift' : return (state)=>(state.shift);
+    case 'module' : return (state)=>(state.module);
+
   }
 }
 

@@ -1,17 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
+import { jwtDecode } from "jwt-decode";
 
 export const LoginMiddleware = createAsyncThunk('auth/login',async (formData)=>{
-      const  response = await fetch('/api/authorize/login',{
-        method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(formData)
-      });
-      const result = await response.json();
-      return result;
+  try{
+    const  response = await fetch('/api/authorize/login',{
+      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(formData)
+    });
+    const result = await response.json();
+    return result;
+  }catch(error){
+    console.log(error.message);
+  }
+      
 })
 
 export const LogOutMiddleware = createAsyncThunk('auth/logout',async()=>{
-  console.log('logout triggered');
+
+  try{
+    console.log('logout triggered');
       const  response = await fetch('/api/authorize/logout',{
         method:"GET",
         headers:{"Content-Type":"application/json"}
@@ -19,15 +26,17 @@ export const LogOutMiddleware = createAsyncThunk('auth/logout',async()=>{
       const result = await response.json();
       console.log(result);
       return result;
+  }catch(error){
+    console.log(error.message);
+  }
+  
 })
 
-
-
 const loggedData =(JSON.parse(localStorage.getItem("emplog")) || '');
-
+// jwtDecode() 
 
 const initialState = {
-  data : {},
+  data : loggedData?loggedData:{},
   status:'idle',
   error:'',
   isLogged:loggedData ? true:false

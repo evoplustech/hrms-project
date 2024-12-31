@@ -26,7 +26,7 @@ designation: { type: mongoose.Schema.Types.ObjectId,ref:'Designation',required: 
 //   required: true // Dropdown selection for designation
 // },
 dateOfJoining: { type: Date, required: true },
-employmentType: { type: String, enum: ['Full-Time', 'Part-Time', 'Contract'], required: true },
+employmentType: { type: String, enum: ['Permanent', 'Temporary', 'Trainee'], required: true },
 salary: {
   basic: Number,
   hra: Number,
@@ -37,24 +37,23 @@ workLocation: {
   office: String,
   city: String
 },
-reportingManager: {
-  managerId: { 
-    type:mongoose.Schema.Types.ObjectId,
-    ref:'Employee_professional_detail',
-    required : true
 
-   }
-  // ,managerName: { type: String }
-},
-experience: [
-  {
-    company: String,
-    position: String,
-    fromDate: Date,
-    toDate: Date
-  }
-],
-skills: [String],
+managerId: { 
+  type:mongoose.Schema.Types.ObjectId,
+  ref:'Employee_professional_detail',
+  required : true
+
+  },
+
+// experience: [
+//   {
+//     company: String,
+//     position: String,
+//     fromDate: Date,
+//     toDate: Date
+//   }
+// ],
+// skills: [String],
 // status: { type: String, enum: ['Active', 'Inactive', 'Resigned'], default: 'Active' },
 
 // User Authentication Details

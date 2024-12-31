@@ -77,9 +77,9 @@ leaveBalances: {
   paidLeave: { type: Number,  max:2, default: 0 },
   unpaidLeave: { type: Number,  default: 0 }, // Unpaid leave doesn't affect balance
   compensatoryOff: { type: Number, default: 0 },
-  Others: { type: Number, default: 0 }
+  others: { type: Number, default: 0 }
 },
-
+permissons:{type: Number,max:4,default:0},
 shift: {
   type: mongoose.Schema.Types.ObjectId,
   ref: 'Shift',  // Reference to the Shift collection

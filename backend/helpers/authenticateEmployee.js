@@ -3,15 +3,14 @@ import employeeProfessionalModel from '../models/employee/EmployeeProfessional.m
 const authenticate = async (request,response,next)=>{
     try{
       const {webtoken} = request.cookies;
-      
       if(!webtoken)
         return response.status(401).json({"error":"Authentication failed.Token Missing","success":false});
 
         // validate JWT token
-        const {_id} = jwt.verify(webtoken,process.env.SIGN);
+        const {_id, role, firstName} = jwt.verify(webtoken,process.env.SIGN);
 
         const employeeRecord = await employeeProfessionalModel.findOne({_id,isActive:true}).populate('role','name');
-       console.log(employeeRecord);
+
         // if(verifiedData?.role)
         if(!employeeRecord)
           return response.status(401).json({"error":"Authentication failed. Invalid or missing token","success":false});

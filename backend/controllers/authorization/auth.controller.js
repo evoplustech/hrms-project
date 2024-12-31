@@ -10,7 +10,6 @@ const loginEmployee = async (request,response)=>{
     try{
       
       const {username,password} = request.body;
-      console.log('tst')
 
       if(!username || !password)
         return response.status(400).json({error:"Username or password is Missing",success:false});

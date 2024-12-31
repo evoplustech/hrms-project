@@ -11,8 +11,6 @@ const useActiveTab = () => {
     let tab = urlarray[2];
     let catagoryLink = path.split('/')[urlarray.length-1];
 
-    
-
     const catagory =  {
       employee : [
         {
@@ -65,6 +63,16 @@ const useActiveTab = () => {
           label  :'Apply Leave',
           url : `/${tab}/employeeList`
         }
+      ],
+      configuration : [
+        {
+          label  :'Modules',
+          url : `/home/${tab}/`
+        },
+        {
+          label  :'Dummy',
+          url : `/${tab}/employeeList`
+        }
       ]
     }
 
@@ -72,6 +80,7 @@ const useActiveTab = () => {
       tab='home';
 
     const subCatagory = catagory[tab];
+    
     
     return [tab,subCatagory];
 

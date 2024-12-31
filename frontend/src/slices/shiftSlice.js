@@ -4,9 +4,9 @@ import httpRequest from "../../utils/httpRequest";
 
 
 
-export const fetchAllEmployees = createAsyncThunk('/employee/getAll', async ()=>{
+export const fetchAllShifts = createAsyncThunk('/shift/getAll', async ()=>{
   try{    
-      const response = await httpRequest({path:'/api/employee/getAllRecords',method:'get'});
+      const response = await httpRequest({path:'/api/shift/AllShifts',method:'get'});
       console.log(response);
       return response;
   }catch(error){
@@ -16,21 +16,21 @@ export const fetchAllEmployees = createAsyncThunk('/employee/getAll', async ()=>
 
 
 const initialState = {
-  data : {},
+  data : [],
   status : 'idle',
   error: null
 }
 
-const employeeSlice = createSlice({
-  name:'empSlice',
+const shiftSlice = createSlice({
+  name:'shiftSlice',
   initialState,
   reducers:{},
   extraReducers:(builder)=>{
-    builder.addCase(fetchAllEmployees.pending,(state,action)=>{
-      console.log('fetchAllEmployees.pending');
+    builder.addCase(fetchAllShifts.pending,(state,action)=>{
+      console.log('fetchAllShifts.pending');
        state.status= 'pending'
-    }).addCase(fetchAllEmployees.fulfilled,(state,action)=>{
-      console.log('fetchAllEmployees.fulfilled');
+    }).addCase(fetchAllShifts.fulfilled,(state,action)=>{
+      console.log('fetchAllShifts.fulfilled');
       state.status= 'success';
        if(action.payload.success){
         state.data = action.payload.data;
@@ -40,8 +40,8 @@ const employeeSlice = createSlice({
           state.data = {};
           state.error = action.payload.error;
        }
-    }).addCase(fetchAllEmployees.rejected,(state,action)=>{
-      console.log('fetchAllEmployees.rejected');
+    }).addCase(fetchAllShifts.rejected,(state,action)=>{
+      console.log('fetchAllShifts.rejected');
       // state.error = null;
       // state.status= 'failed';
       // state.data={};
@@ -50,41 +50,4 @@ const employeeSlice = createSlice({
 });
 
 
-export default employeeSlice.reducer;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default shiftSlice.reducer;

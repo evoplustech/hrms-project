@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 const ShiftSchema = new mongoose.Schema({
-  shiftName: {
+  name: {
     type: String,
     required: true,
     trim: true

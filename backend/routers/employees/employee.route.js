@@ -1,6 +1,6 @@
 import express from 'express'
 import { createPersonalDetail,updatePersonalDetail,deletePersonalDetail, getAllPersonalDetail } from '../../controllers/employees/employee.personal.controller.js';
-import { createProfDetail,updateProRecord,deleteProRecord, getReportingManagerList } from '../../controllers/employees/employee.professional.controller.js';
+import { createProfDetail,updateProRecord,deleteProRecord,resetPassword, getReportingManagerList,getAllEmployees } from '../../controllers/employees/employee.professional.controller.js';
 import { authenticate } from '../../helpers/authenticateEmployee.js';
 
 
@@ -13,7 +13,10 @@ employeeRouter.get('/getAll/personal',authenticate,getAllPersonalDetail)
 .post('/create/professional',authenticate,createProfDetail)
 .put('/update/professional/:empId',authenticate,updateProRecord)
 .delete('/delete/professional/:empId',authenticate,deleteProRecord)
+.put('/credentials/reset/:empId',authenticate,resetPassword)
+.get('/getAllRecords',authenticate,getAllEmployees)
 .get('/getreportingmanagers',getReportingManagerList);
+
 
 export default employeeRouter;
 

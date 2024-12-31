@@ -4,26 +4,29 @@ import employeeProfessionalModel from '../../models/employee/EmployeeProfessiona
 const createProfDetail = async (request,response)=>{
   try{
     
-    const {empPersonalId,employeeId,department,designation,dateOfJoining,employmentType,reportingManager,email,password,confirmPassword,role,shift} = request.body;
-    const {role:empRole} = request;
-    console.log(role);
-    console.log(empRole);
-      if(empRole.toLowerCase() !=='admin')
-         return response.status(403).json({ "error": "Access denied. You do not have permission to perform this action.","success":false });
+    const {empPersonalId,employeeId,department,designation,dateOfJoining,employmentType,managerId,email,password,confirmPassword,role,shift,office,city,basic,hra,allowances,total} = request.body;
 
-    if(!empPersonalId || !employeeId || !department || !designation || !dateOfJoining || !employmentType  || !reportingManager  || !email || !password || !confirmPassword || !role || !shift ){
-        return response.status(404).json({"error":"Validation Failed Form Fields Missing","success": false});
+    
+
+    const {role:empRole} = request;
+    console.log(request.body);
+    // console.log(empRole);
+      if(empRole.toLowerCase() !=='admin')
+         return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
+
+    if(!empPersonalId || !employeeId || !department || !designation || !dateOfJoining || !employmentType  || !managerId  || !email || !password || !confirmPassword || !role || !shift ){
+        return response.status(404).json({error:"Validation Failed Form Fields Missing",success: false});
     } 
 
     // Check for duplicate EmpId
      const getEmployees = await employeeProfessionalModel.findOne({employeeId});
       if(getEmployees)
-        return response.status(409).json({"error" : "Duplicate Id Found Employee Id Already Exists","success": false});
+        return response.status(409).json({error : "Duplicate Id Found Employee Id Already Exists",success: false});
 
     // Check for duplicate Username
     const getUsername = await employeeProfessionalModel.findOne({email});
     if(getUsername)
-      return response.status(400).json({"error":"Duplicate username or Email Id Found","success": false});
+      return response.status(400).json({error:"Duplicate username or Email Id Found",success: false});
 
     // validate if the user is admin or not
     // if(request.jwtToken !=='admin')
@@ -31,7 +34,7 @@ const createProfDetail = async (request,response)=>{
 
     // Validate confirm Password
     if(confirmPassword!==password)
-      return response.status(400).json({"error":"Password and confirm password mismatch","success": false});
+      return response.status(400).json({error:"Password and confirm password mismatch",success: false});
 
     // encrypting the password
       const saltValue = await bcrypt.genSalt(10);
@@ -41,16 +44,18 @@ const createProfDetail = async (request,response)=>{
      
       request.body.dateOfJoining = new Date(dateOfJoining);
       request.body.password = hashPassword;
+      request.body.workLocation = {office,city};
+      request.body.salary = {basic,hra,allowances,total};
 
       // const createProDetail = await employeeProfessionalModel.create(request.body);
       const createProDetail = new employeeProfessionalModel(request.body);
         await createProDetail.save();
 
     
-    return response.status(201).json({ "message": "Professional details created successfully", "data": createProDetail,"success": true });
+    return response.status(201).json({ message: "Professional details created successfully", data: createProDetail,"success": true });
   }catch(error){
     console.log(error.message);
-    response.status(500).json({"error":"Internal Server Error","success": false});
+    response.status(500).json({error:"Internal Server Error",success: false});
   }
 
 }
@@ -60,17 +65,19 @@ const createProfDetail = async (request,response)=>{
 
 async function updateProRecord(request,response){
   try{
-    const {empPersonalId,employeeId,department,designation,dateOfJoining,employmentType,reportingManager,role,shift} = request.body;
+    console.log('this is response====>',request.body);
+    const {empPersonalId,employeeId,email,department,designation,dateOfJoining,employmentType,managerId,role,shift,conformation,basic,hra,allowances,total,office,city} = request.body || {};
     const {role:empRole} = request;
+    
 
-    if(empRole !=='admin')
+    if(empRole.toLowerCase() !=='admin')
          return response.status(403).json({ "error": "Access denied. You do not have permission to perform this action.","success":false });
 
-    if(!empPersonalId || !employeeId || !department || !designation || !dateOfJoining || !employmentType  || !reportingManager  ||  !role || !shift ){
+    if(!empPersonalId || !email || !employeeId || !department || !designation || !dateOfJoining || !employmentType  || !managerId  ||  !role || !shift ){
         return response.status(404).json({"error":"Validation Failed Form Fields Missing","success": false});
     } 
 
-        const {empId} = request.params;
+    const {empId} = request.params;
     // check if the resord is present
 
     if(!empId)
@@ -81,11 +88,25 @@ async function updateProRecord(request,response){
       if(!empRecord)
         return response.status(400).json({"error":"No Specified Employee found","success": false});
 
-      request.body.dateOfJoining = new Date(dateOfJoining);
+    // structure the object according to schema
+    const updateData = {
+      empPersonalId,
+      email,
+      department,
+      conformation: conformation ?? false,
+      designation,
+      dateOfJoining: new Date(dateOfJoining),
+      employmentType,
+      managerId,
+      role,
+      shift,
+      salary: { basic, hra, allowances, total },
+      workLocation: { office, city },
+    };
 
-      await employeeProfessionalModel.updateOne({_id:empId}, {$set:request.body});
-
-      response.status(200).json({"message":"Record Updated Successfully","success": true});
+      // return response.status(200).json({message:"Record Updated Successfully",data:updateData,"success": true});
+      await employeeProfessionalModel.updateOne({_id:empId}, {$set:updateData});
+      response.status(200).json({message:"Record Updated Successfully",success: true});
   }catch(error){
     console.log(error.message);
     response.status(500).json({"error":"Internal Server Error","success": false});
@@ -100,7 +121,7 @@ async function deleteProRecord(request,response){
     const {empId} = request.params;
     const {role:empRole} = request;
 
-    if(empRole !=='admin')
+    if(empRole.toLowerCase() !=='admin')
          return response.status(403).json({ "error": "Access denied. You do not have permission to perform this action.","success":false });
 
     if(!empId)
@@ -124,21 +145,91 @@ async function deleteProRecord(request,response){
 // Function To get The reporting manager list
 async function getReportingManagerList(request,response){
 try{
+  const reporingManagerObj = [];
 
-  const reportingList = await employeeProfessionalModel.find({role :{$ne:'employee'}}).populate('empPersonalId','firstName lastName').select('_id empPersonalId');
+  const papulateList = await employeeProfessionalModel.find().populate('role','name').populate('empPersonalId','firstName lastName').select('firstName lastName name');
 
-  if(reportingList.length === 0)
-    return response.status(404).json({ "message": 'No Reporting Employees Found',"success": false});
+  
 
-  response.status(200).json({"data":reportingList,"success": true});
+  if(papulateList.length === 0)
+    return response.status(404).json({ error: 'No Reporting Employees Found',success: false});
+
+
+  const reportingList =  papulateList.filter((value)=>{
+        return value['role'].name.toLowerCase() !=='employee';
+  }
+  );
+
+  // console.log('===>',reportingList);
+
+if(reportingList.length ===0 )
+  return response.status(404).json({ error: 'No Reporting Employees Found',success: false});
+
+  response.status(200).json({data:reportingList,success: true});
 
 }catch(error){
   console.log(error.message);
-  response.status(500).json({"error":"Internal server error","success": false});
+  response.status(500).json({error:"Internal server error",success: false});
 }
 
+}
+
+const getAllEmployees = async (request,response)=>{
+  try{
+
+    const {role:empRole} = request;
+
+    if(empRole.toLowerCase() !=='admin')
+      return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
+
+    
+    const empData = await  employeeProfessionalModel.find().populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name');
+   
+    if(!empData)
+      return response.status(200).json({message:"No Records Found",success:true});
+
+    response.status(200).json({message:'employee Reords',data:empData,success:true});
+
+  }catch(error){
+    console.log(error.message);
+    response.status(500).json({error:"Internal Server Error",success:false})
+  }
+}
+
+// function to reset password
+
+const resetPassword = async(request,response)=>{
+
+  try{
+    const {empId} = request.params;
+    const {role:empRole} = request;
+    const {password,confirmPassword} = request.body;
+
+    if(empRole.toLowerCase() !=='admin')
+         return response.status(403).json({ "error": "Access denied. You do not have permission to perform this action.","success":false });
+    if(!password || !confirmPassword)
+      return response.status(404).json({error:"Validation Failed Form Fields Missing",success: false});
+
+    if(confirmPassword!==password)
+      return response.status(400).json({error:"Password and confirm password mismatch",success: false});  
+
+    // encrypting the password
+    const saltValue = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password,saltValue);
+    // Updating the record or password
+    const updatedRecord =   await  employeeProfessionalModel.findOneAndUpdate({empPersonalId:empId},{password:hashPassword});
+
+    if(!updatedRecord)
+      return response.status(404).json({"error":"User not found","success": false});
+
+    response.status(200).json({data:"",message:"Password Reset Successfull",success:true})
+
+  }catch(error){
+    console.log(error.message);
+    response.status(500).json({error:"Internal Server Error",success:false})
+  }
 }
 
  
 
-export {createProfDetail,updateProRecord,deleteProRecord,getReportingManagerList}
+export {createProfDetail,updateProRecord,deleteProRecord,getReportingManagerList,getAllEmployees,resetPassword}

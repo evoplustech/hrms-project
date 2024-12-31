@@ -13,9 +13,9 @@ const createShift = async (request,response)=>{
     if(!isValid)
       return response.status(422).json({error:"Validation failed Form Fields Missing",success: false});
 
-    const {shiftName,startTime,endTime,days} = request.body;
+    const {name,startTime,endTime,days} = request.body;
     
-    const newShift=  new shiftModel({shiftName,startTime,endTime,days});
+    const newShift=  new shiftModel({name,startTime,endTime,days});
     await newShift.save();
 
      response.status(200).json({newShift,"success": true});
@@ -40,9 +40,9 @@ const updateShift = async (request,response)=>{
       return response.status(422).json({error:"Validation failed Form Fields Missing",success: false});
 
     const {shiftId} = request.params;
-    const {shiftName,startTime,endTime,days} = request.body;
+    const {name,startTime,endTime,days} = request.body;
 
-    const editShift = await shiftModel.findOneAndUpdate({_id:shiftId},{shiftName,startTime,endTime,days},{
+    const editShift = await shiftModel.findOneAndUpdate({_id:shiftId},{name,startTime,endTime,days},{
       new:true
     });
 
@@ -90,7 +90,9 @@ const getAllShifts = async (request,response)=>{
     const allShifts = await shiftModel.find();
     const {role:empRole} = request;
 
-    if(empRole !=='admin')
+    console.log(request);
+
+    if(empRole.toLowerCase() !=='admin')
       return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
 
       if(!allShifts)
@@ -108,9 +110,9 @@ const getAllShifts = async (request,response)=>{
 
 // Function To Validate Form Fields
 const validateFormFields= (request)=>{
-  const {shiftName,startTime,endTime,days} =  request.body;
+  const {name,startTime,endTime,days} =  request.body;
 
-  if(!shiftName || !startTime || !endTime || !days)
+  if(!name || !startTime || !endTime || !days)
     return false;
 
   return true;

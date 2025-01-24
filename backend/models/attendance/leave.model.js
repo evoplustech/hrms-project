@@ -65,14 +65,3 @@ const leaveSchema = new mongoose.Schema({
 const leaveModel = mongoose.model('Leave',leaveSchema);
 
 export default leaveModel;
-
-
-
-
-
-
-
-
-
-
-

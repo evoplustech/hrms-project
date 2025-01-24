@@ -8,8 +8,8 @@ const leaveRouter = express.Router();
 leaveRouter
 .post('/applyleave', authenticate, applyLeave)
 .post('/addleavetype', authenticate, addLeaveType)
-.post('/cancelleave', authenticate, cancelLeave)
+// .post('/cancelleave', authenticate, cancelLeave)
 .post('/leaveAction', authenticate, leaveAction)
-.get('/getleavedetails',authenticate,getLeaveDetails)
+.post('/getleavedetails',authenticate,getLeaveDetails)
 
 export default  leaveRouter

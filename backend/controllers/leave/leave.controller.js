@@ -6,33 +6,127 @@ import employeeProfessionalModel from "../../models/employee/EmployeeProfessiona
 
 const getLeaveDetails = async (req,res)=>{
     try {
-        const { role, empId } = req;
 
-        console.log(role,empId)
-        if( role.toLowerCase() === 'employee' ){
-            const leaveDetails = await leaveModel.find({ employeeId: empId })
-            return res.status(200).json({leaveDetails})
-        }else if(role.toLowerCase() === 'manager'){
-            console.log("MAANGER TUE")
-            const employeeDetails = await employeeProfessionalModel.find({ 'reportingManager.managerId' : '67286a64b5f3b4fc1b810ffa' })
-            console.log(employeeDetails)
+        let { role, empId } = req;
+        role = 'admin';
+        let {status, AppliedStartDate, AppliedEndDate, mine } = req.body;
+        const  query = {};
+
+        if( (AppliedStartDate ==='' && AppliedEndDate !=='') || (AppliedStartDate !=='' && AppliedEndDate ==='') ) return res.status(400).json({ success:false, error: "Need Both dates to search Applied Leaves." })
+
+        if( AppliedStartDate === '' && AppliedEndDate === '' ){
+
+            const currentYear = new Date().getFullYear();
+            AppliedStartDate = new Date(`${currentYear}-01-01`);
+            AppliedEndDate = new Date(`${currentYear}-12-31`);
+
+        }else if(AppliedStartDate !== '' && AppliedEndDate !== ''){
+            query.startDate = { $gte: new Date(AppliedStartDate), $lte: new Date(AppliedEndDate) }
+            query.endDate = { $gte: new Date(AppliedStartDate), $lte: new Date(AppliedEndDate) }
         }
-        
-        return res.status(200).json({role,empId})
+
+        if(status !== '') query.status = status
+
+        if(mine === 'mine') query.employeeId = empId;
+
+        if( role.toLowerCase() === 'employee' ){
+            if(mine === 'all') return res.status(400).json({ success:true , error: "Unauthorise to fetch others details"})
+
+        }else if(role.toLowerCase() === 'manager' || role.toLowerCase() === 'tl'){
+
+            if(mine === 'all'){
+                const employeeIdList = await reportingEmployeeIds(empId);
+                query.employeeId = { $in: employeeIdList };
+                if(query.status === '') query.status = { $nin : ['Cancelled'] }
+            }
+            // const leaveDetails = await leaveModel.find(query);
+        }
+        // else if(role.toLowerCase() === 'admin' || role.toLowerCase() === 'hr'){
+        //     if(mine === 'all'){
+            
+        //     }
+        // }
+        // return res.status(200).json({query})
+        // console.log(query)
+
+        const leaveDetails = await leaveModel.find(query).populate([
+            { 
+                path:'employeeId',
+                select: '',
+                // populate: { path:'role', select:'' }
+                populate: [
+                    { path:'empPersonalId', select:'' },
+                    { path:'role', select:'' }
+                ]
+            },
+            { path:'leaveTypeId', select:'' },
+            {
+                path:'approvedBy',
+                select:'',
+                populate: { path:'empPersonalId', select:'' }
+            }
+        ])
+        const leaveDetails_Data = leaveDetails.map((leave) => {
+            // console.log(leave.employeeId.empPersonalId.firstName);
+            const leave_dtails = {
+                leaveId: leave._id,
+                name: (`${leave.employeeId.empPersonalId.firstName} ${leave.employeeId.empPersonalId.lastName}`),
+                leaveType: leave.leaveTypeId.leaveType,
+                startDate: leave.startDate,
+                startDatetype: leave.startDatetype,
+                endDate: leave.endDate,
+                endDatetype: leave.endDatetype,
+                numberofDays: leave.daysCount,
+                leaveReason: leave.reason,
+                leaveStatus: leave.status,
+                approvedBy: leave.approvedBy?.empPersonalId.firstName
+
+            }
+            return leave_dtails;
+        } );
+        // console.log(leaveDetails_Data.length)
+        if(leaveDetails_Data.length){
+            return res.status(200).json({ success:true, data: leaveDetails_Data })
+        }else{
+            return res.status(200).json({ success:true, data: "No Leave Record Found" })
+        }
+
 
     } catch (error) {
         console.log("Error in get Leave Details function in leave controller ::" + error.message)
         return res.status(409).json({ success: false, message: "Internal Server Error"})
     }
 }
+
+async function reportingEmployeeIds(empId) {
+
+    let employeeIds = []; // Store all employee IDs
+
+    // Fetch direct reports of the given manager (empId)
+    const employeeDetails = await employeeProfessionalModel.find({ managerId: empId }).select('_id');
+    
+    // Extract and store the direct report IDs
+    const directReportIds = employeeDetails.map(emp => emp._id);
+    employeeIds.push(...directReportIds);
+
+    // Recursively fetch employees of each direct report
+    for (const id of directReportIds) {
+        const subEmployeeIds = await reportingEmployeeIds(id); // Recursive call
+        employeeIds.push(...subEmployeeIds);
+    }
+
+    return employeeIds;
+}
+
+
 const applyLeave = async (req, res) => {
 
     try {
         const { employeeId, leaveTypeId, startDate, startDatetype, endDate, endDatetype, reason, status = "Pending", approvedBy, approvedOn, isActive } = req.body;
-        const { role } = req;
+
         const start     = parseDate(startDate);
         const end       = parseDate(endDate);
-        let daysCount = compareDates(start, end, startDatetype, endDatetype);
+        let daysCount   = compareDates(start, end, startDatetype, endDatetype);
 
         const leaveType = (await leaveTypeModel.findOne( { _id: leaveTypeId } )).leaveType;
         const holidayList = [{ "holidayName" : "Test", "holidayDate": "2024-12-25", "description": "Christmas" },{ "holidayName" : "Test", "holidayDate": "2024-08-15", "description": "Christmas" },{ "holidayName" : "Test", "holidayDate": "2024-11-26", "description": "Christmas" }]
@@ -53,11 +147,15 @@ const applyLeave = async (req, res) => {
 
         const appliedLeave = await leaveModel.find({
             employeeId,
-            startDate: { $lte: new Date(end), $gte: new Date(start) },
-            endDate: {  $lte: new Date(end), $gte: new Date(start) },
+            // startDate: { $lte: new Date(end), $gte: new Date(start) },
+            // endDate: { $lte: new Date(end), $gte: new Date(start) },
+            $or: [
+                { startDate: { $lte: new Date(end), $gte: new Date(start) } },
+                { endDate: { $lte: new Date(end), $gte: new Date(start) } }
+            ],
             status: { $in: ['Approved', 'Pending'] }
         });
-
+        // return res.status(200).json({appliedLeave,start,end});
         if (appliedLeave.length !== 0 ) {
             return res.status(409).json({
                 success: false,
@@ -70,7 +168,7 @@ const applyLeave = async (req, res) => {
         let diffInMilliseconds = leaveApplyStartDate.setHours(0, 0, 0, 0) - current_date.setHours(0, 0, 0, 0);
         let diffInDays = Math.floor( diffInMilliseconds / (1000 * 60 * 60 * 24) );
         let dayofDate = (leaveType.toLowerCase() === 'casualleave')?start.getDay():end.getDay();
-        console.log(diffInDays)
+        // console.log(diffInDays)
         if(leaveType.toLowerCase() === 'casualleave' && diffInDays < 7 ) return res.status(200).json({ success:false, error : "Casual Leave request should be submitted 7 Days Before Taking Leave" })
 
         if(leaveType.toLowerCase() === 'sickleave'){ 
@@ -153,24 +251,37 @@ const leaveAction = async (req, res) => {
         const { leaveId, action } = req.body;
         const { role,empId } = req;
 
-        if(!['pending','cancelled','rejected','approved'].includes(action.toLowerCase())) return res.status(409).json({success:false, message: "Invalid Action or leave Status." })
-        // Check role authorization
-        if (!['hr', 'admin', 'manager', 'tl'].includes(role.toLowerCase())) {
-            return res.status(401).json({
-                success: false,
-                message: "You are not authorized to approve your own leave request."
-            });
-        }
+        if(!['pending','cancelled','rejected','approved'].includes(action.toLowerCase())) return res.status(409).json({success:false, message: "Invalid Action." })
 
         // Find leave details
         const leaveDetails = await leaveModel.findById(leaveId);
         if (!leaveDetails) {
-            return res.status(400).json({ success: false, message: "Leave request not found or not pending." });
+            return res.status(400).json({ success: false, message: "Leave record not found." });
         }
 
         // Prevent duplicate actions
         if ((leaveDetails.status).toLowerCase() === action.toLowerCase()) {
             return res.status(400).json({ success: false, message: `This leave request has already been ${action}.` });
+        }
+
+        if(leaveDetails.status.toLowerCase() === 'pending' && action.toLowerCase() === 'cancelled'){
+            const leaveExist = await leaveModel.findOneAndUpdate(
+                { _id: leaveId, status: "Pending" },  // Query
+                { $set: { status: "Cancelled" } },    // Update operation
+                { new: true }                         // Return the updated document
+            );
+            if (!leaveExist) {
+                return res.status(400).json({ success: false, message: "The leave request could not be found." });
+            }
+            return res.status(200).json({ success: true, message: "Your leave has been cancelled successfully." });
+        }
+
+        // Check role authorization
+        if (!['hr', 'admin', 'manager', 'tl'].includes(role.toLowerCase()) || leaveDetails.employeeId.toString() === empId ) {
+            return res.status(401).json({
+                success: false,
+                message: "You are not authorized to approve your own leave request."
+            });
         }
 
         let { employeeId, daysCount, leaveTypeId, status, startDate, endDate } = leaveDetails;
@@ -265,78 +376,6 @@ const addLeaveType = async (req, res) => {
     }
 }
 
-// function compareDates(startDate, endDate, startDatetype, endDatetype) {
-//     // Create Date objects from the provided startDate and endDate
-//     const start = new Date(startDate);
-//     const end = new Date(endDate);
-
-//     // Normalize the start and end dates by setting the time to 00:00:00
-//     start.setHours(0, 0, 0, 0);
-//     end.setHours(0, 0, 0, 0);
-
-//     // Ensure both start and end are valid Date objects before proceeding
-//     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-//         return "Invalid date input";  // Invalid date input
-//     }
-
-//     if (start.getTime() === end.getTime()) {
-//         if (startDatetype === 'Half Day Morning' && endDatetype === 'Half Day Afternoon') {
-//             return 1;
-//         }
-
-//         if (startDatetype === endDatetype) {
-//             // If the types match, return 0.5 for half-day types or 1 for full-day types
-//             return ['Half Day Morning', 'Half Day Afternoon'].includes(startDatetype) ? 0.5 : 1;
-//         }
-//     }
-
-
-//     // If the end date is later than the start date, calculate the difference
-//     if (end > start) {
-
-//         let diffDays = (end - start) / (1000 * 3600 * 24);  // Difference in full days
-
-//         // If the start and end are on different days, account for partial days
-//         if (startDatetype === 'Half Day Afternoon' && endDatetype === "Half Day Morning") {
-//             return 1;  // Special case: Full day between Half Day Afternoon and Half Day Morning
-//         }
-
-//         // If the difference is more than one full day, calculate accordingly
-//         if (diffDays >= 2) {
-//             // Invalid combinations (check for startDatetype and endDatetype)
-//             const invalidCombinations = [
-//                 ["Full Day", "Half Day Afternoon"],
-//                 ["Half Day Morning", "Full Day"],
-//                 ["Half Day Morning", "Half Day Afternoon"],
-//                 ["Half Day Afternoon", "Half Day Afternoon"]
-//             ];
-
-//             // Check if the combination exists in the invalidCombinations array
-//             if (invalidCombinations.some(([startType, endType]) => startDatetype === startType && endDatetype === endType)) {
-//                 return "This combination can't be applied.";  // Invalid combination
-//             }
-
-//             // Valid combinations for 1.5 days
-//             if ((startDatetype === "Full Day" && endDatetype === "Half Day Morning") || 
-//                 (startDatetype === "Half Day Afternoon" && endDatetype === "Full Day")) {
-//                 return 1.5;  // Full Day + Half Day Morning = 1.5 days
-//             }
-
-//             // Invalid combination for Half Day Morning + Half Day Afternoon
-//             if (startDatetype === "Half Day Morning" && endDatetype === "Half Day Afternoon") {
-//                 return "This combination can't be applied.";
-//             }
-
-//             // Subtract half day for both start and end dates if applicable
-//             if (['Half Day Morning', 'Half Day Afternoon'].includes(startDatetype)) diffDays -= 0.5;
-//             if (['Half Day Morning', 'Half Day Afternoon'].includes(endDatetype)) diffDays -= 0.5;
-//             return Math.ceil(diffDays);  // Round up the difference in days
-//         }
-//     }
-
-//     return -1;  // Return -1 if the end date is before the start date
-// }
-
 function compareDates(startDate, endDate, startDatetype, endDatetype) {
     // Create Date objects from the provided startDate and endDate
     if( !['full day','half day morning','half day afternoon'].includes(startDatetype.toLowerCase()) || !['full day','half day morning','half day afternoon'].includes(endDatetype.toLowerCase()) ) return "Not valid start and end type";
@@ -391,12 +430,10 @@ function compareDates(startDate, endDate, startDatetype, endDatetype) {
 
         return dayCount;
     }
-    
+
     return -1;
 
 }
-
-
 
 function parseDate(dateStr) {
     const [day, month, year] = dateStr.replace(/[^0-9a-zA-Z]/g, '-').split('-');

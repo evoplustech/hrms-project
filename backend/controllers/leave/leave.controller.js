@@ -8,9 +8,14 @@ const getLeaveDetails = async (req,res)=>{
     try {
 
         let { role, empId } = req;
-        role = 'admin';
-        let {status, AppliedStartDate, AppliedEndDate, mine } = req.body;
+        // role = 'admin';
+        let { status, AppliedStartDate, AppliedEndDate, mine, page, limit } = req.body;
+
+        page = page || page === '' ? 1 : page;
+        limit = limit || limit === '' ? 10 : limit;
+
         const  query = {};
+        const skip = ( page - 1 ) * limit;
 
         if( (AppliedStartDate ==='' && AppliedEndDate !=='') || (AppliedStartDate !=='' && AppliedEndDate ==='') ) return res.status(400).json({ success:false, error: "Need Both dates to search Applied Leaves." })
 
@@ -48,7 +53,7 @@ const getLeaveDetails = async (req,res)=>{
         // }
         // return res.status(200).json({query})
         // console.log(query)
-
+        const totalRecord = await leaveModel.countDocuments(query);
         const leaveDetails = await leaveModel.find(query).populate([
             { 
                 path:'employeeId',
@@ -65,28 +70,33 @@ const getLeaveDetails = async (req,res)=>{
                 select:'',
                 populate: { path:'empPersonalId', select:'' }
             }
-        ])
+        ]).skip(skip).limit(limit)
+
         const leaveDetails_Data = leaveDetails.map((leave) => {
-            // console.log(leave.employeeId.empPersonalId.firstName);
+
+            const startDate = dateFormating(leave.startDate)
+            const endDate   = dateFormating(leave.endDate)
+            const appliedOn = dateFormating(leave.appliedOn)
             const leave_dtails = {
                 leaveId: leave._id,
                 name: (`${leave.employeeId.empPersonalId.firstName} ${leave.employeeId.empPersonalId.lastName}`),
                 leaveType: leave.leaveTypeId.leaveType,
-                startDate: leave.startDate,
+                startDate: startDate,
                 startDatetype: leave.startDatetype,
-                endDate: leave.endDate,
+                endDate: endDate,
                 endDatetype: leave.endDatetype,
                 numberofDays: leave.daysCount,
                 leaveReason: leave.reason,
                 leaveStatus: leave.status,
-                approvedBy: leave.approvedBy?.empPersonalId.firstName
+                approvedBy: leave.approvedBy?.empPersonalId.firstName,
+                appliedOn: appliedOn
 
             }
             return leave_dtails;
         } );
         // console.log(leaveDetails_Data.length)
         if(leaveDetails_Data.length){
-            return res.status(200).json({ success:true, data: leaveDetails_Data })
+            return res.status(200).json({ success:true, totalRecord, page, limit, data: leaveDetails_Data })
         }else{
             return res.status(200).json({ success:true, data: "No Leave Record Found" })
         }
@@ -362,6 +372,7 @@ const cancelLeave = async (req, res) => {
 const addLeaveType = async (req, res) => {
     try {
         const { leaveType } = req.body;
+        if(req.role !== 'admin') return res.status(400).json({ success: false, message: "Permission Denied."})
         const existLeaveType = await leaveTypeModel.find({leaveType:leaveType});
 
         if(existLeaveType.length !== 0 ){
@@ -378,7 +389,7 @@ const addLeaveType = async (req, res) => {
 
 function compareDates(startDate, endDate, startDatetype, endDatetype) {
     // Create Date objects from the provided startDate and endDate
-    if( !['full day','half day morning','half day afternoon'].includes(startDatetype.toLowerCase()) || !['full day','half day morning','half day afternoon'].includes(endDatetype.toLowerCase()) ) return "Not valid start and end type";
+    if( !['full day','first half','second half'].includes(startDatetype.toLowerCase()) || !['full day','first half','second half'].includes(endDatetype.toLowerCase()) ) return "Not valid start and end type";
     const start = new Date(startDate);
     const end = new Date(endDate);
 
@@ -394,26 +405,26 @@ function compareDates(startDate, endDate, startDatetype, endDatetype) {
 
     if (start.getTime() === end.getTime()) {
 
-        if (endDatetype === 'Half Day Morning' && startDatetype === 'Half Day Afternoon') {
+        if (endDatetype === 'First Half' && startDatetype === 'Second Half') {
             return "Invalid Date and type combination";
         }
 
-        if (startDatetype === 'Half Day Morning' && endDatetype === 'Half Day Afternoon') {
+        if (startDatetype === 'First Half' && endDatetype === 'Second Half') {
             return 1;
         }
 
         if (startDatetype === endDatetype) {
             // If the types match, return 0.5 for half-day types or 1 for full-day types
-            return ['Half Day Morning', 'Half Day Afternoon'].includes(startDatetype) ? 0.5 : 1;
+            return ['First Half', 'Second Half'].includes(startDatetype) ? 0.5 : 1;
         }
-    }else if(start<end){
+    }else if( start < end ){
 
         const invalidCombinations = [
-            ["Full Day", "Half Day Afternoon"],
-            ["Half Day Morning", "Full Day"],
-            ["Half Day Morning", "Half Day Afternoon"],
-            ["Half Day Afternoon", "Half Day Afternoon"],
-            ["Half Day Morning", "Half Day Morning"]
+            ["Full Day", "Second Half"],
+            ["First Half", "Full Day"],
+            ["First Half", "Second Half"],
+            ["Second Half", "Second Half"],
+            ["First Half", "First Half"]
         ];
 
         if (invalidCombinations.some(([startType, endType]) => startDatetype.toLowerCase() === startType.toLowerCase() && endDatetype.toLowerCase() === endType.toLowerCase())) {
@@ -425,8 +436,8 @@ function compareDates(startDate, endDate, startDatetype, endDatetype) {
         end.setHours(0, 0, 0, 0);
         let dayCount = Math.abs( (start - end) / (1000 * 60 * 60 * 24) ) + 1;
 
-        if(['half day afternoon',"half day morning"].includes(startDatetype.toLowerCase())) dayCount-=0.5;
-        if(['half day afternoon',"half day morning"].includes(endDatetype.toLowerCase())) dayCount-=0.5;
+        if(['second half',"first half"].includes(startDatetype.toLowerCase())) dayCount-=0.5;
+        if(['second half',"first half"].includes(endDatetype.toLowerCase())) dayCount-=0.5;
 
         return dayCount;
     }
@@ -436,8 +447,31 @@ function compareDates(startDate, endDate, startDatetype, endDatetype) {
 }
 
 function parseDate(dateStr) {
-    const [day, month, year] = dateStr.replace(/[^0-9a-zA-Z]/g, '-').split('-');
-    return new Date(`${year}-${month}-${day}`);
+    // Normalize the date string by replacing non-numeric characters with hyphens
+    const normalizedDate = dateStr.replace(/[^0-9a-zA-Z]/g, '-');
+
+    const parts = normalizedDate.split('-');
+    let day, month, year;
+
+    // Check for length of parts and identify the format
+    if (parts.length === 3) {
+        if (parts[0].length === 4) { // YYYY-MM-DD format
+            [year, month, day] = parts;
+        } else if (parts[2].length === 4) { // MM-DD-YYYY or DD-MM-YYYY format
+            [month, day, year] = parts; // Assuming it's MM-DD-YYYY
+        } else {
+            [day, month, year] = parts; // Assuming it's DD-MM-YYYY
+        }
+    }
+
+    // Return the date in YYYY-MM-DD format
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
+
+function dateFormating(datastr){
+    const date = new Date(datastr);
+    const formattedDate = date.toISOString().split('T')[0];
+    return formattedDate;
 }
 
 export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails }

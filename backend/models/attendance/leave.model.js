@@ -19,7 +19,7 @@ const leaveSchema = new mongoose.Schema({
   },
   startDatetype:{
     type: String,
-    enum: ['Half Day Morning','Half Day Afternoon','Full Day'],
+    enum: ['First Half','Second Half','Full Day'],
     required: true
   },
   endDate: {
@@ -28,7 +28,7 @@ const leaveSchema = new mongoose.Schema({
   },
   endDatetype:{
     type: String,
-    enum: ['Half Day Morning','Half Day Afternoon','Full Day'],
+    enum: ['First Half','Second Half','Full Day'],
     required: true
   },
   daysCount: {

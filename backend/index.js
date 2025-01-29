@@ -41,7 +41,7 @@ app.use('/api/authorize',authRouter);
 app.use('/api/configure',picklistRouter);
 
 // end point for Leaves apply
-app.use('/leaves',leaveRouter)
+app.use('/api/leaves',leaveRouter)
 
 app.listen(PORT,()=>{
   console.log(`server started to listern on port ${PORT}`);

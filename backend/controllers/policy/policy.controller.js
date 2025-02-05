@@ -51,8 +51,9 @@ const updatePolicy = async (req,res) => {
 
 const deletePolicy = async (req,res) => {
     try {
-
-        if(req.role !== 'admin') return res.status(400).json({ success: false, message: "Permission Denied."})
+        const rolebase = ['admin','hr']
+        // if(req.role !== 'admin') return res.status(400).json({ success: false, message: "Permission Denied."})
+        if(! rolebase.includes((req.role).toLowerCase())) return res.status(400).json({ success: false, message: "Permission Denied."})
 
         const { id } = req.body;
         const policyExist = await policyModel.find({_id:id, isActive:true });

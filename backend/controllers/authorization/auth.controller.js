@@ -16,7 +16,7 @@ const loginEmployee = async (request,response)=>{
 
       
 
-        const empRecord = await employeeProfessionalModel.findOne({email:username}).populate('empPersonalId','firstName lastName profilepic');
+        const empRecord = await employeeProfessionalModel.findOne({email:username}).populate([{path:'empPersonalId',select:'firstName lastName profilepic'},{path:'role',select:''}]);
         
         if(!empRecord)
           return response.status(401).json({error:"Invalid Credentials",success:false});
@@ -34,7 +34,7 @@ const loginEmployee = async (request,response)=>{
 
         console.log(empRecord);
         const {firstName,lastName,profilepic} = empRecord.empPersonalId;
-        
+
         response.status(200).json({data:{_id,firstName,lastName,role,profilepic},success:true});
 
     }catch(error){

@@ -98,7 +98,7 @@ const groupAttendance = async (attendanceList,empid)=>{
     const minutes = Math.floor((differenceInSeconds % 3600) / 60);
     const totalHours = `${hours}:${minutes}`;
 
-    const createAttendance = await   attendanceModel.create({
+    const createAttendance = await attendanceModel.create({
       employeeId : empid,
       date,
       checkInTime : InTime,
@@ -119,12 +119,12 @@ const addBiometricDevice = async (req,res) =>{
 
   try {
 
-    const { deviceName, ipAddress, port, connectionType, status, isActive, method, id } = req.body;
+    const { deviceName, ipAddress, port, connectionType, status, isActive, method, _id } = req.body;
 
     // const adminId = {_id:"672b0a57de2599055050bbfd",type:"admin"};
-    const adminId = {_id:"6729ff2f40e30ad8370fa0a6",type:"admin"};
+    const adminId = {_id:req.empId,type:req.role};
 
-    if(adminId.type !== 'admin'){
+    if((adminId.type).toLowerCase() !== 'admin'){
       return res.status(400).json({success:false,message:`Permission denied: You are not authorized to ${method} a biometric device.`})
     }
 
@@ -138,25 +138,25 @@ const addBiometricDevice = async (req,res) =>{
       const newbiometricModel = new biometricModel({ deviceName, ipAddress, port, connectionType, status, isActive,adminId: adminId._id });
       await newbiometricModel.save();
 
-      return res.status(200).json({success:true,message:"Device Added Successfully."})
-    }else if(method === 'update' && id !== ''){
+      return res.status(200).json({success:true,message:"Device Added Successfully.",data:newbiometricModel})
+    }else if(method === 'update' && _id !== ''){
 
-      const deviceExist = await biometricModel.findOne({_id:id,isActive:true})
+      const deviceExist = await biometricModel.findOne({_id,isActive:true})
+      console.log("device",deviceExist,_id)
+      if(!deviceExist){
+        return res.status(200).json({success:false,error:"Unable to find the Device."})
+      }
+      const response = await biometricModel.findOneAndUpdate({_id}, { deviceName, ipAddress, port, connectionType, status, isActive },{new:true});
+      return res.status(200).json({success:true,message:"Device Updated Successfully.",data:response})
+
+    }else if(method === 'delete' && _id !== ''){
+      const deviceExist = await biometricModel.findOne({_id,isActive:true})
 
       if(!deviceExist){
         return res.status(200).json({success:false,error:"Unable to find the Device."})
       }
-      await biometricModel.findOneAndUpdate({_id:id}, { deviceName, ipAddress, port, connectionType, status, isActive });
-      return res.status(200).json({success:true,message:"Device Updated Successfully."})
 
-    }else if(method === 'delete' && id !== ''){
-      const deviceExist = await biometricModel.findOne({_id:id,isActive:true})
-
-      if(!deviceExist){
-        return res.status(200).json({success:false,error:"Unable to find the Device."})
-      }
-
-      await biometricModel.findOneAndUpdate({_id:id}, { isActive:false });
+      await biometricModel.findOneAndUpdate({_id}, { isActive:false });
       return res.status(200).json({ success:true, message:"Device Deleted Successfully." })
     }
   } catch (error) {
@@ -170,16 +170,17 @@ const getBiometricDevice = async (req,res) =>{
   try {
 
     // const adminId = {_id:"672b0a57de2599055050bbfd",type:"admin"};
-    const adminId = {_id:"6729ff2f40e30ad8370fa0a6",type:"admin"};
-    
-    if(adminId.type !== 'admin'){
+    // const adminId = {_id:"6729ff2f40e30ad8370fa0a6",type:"admin"};
+    const adminId = {_id:req.empId,type:req.role};
+    console.log(adminId);
+    if((adminId.type).toLowerCase() !== 'admin'){
       return res.status(400).json({success:false,message:`Permission denied: You are not authorized to access biometric device details.`})
     }
 
     const biometricDeviceDetails = await biometricModel.find({ isActive:true, adminId:adminId._id });
 
     if(!biometricDeviceDetails.length){
-      return res.status(400).json({success:false,message:`No Device Details Avaliable.`})
+      return res.status(200).json({success:true,data:{}})
     }
     return res.status(200).json({ success: true, data: biometricDeviceDetails });
 

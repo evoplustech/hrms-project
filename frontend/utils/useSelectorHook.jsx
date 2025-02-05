@@ -23,6 +23,7 @@ const pickStateSelector = (param)=>{
     case 'designation' : return (state)=>(state.designation);
     case 'shift' : return (state)=>(state.shift);
     case 'module' : return (state)=>(state.module);
+    case 'biometric': return (state) => (state.biometric)
 
   }
 }

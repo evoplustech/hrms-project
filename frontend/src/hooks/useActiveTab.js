@@ -46,12 +46,14 @@ const useActiveTab = () => {
       ],
       devices : [
         {
-          label  :'Organization',
-          url : `/${tab}/createEmployee`
+          label  :'Device Details',
+          url : `/home/${tab}`,
+          isActve : catagoryLink === 'devices' && true || false
         },
         {
-          label  :'Anncouncement',
-          url : `/${tab}/employeeList`
+          label  :'Add Device',
+          url : `/home/${tab}/adddevice`,
+          isActve : catagoryLink === 'adddevice' && true || false
         }
       ],
       leaves : [

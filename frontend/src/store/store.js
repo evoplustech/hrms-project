@@ -6,6 +6,7 @@ import roleSlice from "../slices/roleSlice";
 import designationSlice from "../slices/designationSlice";
 import shiftSlice from "../slices/shiftSlice";
 import moduleSlice from "../slices/moduleSlice";
+import biometriSlice from "../slices/biometricSlice"
 
 
 
@@ -17,7 +18,8 @@ reducer : {
   department:departmentSlice,
   designation : designationSlice,
   shift:shiftSlice,
-  module:moduleSlice
+  module:moduleSlice,
+  biometric: biometriSlice
 
   // Slices goes here
 }

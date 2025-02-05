@@ -11,6 +11,7 @@ import { fetchAllDepartment } from './slices/departmentSlice';
 import { fetchAllDesignation } from './slices/designationSlice';
 import { fetchAllRoles } from './slices/roleSlice';
 import { fetchAllShifts } from './slices/shiftSlice';
+import { fetchBiometricDevice } from './slices/biometricSlice'
 import Module from './components/home/cofiguration/Module';
 import { getModules } from './slices/moduleSlice';
 
@@ -34,13 +35,15 @@ const ResetPassword = React.lazy(()=>import('./components/Login/ResetPassword'))
 const EmployeeManagement = React.lazy(()=>import('./components/home/employee/EmployeeManagement'));
 const Dashboard = React.lazy(()=>import('./components/home/dashboard/Dashboard'));
 const Attendance = React.lazy(()=>import('./components/home/attendance/Attendance'));
-const BIometric = React.lazy(()=>import('./components/home/devices/BIometric'));
+const Biometric = React.lazy(()=>import('./components/home/devices/Biometric'));
 const Leave = React.lazy(()=>import('./components/home/leave/Leave'));
 const Configuration = React.lazy(()=>import('./components/home/cofiguration/Configuration'));
 const PersonalDetailsForm = React.lazy(()=>import('./components/home/employee/PersonalDetailsForm'));
 const ProfessionalDetailsForm = React.lazy(()=>import('./components/home/employee/ProfessionalDetailsForm'));
 const EmployeeList = React.lazy(()=>import('./components/home/employee/EmployeeList'));
 const UpdateEmployee = React.lazy(()=>import('./components/home/employee/UpdateEmployee'));
+const BiometricDeviceList = React.lazy(()=>import('./components/home/devices/BiometricDeviceList'))
+const AddDevice = React.lazy(()=>import('./components/home/devices/AddDevice'));
 
 
 
@@ -51,13 +54,14 @@ const BaseComponent = ()=>{
 
   useEffect(()=>{
     console.log('hello world');
-    async function  storeData(){
+    async function storeData(){
       await dispatch(fetchAllEmployees());
       await dispatch(fetchAllDepartment());
       await dispatch(fetchAllRoles());
       await dispatch(fetchAllDesignation());
       await dispatch(fetchAllShifts());
       await dispatch(getModules());
+      await dispatch(fetchBiometricDevice());
 
     }
     storeData();
@@ -110,7 +114,19 @@ const BaseComponent = ()=>{
             },
             {
               path:'/home/devices',
-              element:<Suspense><BIometric/></Suspense>
+              element:<Suspense><Biometric/></Suspense>,
+              children:[
+                {
+                  path:'/home/devices/',
+                  element:<Suspense><BiometricDeviceList /></Suspense>
+                },{
+                  path:'/home/devices/adddevice',
+                  element:<Suspense><AddDevice/></Suspense>,
+                },{
+                  path:'/home/devices/adddevice/:id',
+                  element:<Suspense><AddDevice/></Suspense>,
+                }
+              ]
             },
             {
               path:'/home/leaves',

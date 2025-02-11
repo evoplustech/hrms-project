@@ -10,7 +10,7 @@ const Home = () => {
   const [tab,subCatagory] = useActiveTab();
 
   console.log(useActiveTab());
-  
+  console.log(tab)
   return (
     <>
       <div className="">
@@ -22,12 +22,8 @@ const Home = () => {
         </div>
         <Footer/>
       </div>
-      
-      
+    </>
 
-  
-      </>   
-   
   )
 }
 

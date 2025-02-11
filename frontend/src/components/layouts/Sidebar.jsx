@@ -8,6 +8,7 @@ import { IoFingerPrint } from "react-icons/io5";
 import { TbSettingsCog } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 import useSelectorHook from '../../../utils/useSelectorHook';
+import { MdPolicy } from "react-icons/md";
 
 const Sidebar = ({tab}) => {
 
@@ -61,12 +62,16 @@ const sideWidth = {
           </Link>
           <Link to="/home/attendance" className={`px-4 py-2  font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='attendance' ? active:''}`}><GiTimeBomb className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Attendance'}</Link>
-          {data.role.name.toLowerCase() === 'admin' && <Link to="/home/devices" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='devices' ? active:''}`}><IoFingerPrint  className="w-6 h-6 me-2 text-orange-600"/>
-          {sidebarToggle ? '':'Bio-Metric'} </Link> }
+          {data.role.name.toLowerCase() === 'admin'&&<Link to="/home/devices" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='devices' ? active:''}`}><IoFingerPrint  className="w-6 h-6 me-2 text-orange-600"/>
+          {sidebarToggle ? '':'Bio-Metric'}</Link>}
           <Link to="/home/leaves" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='leaves' ? active:''}`}><GiIsland  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Leave'}</Link>
           <Link to="/home/configuration" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='configuration' ? active:''}`}><TbSettingsCog  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Configuration'}</Link>
+
+          <Link to="/home/policy" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='policy' ? active:''}`}><MdPolicy  className="w-6 h-6 me-2 text-orange-600"/>
+          {sidebarToggle ? '':'policy'}</Link>
+
         </div>
       </nav>
     </aside>

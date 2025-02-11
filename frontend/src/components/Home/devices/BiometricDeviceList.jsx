@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import useSelectorHook from '../../../../utils/useSelectorHook';
 import httpRequest from '../../../../utils/httpRequest';
-import { fetchBiometricDevice } from '../../../slices/biometricSlice';
+import { fetchBiometricDevice, deleteBiometericDevice } from '../../../slices/biometricSlice';
 
 const BiometricDeviceList = () => {
     const dispatch = useDispatch();
@@ -21,8 +21,10 @@ const BiometricDeviceList = () => {
         }
         if(confirm(`Are you sure you want to delete this Device ${name}`)){
             const response = await httpRequest({path:'/api/biometric/addbiometricdevice', method:'post', data:device_detail});
+            dispatch(deleteBiometericDevice({id}))
             alert(response.message)
-            dispatch(fetchBiometricDevice())
+            
+            
         }
     }
 

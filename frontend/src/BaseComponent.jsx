@@ -44,6 +44,7 @@ const EmployeeList = React.lazy(()=>import('./components/home/employee/EmployeeL
 const UpdateEmployee = React.lazy(()=>import('./components/home/employee/UpdateEmployee'));
 const BiometricDeviceList = React.lazy(()=>import('./components/home/devices/BiometricDeviceList'))
 const AddDevice = React.lazy(()=>import('./components/home/devices/AddDevice'));
+const Policy = React.lazy(()=>import('./components/home/policy/Policy'));
 
 
 
@@ -53,7 +54,7 @@ const BaseComponent = ()=>{
   
 
   useEffect(()=>{
-    console.log('hello world');
+    // console.log('hello world');
     async function storeData(){
       await dispatch(fetchAllEmployees());
       await dispatch(fetchAllDepartment());
@@ -138,7 +139,11 @@ const BaseComponent = ()=>{
                 path:'/home/configuration/',
                 element:<Suspense><Module/></Suspense>,
               }]
+            },{
+              path:'/home/policy',
+              element:<Suspense><Policy /></Suspense>,
             }
+
           ]
         },{
           path:'/forget-password',

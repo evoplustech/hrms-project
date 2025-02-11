@@ -75,6 +75,16 @@ const useActiveTab = () => {
           label  :'Dummy',
           url : `/${tab}/employeeList`
         }
+      ],
+      policy : [
+        {
+          label  :'Policy List',
+          url : `/home/${tab}/`
+        },
+        {
+          label  :'Add Policy',
+          url : `/${tab}/employeeList`
+        }
       ]
     }
 

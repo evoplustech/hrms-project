@@ -34,7 +34,13 @@ const initialState = {
 const biometricSlice = createSlice({
   name: "biometricSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    deleteBiometericDevice: (state,action) => {
+        console.log('test',action.payload);
+        const deleteId = action.payload.id
+        state.data = state.data.filter(device => device._id !== deleteId);
+    }
+  },
   extraReducers: (builder) => {
     // Handle fetchBiometricDevice
     builder
@@ -92,6 +98,7 @@ const biometricSlice = createSlice({
   }
 });
 
+export const { deleteBiometericDevice } = biometricSlice.actions;
 // Selector for biometric details
 export const biometricDetails = (state) => state.biometricSlice.data;
 

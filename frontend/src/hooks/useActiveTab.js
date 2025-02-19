@@ -58,12 +58,14 @@ const useActiveTab = () => {
       ],
       leaves : [
         {
-          label  :'Leave Requests',
-          url : `/${tab}/createEmployee`
+          label  :'Leaves',
+          url : `/home/${tab}`,
+          isActve : catagoryLink === 'leaves' && true || false
         },
         {
-          label  :'Apply Leave',
-          url : `/${tab}/employeeList`
+          label  :'Leave Requests',
+          url : `/home/${tab}/leaverequest`,
+          isActve : catagoryLink === 'leaverequest' && true || false
         }
       ],
       configuration : [
@@ -79,11 +81,14 @@ const useActiveTab = () => {
       policy : [
         {
           label  :'Policy List',
-          url : `/home/${tab}/`
+          url : `/home/${tab}`,
+          isActve : catagoryLink === 'policy' && true || false
+
         },
         {
           label  :'Add Policy',
-          url : `/${tab}/employeeList`
+          url : `/home/${tab}/addpolicy`,
+          isActve : catagoryLink === 'addpolicy' && true || false
         }
       ]
     }

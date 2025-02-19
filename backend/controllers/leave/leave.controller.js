@@ -11,9 +11,14 @@ const getLeaveDetails = async (req,res)=>{
         // role = 'admin';
         let { status, AppliedStartDate, AppliedEndDate, mine, page, limit } = req.body;
 
+        // page = ( page === '' || !page ) ? 1 : page;
+        // limit = ( limit === '' || !limit ) ? 10 : limit;
+        // console.log(page,limit)
+        
         page = page || page === '' ? 1 : page;
         limit = limit || limit === '' ? 10 : limit;
 
+        // console.log(page,limit)
         const  query = {};
         const skip = ( page - 1 ) * limit;
 

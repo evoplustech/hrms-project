@@ -6,7 +6,9 @@ import roleSlice from "../slices/roleSlice";
 import designationSlice from "../slices/designationSlice";
 import shiftSlice from "../slices/shiftSlice";
 import moduleSlice from "../slices/moduleSlice";
-import biometriSlice from "../slices/biometricSlice"
+import biometriSlice from "../slices/biometricSlice";
+import policySlice from "../slices/policySlice";
+import leaveSlice from "../slices/leaveSlice"
 
 
 
@@ -19,10 +21,13 @@ reducer : {
   designation : designationSlice,
   shift:shiftSlice,
   module:moduleSlice,
-  biometric: biometriSlice
+  biometric: biometriSlice,
+  policy: policySlice,
+  leave: leaveSlice
 
   // Slices goes here
 }
 })
+
 
 export default store;

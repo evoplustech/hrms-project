@@ -35,7 +35,7 @@ const AddDevice = () => {
         deviceName: "",
         ipAddress: "",
         port: "",
-        connectionType: "",
+        connectionType: "Ethernet",
         status: "Online",
         isActive: true,
         method:'add',
@@ -53,6 +53,7 @@ const AddDevice = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if(formData.deviceName ==='' || formData.port === '' || formData.ipAddress === ''){
       setFormError('*All the field must be filled')
       return false
@@ -71,9 +72,9 @@ const AddDevice = () => {
     if (id) {
       setFormData({...formData,id:id})
     }
-    console.log(formData)
+    // console.log(formData)
     // return false;
-    const res = await dispatch(addBiometricDevice(formData))
+    dispatch(addBiometricDevice(formData))
     // const response = await httpRequest({path:'/api/biometric/addbiometricdevice',method:'post',data:formData})
     // console.log(response);
 

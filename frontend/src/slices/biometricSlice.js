@@ -7,7 +7,7 @@ export const fetchBiometricDevice = createAsyncThunk('/fetchbiometric', async ()
     const response = await httpRequest({ path: '/api/biometric/getbiometricdevice', method: 'get' });
     return response;  // Return data if success
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Error in Fetch fetchbiometric functionality in Biometric Slice:', error.message);
     throw error;  // Throw error for rejection
   }
 });
@@ -100,6 +100,6 @@ const biometricSlice = createSlice({
 
 export const { deleteBiometericDevice } = biometricSlice.actions;
 // Selector for biometric details
-export const biometricDetails = (state) => state.biometricSlice.data;
+// export const biometricDetails = (state) => state.biometricSlice.data;
 
 export default biometricSlice.reducer;

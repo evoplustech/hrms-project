@@ -9,6 +9,7 @@ import authRouter from './routers/authorization/auth.router.js';
 import leaveRouter from './routers/leaves/leave.route.js';
 import cookieParser from 'cookie-parser';
 import picklistRouter from './routers/configuration/config.route.js';
+import policyRouter from './routers/policy/policy.route.js';
 
 const app = express();
 dotenv.config();
@@ -42,6 +43,9 @@ app.use('/api/configure',picklistRouter);
 
 // end point for Leaves apply
 app.use('/api/leaves',leaveRouter)
+
+app.use('/api/policy',policyRouter)
+
 
 app.listen(PORT,()=>{
   console.log(`server started to listern on port ${PORT}`);

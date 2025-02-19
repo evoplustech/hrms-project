@@ -23,8 +23,6 @@ const BiometricDeviceList = () => {
             const response = await httpRequest({path:'/api/biometric/addbiometricdevice', method:'post', data:device_detail});
             dispatch(deleteBiometericDevice({id}))
             alert(response.message)
-            
-            
         }
     }
 

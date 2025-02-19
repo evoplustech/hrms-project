@@ -9,7 +9,6 @@ const fetchAttendance = async (request,response)=>{
       try{
         const {role} = request;
         const {ip,port} = request.body;
-
         if(role !=='admin')
           return response.status(403).json({ "error": "Access denied. You do not have permission to perform this action.","status":false });
 
@@ -119,7 +118,7 @@ const addBiometricDevice = async (req,res) =>{
 
   try {
 
-    const { deviceName, ipAddress, port, connectionType, status, isActive, method, _id } = req.body;
+    const { deviceName, ipAddress, port, connectionType='Ether', status, isActive, method, _id } = req.body;
 
     // const adminId = {_id:"672b0a57de2599055050bbfd",type:"admin"};
     const adminId = {_id:req.empId,type:req.role};
@@ -168,11 +167,11 @@ const addBiometricDevice = async (req,res) =>{
 
 const getBiometricDevice = async (req,res) =>{ 
   try {
-
+    
     // const adminId = {_id:"672b0a57de2599055050bbfd",type:"admin"};
     // const adminId = {_id:"6729ff2f40e30ad8370fa0a6",type:"admin"};
     const adminId = {_id:req.empId,type:req.role};
-    console.log(adminId);
+
     if((adminId.type).toLowerCase() !== 'admin'){
       return res.status(400).json({success:false,message:`Permission denied: You are not authorized to access biometric device details.`})
     }

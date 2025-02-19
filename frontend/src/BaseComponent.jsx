@@ -14,6 +14,7 @@ import { fetchAllShifts } from './slices/shiftSlice';
 import { fetchBiometricDevice } from './slices/biometricSlice'
 import Module from './components/home/cofiguration/Module';
 import { getModules } from './slices/moduleSlice';
+import { fetchPolicy } from './slices/policySlice';
 
 
 
@@ -45,8 +46,10 @@ const UpdateEmployee = React.lazy(()=>import('./components/home/employee/UpdateE
 const BiometricDeviceList = React.lazy(()=>import('./components/home/devices/BiometricDeviceList'))
 const AddDevice = React.lazy(()=>import('./components/home/devices/AddDevice'));
 const Policy = React.lazy(()=>import('./components/home/policy/Policy'));
-
-
+const PolicyList = React.lazy(()=>import('./components/home/policy/PolicyList'));
+const AddPolicy  = React.lazy(()=>import('./components/home/policy/AddPolicy'));
+const LeaveList = React.lazy(()=> import('./components/home/leave/LeaveList'));
+const LeaveRequest = React.lazy(()=> import('./components/home/leave/LeaveRequest'));
 
 const BaseComponent = ()=>{
   const dispatch = useDispatch();
@@ -63,6 +66,7 @@ const BaseComponent = ()=>{
       await dispatch(fetchAllShifts());
       await dispatch(getModules());
       await dispatch(fetchBiometricDevice());
+      await dispatch(fetchPolicy())
 
     }
     storeData();
@@ -131,7 +135,17 @@ const BaseComponent = ()=>{
             },
             {
               path:'/home/leaves',
-              element:<Suspense><Leave/></Suspense>
+              element:<Suspense><Leave/></Suspense>,
+              children: [
+                {
+                  path:'/home/leaves/',
+                  element: <Suspense><LeaveList /></Suspense>
+                },
+                {
+                  path:'/home/leaves/leaverequest',
+                  element: <Suspense><LeaveRequest /></Suspense>
+                }
+              ]
             },{
               path:'/home/configuration',
               element:<Suspense><Configuration/></Suspense>,
@@ -142,6 +156,21 @@ const BaseComponent = ()=>{
             },{
               path:'/home/policy',
               element:<Suspense><Policy /></Suspense>,
+              children:[
+                {
+                  path:'/home/policy',
+                  element:<Suspense><PolicyList/></Suspense>,
+                },
+                {
+                  path:'/home/policy/addpolicy',
+                  element:<Suspense><AddPolicy/></Suspense>,
+                  
+                },{
+                  path:'/home/policy/addpolicy/:polidyId',
+                  element:<Suspense><AddPolicy/></Suspense>,
+                  
+                }
+              ]
             }
 
           ]

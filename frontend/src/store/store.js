@@ -8,7 +8,8 @@ import shiftSlice from "../slices/shiftSlice";
 import moduleSlice from "../slices/moduleSlice";
 import biometriSlice from "../slices/biometricSlice";
 import policySlice from "../slices/policySlice";
-import leaveSlice from "../slices/leaveSlice"
+import leaveSlice from "../slices/leaveSlice";
+import leavetypeSlice from "../slices/leavetypeSlice"
 
 
 
@@ -23,7 +24,8 @@ reducer : {
   module:moduleSlice,
   biometric: biometriSlice,
   policy: policySlice,
-  leave: leaveSlice
+  leave: leaveSlice,
+  leavetype: leavetypeSlice
 
   // Slices goes here
 }

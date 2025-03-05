@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import useSelectorHook from '../../../../utils/useSelectorHook';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addBiometricDevice } from '../../../slices/biometricSlice';
+import { getUserRole } from '../../../slices/authSlice';
+import Notauthorize from '../Notauthorize';
+
+
 
 
 const AddDevice = () => {
@@ -11,6 +15,8 @@ const AddDevice = () => {
   let { id } = useParams() || '';
   const dispatch =  useDispatch()
   const navigate = useNavigate();
+  const userRole = useSelector(getUserRole)
+
 
   // Initialize formData with default values or fetched data based on id
   const [formData, setFormData] = useState({
@@ -28,7 +34,7 @@ const AddDevice = () => {
     if (id) {
       const biometricData = data.find(item => item._id === id);
       if (biometricData) {
-        setFormData({ ...biometricData,method: 'update' });
+        setFormData({ ...biometricData, method: 'update' });
       }
     }else{
       setFormData({
@@ -81,6 +87,12 @@ const AddDevice = () => {
     navigate('/home/devices')
 
   };
+
+  if(userRole !== 'admin'){
+    return (<>
+      <Notauthorize />
+    </>)
+  }
   
   // Loading check
   if (status === 'loading') {
@@ -109,20 +121,6 @@ const AddDevice = () => {
         />
       </div>
 
-      <div className="mb-6">
-        <label htmlFor="port" className="block text-sm font-medium text-gray-700">
-          Port
-        </label>
-        <input
-          type="number"
-          id="port"
-          name="port"
-          value={formData.port}
-          onChange={handleChange}
-          placeholder="Port"
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
 
       <div className="mb-6">
         <label htmlFor="ipaddress" className="block text-sm font-medium text-gray-700">
@@ -138,6 +136,22 @@ const AddDevice = () => {
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
+      
+      <div className="mb-6">
+        <label htmlFor="port" className="block text-sm font-medium text-gray-700">
+          Port
+        </label>
+        <input
+          type="number"
+          id="port"
+          name="port"
+          value={formData.port}
+          onChange={handleChange}
+          placeholder="Port"
+          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
         <p className='text-red-700 text-center m-2 items-center'>{formError}</p>
       <button
         type="submit"

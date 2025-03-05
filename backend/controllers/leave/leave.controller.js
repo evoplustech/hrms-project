@@ -8,21 +8,22 @@ const getLeaveDetails = async (req,res)=>{
     try {
 
         let { role, empId } = req;
+
         // role = 'admin';
         let { status, AppliedStartDate, AppliedEndDate, mine, page, limit } = req.body;
 
         // page = ( page === '' || !page ) ? 1 : page;
         // limit = ( limit === '' || !limit ) ? 10 : limit;
         // console.log(page,limit)
-        
-        page = page || page === '' ? 1 : page;
-        limit = limit || limit === '' ? 10 : limit;
+
+        page = page === '' ? 1 : page;
+        limit = limit === '' ? 10 : limit;
 
         // console.log(page,limit)
-        const  query = {};
+        const  query = {isActive:true};
         const skip = ( page - 1 ) * limit;
 
-        if( (AppliedStartDate ==='' && AppliedEndDate !=='') || (AppliedStartDate !=='' && AppliedEndDate ==='') ) return res.status(400).json({ success:false, error: "Need Both dates to search Applied Leaves." })
+        if( (AppliedStartDate ==='' && AppliedEndDate !=='') || (AppliedStartDate !=='' && AppliedEndDate ==='') ) return res.status(200).json({ success:false, error: "Need Both dates to search Applied Leaves." })
 
         if( AppliedStartDate === '' && AppliedEndDate === '' ){
 
@@ -37,20 +38,25 @@ const getLeaveDetails = async (req,res)=>{
 
         if(status !== '') query.status = status
 
-        if(mine === 'mine') query.employeeId = empId;
+        if((mine.toLowerCase() === 'mine' || mine ==='')) query.employeeId = empId;
 
         if( role.toLowerCase() === 'employee' ){
-            if(mine === 'all') return res.status(400).json({ success:true , error: "Unauthorise to fetch others details"})
+            if(mine.toLowerCase() === 'others') return res.status(400).json({ success:true , error: "Unauthorise to fetch others details"})
 
         }else if(role.toLowerCase() === 'manager' || role.toLowerCase() === 'tl'){
 
-            if(mine === 'all'){
+            if( mine.toLowerCase() === 'others' ){
                 const employeeIdList = await reportingEmployeeIds(empId);
                 query.employeeId = { $in: employeeIdList };
                 if(query.status === '') query.status = { $nin : ['Cancelled'] }
             }
             // const leaveDetails = await leaveModel.find(query);
+        }else if(role.toLowerCase() === 'admin' ||  role.toLowerCase() === 'hr'){
+            if(mine.toLowerCase() === 'others'){
+                query.employeeId = { $nin: empId };
+            }
         }
+
         // else if(role.toLowerCase() === 'admin' || role.toLowerCase() === 'hr'){
         //     if(mine === 'all'){
             
@@ -75,15 +81,20 @@ const getLeaveDetails = async (req,res)=>{
                 select:'',
                 populate: { path:'empPersonalId', select:'' }
             }
-        ]).skip(skip).limit(limit)
+        ]).skip(skip).limit(limit).sort({appliedOn:-1})
 
         const leaveDetails_Data = leaveDetails.map((leave) => {
 
-            const startDate = dateFormating(leave.startDate)
-            const endDate   = dateFormating(leave.endDate)
-            const appliedOn = dateFormating(leave.appliedOn)
+            const startDate = dateFormating(leave.startDate);
+            const endDate   = dateFormating(leave.endDate);
+            const appliedOn = dateFormating(leave.appliedOn);
+            let approvedBy  = ""
+            // console.log(leave.approvedBy?.empPersonalId.firstName);
+            // (leave.approvedBy?.empPersonalId.firstName)?(approvedBy = leave.approvedBy?.empPersonalId.firstName +leave.approvedBy?.empPersonalId.lastName):"";
+            // console.log(leave.approvedBy);
             const leave_dtails = {
                 leaveId: leave._id,
+                employeeId: leave.employeeId._id,
                 name: (`${leave.employeeId.empPersonalId.firstName} ${leave.employeeId.empPersonalId.lastName}`),
                 leaveType: leave.leaveTypeId.leaveType,
                 startDate: startDate,
@@ -93,7 +104,7 @@ const getLeaveDetails = async (req,res)=>{
                 numberofDays: leave.daysCount,
                 leaveReason: leave.reason,
                 leaveStatus: leave.status,
-                approvedBy: leave.approvedBy?.empPersonalId.firstName,
+                approvedBy: `${leave.approvedBy?.empPersonalId.firstName} ${leave.approvedBy?.empPersonalId.lastName}`,
                 appliedOn: appliedOn
 
             }
@@ -103,7 +114,7 @@ const getLeaveDetails = async (req,res)=>{
         if(leaveDetails_Data.length){
             return res.status(200).json({ success:true, totalRecord, page, limit, data: leaveDetails_Data })
         }else{
-            return res.status(200).json({ success:true, data: "No Leave Record Found" })
+            return res.status(200).json({ success:false, data: "No Leave Record Found" })
         }
 
 
@@ -138,26 +149,25 @@ const applyLeave = async (req, res) => {
 
     try {
         const { employeeId, leaveTypeId, startDate, startDatetype, endDate, endDatetype, reason, status = "Pending", approvedBy, approvedOn, isActive } = req.body;
+        const {role,empId} = req;
+        const shiftName = await employeeProfessionalModel.find({_id: empId}).populate([{
+            path: 'shift',
+            select:""
+        }]);
+
+        const employeeShift = shiftName[0].shift.name;
 
         const start     = parseDate(startDate);
         const end       = parseDate(endDate);
-        let daysCount   = compareDates(start, end, startDatetype, endDatetype);
+
+        let daysCount   = compareDates(start, end, startDatetype, endDatetype,employeeShift);
 
         const leaveType = (await leaveTypeModel.findOne( { _id: leaveTypeId } )).leaveType;
         const holidayList = [{ "holidayName" : "Test", "holidayDate": "2024-12-25", "description": "Christmas" },{ "holidayName" : "Test", "holidayDate": "2024-08-15", "description": "Christmas" },{ "holidayName" : "Test", "holidayDate": "2024-11-26", "description": "Christmas" }]
 
-        // if(['admin','hr','manager'].includes(role.toLowerCase())) return res.status(400).json({ success:false, message:`The ${role} can't apply leave.` })
-
-        // const cancelOrRejectStatuses = ["Cancelled", "Rejected"];
-
-        // if (start.getDay() > end.getDay()) {
-        //     return res.status(400).json({
-        //         error: 'Leave from Friday to Monday is not allowed. Please choose different dates.'
-        //     });
-        // }
 
         if(typeof(daysCount) === 'string'){
-            return res.status(400).json({ success: false, error: daysCount });
+            return res.status(200).json({ success: false, error: daysCount });
         }
 
         const appliedLeave = await leaveModel.find({
@@ -168,13 +178,14 @@ const applyLeave = async (req, res) => {
                 { startDate: { $lte: new Date(end), $gte: new Date(start) } },
                 { endDate: { $lte: new Date(end), $gte: new Date(start) } }
             ],
+            isActive: true,
             status: { $in: ['Approved', 'Pending'] }
         });
         // return res.status(200).json({appliedLeave,start,end});
         if (appliedLeave.length !== 0 ) {
-            return res.status(409).json({
+            return res.status(200).json({
                 success: false,
-                error: "Leave cannot be applied because a previous leave is still in a pending or approved state."
+                message: "Leave cannot be applied because a previous leave is still in a pending or approved state."
             });
         }
 
@@ -218,7 +229,7 @@ const applyLeave = async (req, res) => {
         if( holiday_count.length > 0 ) daysCount -= holiday_count.length;
 
         if (start > end || daysCount === -1) {
-            return res.status(400).json({ success: false, error: "Start date must be less than end date." });
+            return res.status(200).json({ success: false, error: "Start date must be less than end date." });
         }
 
         const [empDetail] = await employeeProfessionalModel.find({ _id: employeeId, isActive: true });
@@ -229,7 +240,7 @@ const applyLeave = async (req, res) => {
 
         if(['sickLeave', 'casualLeave'].includes(leaveType)){
             if (availableLeave <= 0 || daysCount > availableLeave) {
-                return res.status(400).json({
+                return res.status(200).json({
                     success: false,
                     error: `Your ${leaveType} balance is insufficient. Available: ${availableLeave}, Requested: ${daysCount}.`
                 });
@@ -254,7 +265,10 @@ const applyLeave = async (req, res) => {
 
         await newLeaveApply.save();
 
-        return res.status(201).json({ success: true, leaveId: newLeaveApply._id , message: "Leave Applied Successfully."});
+        const query = { _id:newLeaveApply._id };
+        const AppliedLeaveData = await dataFromating(query);
+
+        return res.status(200).json({ success: true, data: AppliedLeaveData , message: "Leave Applied Successfully."});
     } catch (error) {
         console.error("Error applying leave:", error.message);
         return res.status(500).json({ success: false, error: "Failed to apply leave. Please try again later." });
@@ -288,7 +302,9 @@ const leaveAction = async (req, res) => {
             if (!leaveExist) {
                 return res.status(400).json({ success: false, message: "The leave request could not be found." });
             }
-            return res.status(200).json({ success: true, message: "Your leave has been cancelled successfully." });
+            const query = {_id:leaveId}
+            const updatedLeaveData = await dataFromating(query);
+            return res.status(200).json({ success: true, message: "Your leave has been cancelled successfully.",data:updatedLeaveData });
         }
 
         // Check role authorization
@@ -340,9 +356,12 @@ const leaveAction = async (req, res) => {
         }
 
         // Update leave request status
-        await leaveModel.findByIdAndUpdate(leaveId, { $set: { status: action,approvedBy:empId,daysCount: daysCount} });
+        const updateLeave = await leaveModel.findByIdAndUpdate({_id:leaveId}, { $set: { status: action,approvedBy:empId,daysCount: daysCount} },{new: true});
 
-        return res.status(200).json({ success: true, message: `Leave ${action} updated successfully.` });
+        const query = {_id:updateLeave._id}
+        const updatedLeaveData = await dataFromating(query);
+
+        return res.status(200).json({ success: true, message: `Leave ${action} updated successfully.`, data:updatedLeaveData });
     } catch (error) {
         console.error("Leave Action Error:", error);
         return res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -366,7 +385,7 @@ const cancelLeave = async (req, res) => {
         }
 
         // Return success message with updated leave data
-        return res.status(200).json({ success: true, message: "Your leave has been cancelled successfully." });
+        return res.status(200).json({ success: true, message: "Your leave has been cancelled successfully." ,data:leaveExist});
 
     } catch (error) {
         console.log(`Error in the Cancel Leave Controller :: ${error.message}`);
@@ -392,20 +411,31 @@ const addLeaveType = async (req, res) => {
     }
 }
 
-function compareDates(startDate, endDate, startDatetype, endDatetype) {
+const getLeaveTypes = async(req,res) => {
+    try {
+        const leaveTypes = await leaveTypeModel.find({isActive:true})
+        return res.status(200).json({ success: true, data:leaveTypes })
+    } catch (error) {
+        console.log("Error in the get Leave Types functionality in the Leave Cotroller :: "+error.message)
+        return res.status(200).json({ success:false, error: "Internal Server Error."})
+    }
+}
+
+function compareDates(startDate, endDate, startDatetype, endDatetype, employeeShift) {
     // Create Date objects from the provided startDate and endDate
     if( !['full day','first half','second half'].includes(startDatetype.toLowerCase()) || !['full day','first half','second half'].includes(endDatetype.toLowerCase()) ) return "Not valid start and end type";
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Normalize the start and end dates by setting the time to 00:00:00
-    // start.setHours(0, 0, 0, 0);
-    // end.setHours(0, 0, 0, 0);
-
-
     // Ensure both start and end are valid Date objects before proceeding
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-        return "Invalid date input";  // Invalid date input
+        return "Invalid date input";
+    }
+
+    if(employeeShift.toLowerCase() === 'day shift' ){
+        console.log("TRUE");
+    }else{
+        console.log("FALSE");
     }
 
     if (start.getTime() === end.getTime()) {
@@ -450,8 +480,13 @@ function compareDates(startDate, endDate, startDatetype, endDatetype) {
     return -1;
 
 }
-
 function parseDate(dateStr) {
+
+    const [year, month, day] = dateStr.replace(/[^0-9a-zA-Z]/g, '-').split('-');
+    return new Date(`${year}-${month}-${day}`);
+
+} 
+function parseDate1(dateStr) {
     // Normalize the date string by replacing non-numeric characters with hyphens
     const normalizedDate = dateStr.replace(/[^0-9a-zA-Z]/g, '-');
 
@@ -462,9 +497,11 @@ function parseDate(dateStr) {
     if (parts.length === 3) {
         if (parts[0].length === 4) { // YYYY-MM-DD format
             [year, month, day] = parts;
-        } else if (parts[2].length === 4) { // MM-DD-YYYY or DD-MM-YYYY format
+        }
+         else if (parts[2].length === 4) { // MM-DD-YYYY or DD-MM-YYYY format
             [month, day, year] = parts; // Assuming it's MM-DD-YYYY
-        } else {
+        }
+         else {
             [day, month, year] = parts; // Assuming it's DD-MM-YYYY
         }
     }
@@ -479,4 +516,50 @@ function dateFormating(datastr){
     return formattedDate;
 }
 
-export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails }
+async function dataFromating(query){
+    // console.log(query)
+    const data = await leaveModel.find(query).populate([
+        { 
+            path:'employeeId',
+            select: '',
+            populate: [
+                { path:'empPersonalId', select:'' },
+                { path:'role', select:'' }
+            ]
+        },
+        { path:'leaveTypeId', select:'' },
+        {
+            path:'approvedBy',
+            select:'',
+            populate: { path:'empPersonalId', select:'' }
+        }
+    ])
+
+    const formatedData = data.map((leave) => {
+
+        const startDate = dateFormating(leave.startDate)
+        const endDate   = dateFormating(leave.endDate)
+        const appliedOn = dateFormating(leave.appliedOn)
+        // console.log(leave.approvedBy)
+        const leave_dtails = {
+            leaveId: leave._id,
+            employeeId: leave.employeeId._id,
+            name: (`${leave.employeeId.empPersonalId.firstName} ${leave.employeeId.empPersonalId.lastName}`),
+            leaveType: leave.leaveTypeId.leaveType,
+            startDate: startDate,
+            startDatetype: leave.startDatetype,
+            endDate: endDate,
+            endDatetype: leave.endDatetype,
+            numberofDays: leave.daysCount,
+            leaveReason: leave.reason,
+            leaveStatus: leave.status,
+            approvedBy: `${leave.approvedBy?.empPersonalId.firstName} ${leave.approvedBy?.empPersonalId.lastName}`,
+            appliedOn: appliedOn
+
+        }
+        return leave_dtails;
+    } );
+    return formatedData;
+}
+
+export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails, getLeaveTypes }

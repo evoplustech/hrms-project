@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
+import toast from "react-hot-toast";
 
 export const LoginMiddleware = createAsyncThunk('auth/login',async (formData)=>{
   try{
@@ -51,18 +52,20 @@ const authSlice = createSlice({
   extraReducers:(builder)=>{
     builder.addCase(LoginMiddleware.pending,(state,action)=>{
       console.log('LoginMiddleware pending');
-        state.status='pending';
+      state.status='pending';
     }).addCase(LoginMiddleware.fulfilled,(state,action)=>{
       console.log('LoginMiddleware fulfilled');
-        if(action.payload.success){
-          state.data = action.payload.data;
-          localStorage.setItem("emplog",JSON.stringify(action.payload.data));
-          state.isLogged =true;
-          state.error = '';
-        }else{
-          state.error = action.payload.error;
-        }
-        state.status = "success";
+      if(action.payload.success){
+        state.data = action.payload.data;
+        localStorage.setItem("emplog",JSON.stringify(action.payload.data));
+        state.isLogged =true;
+        state.error = '';
+      }else{
+        state.error = action.payload.error;
+        // console.log(action.payload.error);
+        // toast.error(action.payload.error,{duration:10000})
+      }
+      state.status = "success";
     }).addCase(LoginMiddleware.rejected,(state,action)=>{
       console.log('LoginMiddleware rejected');
       state.status='failed';
@@ -80,6 +83,7 @@ const authSlice = createSlice({
 });
 
 
+export const getUserRole  = (state) => state.authenticate.data.role.name.toLowerCase();
 
 export default authSlice.reducer;
 

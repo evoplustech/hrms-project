@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import useSelectorHook from '../../../../utils/useSelectorHook';
 import httpRequest from '../../../../utils/httpRequest';
-import { fetchBiometricDevice, deleteBiometericDevice } from '../../../slices/biometricSlice';
+import { deleteBiometericDevice } from '../../../slices/biometricSlice';
+import Notauthorize from '../Notauthorize';
+import toast from 'react-hot-toast';
+import { getUserRole } from '../../../slices/authSlice';
 
 const BiometricDeviceList = () => {
     const dispatch = useDispatch();
     const { data, error, status } = useSelectorHook('biometric');
+    // const authenticate =  useSelectorHook('authenticateuser')
+    // const userRole = authenticate.data.role.name.toLowerCase();
+    const userRole = useSelector(getUserRole);
 
-    // useEffect(()=>{
-    //   dispatch(fetchBiometricDevice());
-    // },[dispatch])
 
     const deleteDevice = async (name,id) => {
 
@@ -22,21 +25,24 @@ const BiometricDeviceList = () => {
         if(confirm(`Are you sure you want to delete this Device ${name}`)){
             const response = await httpRequest({path:'/api/biometric/addbiometricdevice', method:'post', data:device_detail});
             dispatch(deleteBiometericDevice({id}))
-            alert(response.message)
+            toast.success(response.message)
         }
     }
 
+
+    if(userRole.toLowerCase() !== 'admin'){
+      return (<>
+        <Notauthorize />
+      </>)
+    }
     return (
         <>
           <div className="text-lg font-bold">
             <h1>Biometric Device List</h1>
           </div>
-      
-      
-          {/* Error Message */}
+
           {error && <div className="text-red-500 w-full text-center p-2">{error}</div>}
-      
-          {/* Success and Data Rendering */}
+
           {status === 'success' ? (
             data.length > 0 ? (
               <div className="flex flex-row flex-wrap">

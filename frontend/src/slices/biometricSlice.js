@@ -74,7 +74,7 @@ const biometricSlice = createSlice({
           
           // Check if this is an update or add
           const existingDeviceIndex = state.data.findIndex(device => device._id === newDevice._id);
-            console.log(existingDeviceIndex)
+          // console.log(existingDeviceIndex)
           if (existingDeviceIndex >= 0) {
             // Update existing device
             state.data = state.data.map(device => 

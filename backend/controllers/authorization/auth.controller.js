@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken'
 import ip from 'ip'
 
 
+
 const loginEmployee = async (request,response)=>{
     try{
       
@@ -14,7 +15,11 @@ const loginEmployee = async (request,response)=>{
       if(!username || !password)
         return response.status(400).json({error:"Username or password is Missing",success:false});
 
-      
+        const empIsActive = await employeeProfessionalModel.findOne({email:username,isActive:false})
+
+        if(empIsActive){
+          return response.status(200).json({error:"Your account is inactive. Please reach out to our support team or admin team for help.",success: false});
+        }
 
         const empRecord = await employeeProfessionalModel.findOne({email:username}).populate([{path:'empPersonalId',select:'firstName lastName profilepic'},{path:'role',select:''}]);
         

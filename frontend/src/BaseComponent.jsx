@@ -15,6 +15,8 @@ import { fetchBiometricDevice } from './slices/biometricSlice'
 import Module from './components/home/cofiguration/Module';
 import { getModules } from './slices/moduleSlice';
 import { fetchPolicy } from './slices/policySlice';
+import { fetchLeaves } from './slices/leaveSlice';
+import { getLeaveTypes } from './slices/leavetypeSlice';
 
 
 
@@ -59,14 +61,20 @@ const BaseComponent = ()=>{
   useEffect(()=>{
     // console.log('hello world');
     async function storeData(){
+      const user = JSON.parse(localStorage.getItem("emplog"));
+      
       await dispatch(fetchAllEmployees());
       await dispatch(fetchAllDepartment());
       await dispatch(fetchAllRoles());
       await dispatch(fetchAllDesignation());
       await dispatch(fetchAllShifts());
       await dispatch(getModules());
-      await dispatch(fetchBiometricDevice());
+      // await dispatch(fetchBiometricDevice());
+      await dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
+      dispatch(getLeaveTypes())
       await dispatch(fetchPolicy())
+
+      if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
 
     }
     storeData();

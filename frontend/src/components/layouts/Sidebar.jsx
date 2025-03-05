@@ -12,10 +12,10 @@ import { MdPolicy } from "react-icons/md";
 
 const Sidebar = ({tab}) => {
 
-const [sidebarToggle,setToggle]= useState(false);
-const {isLogged, data} = useSelectorHook('authenticateUser');
+const [ sidebarToggle, setToggle ]= useState(false);
+const { isLogged, data } = useSelectorHook('authenticateUser');
 
-console.log('toggle state=> ',sidebarToggle);
+// console.log('toggle state=> ',sidebarToggle);
 
 const active = 'text-orange-600 bg-orange-100';
 
@@ -38,12 +38,13 @@ const sideWidth = {
       <button className="absolute transform translate-y-20 translate-x-56  m-2" onClick={()=>(setToggle(!sidebarToggle))}><IoChevronBackCircleOutline className="fill-orange-500 stroke-orange-500 h-8 w-8 rounded-full hover:cursor-pointer"/></button>
     }
     <aside className={`shadow-lg h-full p-2 ${sideWidth[sidebarToggle]}`}>
-      <div className="p-4 flex flex-col items-center">
-        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Profile" className={` border-gray-300 rounded-full ${imgSize[sidebarToggle]}`} />
+      <div className="p-4 flex flex-col items-center text-center">
+        {/* <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Profile" className={` border-gray-300 rounded-full ${imgSize[sidebarToggle]}`} /> */}
+        <img src={data.profilepic} alt="Profile" className={` border-gray-300 rounded-full ${imgSize[sidebarToggle]}`} />
         {sidebarToggle ? '':
         <div className="ml-3">
-          <h2 className="text-lg font-bold">Aaron Hamilton</h2>
-          <p className="text-sm text-gray-500">Regional HR Manager</p>
+          <h2 className="text-lg font-bold">{data.firstName} {data.lastName}</h2>
+          <p className="text-sm text-gray-500">{data.role.name}</p>
         </div>
         }
       </div>

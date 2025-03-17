@@ -7,7 +7,7 @@ import { fetchLeaves, leaveAction } from '../../../slices/leaveSlice';
 import LeavePagination from './LeavePagination';
 import Pagelimit from './Pagelimit';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+
 
 
 const LeaveList = () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Pagelimit = ({searchParams,handlePageLimit}) => {
-    console.log("PageLimit")
+
   return (<>
     <label>Page Limit:</label>
     <select value={searchParams.limit} name='limit' className='bg-white border-none mx-2 p-1' onChange={(e)=>handlePageLimit(e)}>

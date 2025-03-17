@@ -100,12 +100,12 @@ const leaveSlice = createSlice({
                 if (state.data.records.length) {
                     // If records exist, unshift (add to the beginning)
                     state.data.records = [action.payload.data[0], ...state.data.records];
-                  } else {
+                } else {
                     // If records are empty, push (add to the end)
                     // state.data.records = [...state.data.records, action.payload.data[0]];
                     state.data.records = [action.payload.data[0]];
 
-                  }
+                }
 
                 state.data.totalRecord++;
                 state.status = "fulfilled";

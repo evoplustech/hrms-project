@@ -90,6 +90,18 @@ const useActiveTab = () => {
           url : `/home/${tab}/addpolicy`,
           isActve : catagoryLink === 'addpolicy' && true || false
         }
+      ],
+      holiday: [
+        {
+          label: "Holiday List",
+          url: `/home/${tab}`,
+          isActve : catagoryLink === 'holiday' && true || false
+        },
+        {
+          label: "Add Holiday",
+          url: `/home/${tab}/addholiday`,
+          isActve : catagoryLink === 'addholiday' && true || false
+        }
       ]
     }
 

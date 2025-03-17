@@ -9,6 +9,7 @@ import { TbSettingsCog } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 import useSelectorHook from '../../../utils/useSelectorHook';
 import { MdPolicy } from "react-icons/md";
+import { MdOutlineHolidayVillage } from "react-icons/md";
 
 const Sidebar = ({tab}) => {
 
@@ -71,7 +72,12 @@ const sideWidth = {
           {sidebarToggle ? '':'Configuration'}</Link>
 
           <Link to="/home/policy" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='policy' ? active:''}`}><MdPolicy  className="w-6 h-6 me-2 text-orange-600"/>
-          {sidebarToggle ? '':'policy'}</Link>
+          {sidebarToggle ? '':'Policy'}</Link>
+
+          <Link to="/home/holiday" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='holiday' ? active:''}`}>
+            <MdOutlineHolidayVillage className='w-6 h-6 me-2 text-orange-600'/>
+            {sidebarToggle ? '':'Holiday'}
+          </Link>
 
         </div>
       </nav>

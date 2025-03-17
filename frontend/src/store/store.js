@@ -10,7 +10,7 @@ import biometriSlice from "../slices/biometricSlice";
 import policySlice from "../slices/policySlice";
 import leaveSlice from "../slices/leaveSlice";
 import leavetypeSlice from "../slices/leavetypeSlice"
-
+import holidaySlice from "../slices/holidaySlice"
 
 
 const store = configureStore({
@@ -25,7 +25,8 @@ reducer : {
   biometric: biometriSlice,
   policy: policySlice,
   leave: leaveSlice,
-  leavetype: leavetypeSlice
+  leavetype: leavetypeSlice,
+  holiday: holidaySlice
 
   // Slices goes here
 }

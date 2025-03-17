@@ -10,6 +10,7 @@ import leaveRouter from './routers/leaves/leave.route.js';
 import cookieParser from 'cookie-parser';
 import picklistRouter from './routers/configuration/config.route.js';
 import policyRouter from './routers/policy/policy.route.js';
+import holidayRoute from './routers/holiday/holiday.route.js';
 
 const app = express();
 dotenv.config();
@@ -25,7 +26,9 @@ const PORT = process.env.PORT || 8000;
 app.get('/ten/one',(req,res)=>{
   res.redirect(301,'https://localhost:6500/api/authorize/logout');
 })
-
+app.get("/connectioncheck",(req,res)=>{
+  res.send('<h1>BackEnd Running...</h1>')
+})
 // endpoint to add bio-metric data to our db
 app.use('/api/biometric',AttendanceRouter);
 
@@ -45,6 +48,8 @@ app.use('/api/configure',picklistRouter);
 app.use('/api/leaves',leaveRouter)
 
 app.use('/api/policy',policyRouter)
+
+app.use('/api/holiday',holidayRoute)
 
 
 app.listen(PORT,()=>{

@@ -13,7 +13,7 @@ const AddDevice = () => {
   const { data, error, status } = useSelectorHook('biometric');
   const [formError,setFormError] = useState('')
   let { id } = useParams() || '';
-  const dispatch =  useDispatch()
+  const dispatch =  useDispatch();
   const navigate = useNavigate();
   const userRole = useSelector(getUserRole)
 

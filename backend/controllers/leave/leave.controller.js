@@ -1,4 +1,5 @@
 
+import { holidayModel } from "../../models/attendance/holiday.model.js";
 import leaveModel from "../../models/attendance/leave.model.js";
 import leaveTypeModel from "../../models/attendance/leaveType.model.js";
 import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
@@ -88,10 +89,11 @@ const getLeaveDetails = async (req,res)=>{
             const startDate = dateFormating(leave.startDate);
             const endDate   = dateFormating(leave.endDate);
             const appliedOn = dateFormating(leave.appliedOn);
-            let approvedBy  = ""
-            // console.log(leave.approvedBy?.empPersonalId.firstName);
-            // (leave.approvedBy?.empPersonalId.firstName)?(approvedBy = leave.approvedBy?.empPersonalId.firstName +leave.approvedBy?.empPersonalId.lastName):"";
-            // console.log(leave.approvedBy);
+            let approvedBy  = "";
+
+            if(leave.approvedBy?.empPersonalId.firstName){
+                approvedBy = `${leave.approvedBy?.empPersonalId.firstName} ${leave.approvedBy?.empPersonalId.lastName}`;
+            }
             const leave_dtails = {
                 leaveId: leave._id,
                 employeeId: leave.employeeId._id,
@@ -104,7 +106,7 @@ const getLeaveDetails = async (req,res)=>{
                 numberofDays: leave.daysCount,
                 leaveReason: leave.reason,
                 leaveStatus: leave.status,
-                approvedBy: `${leave.approvedBy?.empPersonalId.firstName} ${leave.approvedBy?.empPersonalId.lastName}`,
+                approvedBy: approvedBy?approvedBy:'',
                 appliedOn: appliedOn
 
             }
@@ -156,15 +158,15 @@ const applyLeave = async (req, res) => {
         }]);
 
         const employeeShift = shiftName[0].shift.name;
-
         const start     = parseDate(startDate);
         const end       = parseDate(endDate);
-
         let daysCount   = compareDates(start, end, startDatetype, endDatetype,employeeShift);
-
         const leaveType = (await leaveTypeModel.findOne( { _id: leaveTypeId } )).leaveType;
-        const holidayList = [{ "holidayName" : "Test", "holidayDate": "2024-12-25", "description": "Christmas" },{ "holidayName" : "Test", "holidayDate": "2024-08-15", "description": "Christmas" },{ "holidayName" : "Test", "holidayDate": "2024-11-26", "description": "Christmas" }]
-
+        const year = new Date().getFullYear();
+        const holidaystartDate = `${year}-01-01`;
+        const holidayendDate = `${year}-12-31`;
+        const holidayListDetail = await holidayModel.find({ holidayDate : {$gte: new Date(holidaystartDate), $lte: new Date(holidayendDate) } ,isActive: true});
+        const holidayList = FormatHolidayList(holidayListDetail)
 
         if(typeof(daysCount) === 'string'){
             return res.status(200).json({ success: false, error: daysCount });
@@ -432,49 +434,86 @@ function compareDates(startDate, endDate, startDatetype, endDatetype, employeeSh
         return "Invalid date input";
     }
 
-    if(employeeShift.toLowerCase() === 'day shift' ){
-        console.log("TRUE");
+    if( employeeShift.toLowerCase() === 'day shift' ){
+
+        if (start.getTime() === end.getTime()) {
+
+            if (endDatetype === 'First Half' && startDatetype === 'Second Half') {
+                return "Invalid Date and type combination";
+            }
+
+            if (startDatetype === 'First Half' && endDatetype === 'Second Half') {
+                return 1;
+            }
+
+            if (startDatetype === endDatetype) {
+                // If the types match, return 0.5 for half-day types or 1 for full-day types
+                return ['First Half', 'Second Half'].includes(startDatetype) ? 0.5 : 1;
+            }
+        }else if( start < end ){
+
+            const invalidCombinations = [
+                ["Full Day", "Second Half"],
+                ["First Half", "Full Day"],
+                ["First Half", "Second Half"],
+                ["Second Half", "Second Half"],
+                ["First Half", "First Half"]
+            ];
+
+            if (invalidCombinations.some(([startType, endType]) => startDatetype.toLowerCase() === startType.toLowerCase() && endDatetype.toLowerCase() === endType.toLowerCase())) {
+                return "This combination can't be applied.";
+            }
+
+
+            start.setHours(0, 0, 0, 0);
+            end.setHours(0, 0, 0, 0);
+            let dayCount = Math.abs( (start - end) / (1000 * 60 * 60 * 24) ) + 1;
+
+            if(['second half',"first half"].includes(startDatetype.toLowerCase())) dayCount-=0.5;
+            if(['second half',"first half"].includes(endDatetype.toLowerCase())) dayCount-=0.5;
+
+            return dayCount;
+        }
     }else{
-        console.log("FALSE");
-    }
 
-    if (start.getTime() === end.getTime()) {
+        if (start.getTime() === end.getTime()) {
 
-        if (endDatetype === 'First Half' && startDatetype === 'Second Half') {
-            return "Invalid Date and type combination";
+            if ( (startDatetype === 'First Half' && endDatetype === 'Second Half') || ( endDatetype === 'First Half' && startDatetype === 'Second Half') ) {
+                return "Invalid Date and type combination";
+            }
+            
+            if( endDatetype === "Full Day" || startDatetype === "Full Day"){
+                return "Invalid Date and type combination";
+            }
+
+            if (startDatetype === endDatetype) {
+                return ['First Half', 'Second Half'].includes(startDatetype) ? 0.5 : 1;
+            }
+        }else if( start < end ){
+
+            const invalidCombinations = [
+                ["First Half", "Full Day"],
+                ["Full Day", "First Half"],
+                ["Full Day", "Second Half"],
+                ["Second Half", "Full Day"],
+                ["Full Day", "Full Day"]
+            ];
+
+            if (invalidCombinations.some(([startType, endType]) => startDatetype.toLowerCase() === startType.toLowerCase() && endDatetype.toLowerCase() === endType.toLowerCase())) {
+                return "This combination can't be applied.";
+            }
+
+
+            start.setHours(0, 0, 0, 0);
+            end.setHours(0, 0, 0, 0);
+            let dayCount = Math.abs( (start - end) / (1000 * 60 * 60 * 24) ) + 1;
+
+            if(['second half',"first half"].includes(startDatetype.toLowerCase())) dayCount-=0.5;
+            if(['second half',"first half"].includes(endDatetype.toLowerCase())) dayCount-=0.5;
+
+            return dayCount;
+
         }
-
-        if (startDatetype === 'First Half' && endDatetype === 'Second Half') {
-            return 1;
-        }
-
-        if (startDatetype === endDatetype) {
-            // If the types match, return 0.5 for half-day types or 1 for full-day types
-            return ['First Half', 'Second Half'].includes(startDatetype) ? 0.5 : 1;
-        }
-    }else if( start < end ){
-
-        const invalidCombinations = [
-            ["Full Day", "Second Half"],
-            ["First Half", "Full Day"],
-            ["First Half", "Second Half"],
-            ["Second Half", "Second Half"],
-            ["First Half", "First Half"]
-        ];
-
-        if (invalidCombinations.some(([startType, endType]) => startDatetype.toLowerCase() === startType.toLowerCase() && endDatetype.toLowerCase() === endType.toLowerCase())) {
-            return "This combination can't be applied.";
-        }
-
-
-        start.setHours(0, 0, 0, 0);
-        end.setHours(0, 0, 0, 0);
-        let dayCount = Math.abs( (start - end) / (1000 * 60 * 60 * 24) ) + 1;
-
-        if(['second half',"first half"].includes(startDatetype.toLowerCase())) dayCount-=0.5;
-        if(['second half',"first half"].includes(endDatetype.toLowerCase())) dayCount-=0.5;
-
-        return dayCount;
     }
 
     return -1;
@@ -541,6 +580,12 @@ async function dataFromating(query){
         const endDate   = dateFormating(leave.endDate)
         const appliedOn = dateFormating(leave.appliedOn)
         // console.log(leave.approvedBy)
+        let approvedBy  = "";
+
+        if(leave.approvedBy?.empPersonalId.firstName){
+            approvedBy = `${leave.approvedBy?.empPersonalId.firstName} ${leave.approvedBy?.empPersonalId.lastName}`;
+        }
+
         const leave_dtails = {
             leaveId: leave._id,
             employeeId: leave.employeeId._id,
@@ -553,7 +598,7 @@ async function dataFromating(query){
             numberofDays: leave.daysCount,
             leaveReason: leave.reason,
             leaveStatus: leave.status,
-            approvedBy: `${leave.approvedBy?.empPersonalId.firstName} ${leave.approvedBy?.empPersonalId.lastName}`,
+            approvedBy: approvedBy?approvedBy:"",
             appliedOn: appliedOn
 
         }
@@ -562,4 +607,13 @@ async function dataFromating(query){
     return formatedData;
 }
 
+function FormatHolidayList(holidayList){
+
+    const formattedData = holidayList.map(holiday => {
+        const holidayDate = dateFormating(holiday.holidayDate);
+        return {holidayDate,holidayName:holiday.holidayName,description:holiday.description}
+    })
+
+    return formattedData;
+}
 export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails, getLeaveTypes }

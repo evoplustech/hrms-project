@@ -28,6 +28,7 @@ const pickStateSelector = (param)=>{
     case 'policy': return (state)=> (state.policy);
     case 'leave': return (state) => (state.leave);
     case 'leavetype': return (state) => (state.leavetype);
+    case "holiday": return (state)=> (state.holiday);
 
   }
 }

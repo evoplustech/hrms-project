@@ -22,20 +22,19 @@ const LeavePagination = ({ searchParams, limit, page, totalRecord, prevPage, nex
 
     return (<>
     <button 
-        onClick={(e)=>prevPage(page-1)} 
+        onClick={(e)=>prevPage(Number(page)-1)} 
         disabled={Number(page) === 1}
-        className={`px-4 py-2 bg-green-500 text-white rounded-md 
-            ${Number(page) === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-500'}`}
+        className={`px-4 py-2 bg-green-500 text-white rounded-md ${Number(page) === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-500'}`}
     >
         Prev
     </button>
 
 
     {Number(page) > Number(1) && <button 
-        onClick={(e)=>prevPage(page-1)} 
-        className={`px-4 py-2 bg-green-300 text-white rounded-md hover:bg-green-500`}
+        onClick={(e)=>prevPage(Number(page)-1)} 
+        className={`px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400`}
     >
-        {Number(page-1)}
+        {Number(page)-1}
     </button>}
     {/* curren page start */}
     <button 
@@ -47,10 +46,10 @@ const LeavePagination = ({ searchParams, limit, page, totalRecord, prevPage, nex
     {/* curren page end */}
 
     {Number(page) < Number(lastPage) && <button 
-        onClick={(e)=>nextPage(page+1)} 
-        className={`px-4 py-2 bg-green-300 text-white rounded-md hover:bg-green-500`}
+        onClick={(e)=>nextPage(Number(page)+1)} 
+        className={`px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400`}
     >
-        {Number(page+1)}
+        {Number(page)+1}
     </button>}
 
 

@@ -17,6 +17,11 @@ import { getModules } from './slices/moduleSlice';
 import { fetchPolicy } from './slices/policySlice';
 import { fetchLeaves } from './slices/leaveSlice';
 import { getLeaveTypes } from './slices/leavetypeSlice';
+import HolidayLayout from './components/Home/holiday/holidayLayout';
+import HolidayList from './components/Home/holiday/HolidayList';
+import AddHoliday from './components/Home/holiday/AddHoliday';
+import { getHolidayList } from './slices/holidaySlice';
+
 
 
 
@@ -62,6 +67,12 @@ const BaseComponent = ()=>{
     // console.log('hello world');
     async function storeData(){
       const user = JSON.parse(localStorage.getItem("emplog"));
+      const year = new Date().getFullYear();
+      const holidaystartDate = `${year}-01-01`;
+      const holidayendDate = `${year}-12-31`;
+
+      const params = { "startDate":holidaystartDate, "endDate":holidayendDate };
+      dispatch(getHolidayList(params))
       
       await dispatch(fetchAllEmployees());
       await dispatch(fetchAllDepartment());
@@ -177,6 +188,22 @@ const BaseComponent = ()=>{
                   path:'/home/policy/addpolicy/:polidyId',
                   element:<Suspense><AddPolicy/></Suspense>,
                   
+                }
+              ]
+            },{
+              path: "/home/holiday",
+              element: <Suspense><HolidayLayout /></Suspense>,
+              children: [
+                {
+                  path: "/home/holiday",
+                  element: <Suspense><HolidayList /></Suspense>
+                },
+                {
+                  path: "/home/holiday/addholiday",
+                  element: <Suspense><AddHoliday /></Suspense>
+                },{
+                  path: "/home/holiday/addholiday/:id",
+                  element: <Suspense><AddHoliday /></Suspense>
                 }
               ]
             }

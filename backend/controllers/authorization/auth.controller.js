@@ -37,7 +37,7 @@ const loginEmployee = async (request,response)=>{
         // creating JWT for the user
         generateJWTtoken({_id,role},response);
 
-        console.log(empRecord);
+        // console.log(empRecord);
         const {firstName,lastName,profilepic} = empRecord.empPersonalId;
 
         response.status(200).json({data:{_id,firstName,lastName,role,profilepic},success:true});

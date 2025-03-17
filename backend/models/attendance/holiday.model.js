@@ -31,4 +31,4 @@ const holidaySchema = new mongoose.Schema({
 },{timestamps:true});
 
 
-const holidayModel = mongoose.model('Holiday',holidaySchema);
+export const holidayModel = mongoose.model('Holiday',holidaySchema);

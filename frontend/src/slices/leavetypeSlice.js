@@ -5,7 +5,6 @@ import httpRequest from "../../utils/httpRequest";
 export const getLeaveTypes = createAsyncThunk ('getLeaveTypes', async () => {
     try {
         const response = await httpRequest ({ path: '/api/leaves/getleavetypes', method:'get', data:{} });
-        // console.log(response)
         return response;
     } catch (error) {
         console.log(`Error in the Get Leave Type function in the leaveSlice file ::  ${error.message}`);
@@ -41,3 +40,5 @@ const leavetypeSlice = createSlice({
 })
 
 export default leavetypeSlice.reducer
+
+

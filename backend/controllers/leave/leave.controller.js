@@ -163,9 +163,15 @@ const applyLeave = async (req, res) => {
         let daysCount   = compareDates(start, end, startDatetype, endDatetype,employeeShift);
         const leaveType = (await leaveTypeModel.findOne( { _id: leaveTypeId, isActive: true } )).leaveType;
         const year = new Date().getFullYear();
-        const [ holidaystartDate, holidayendDate ] = [ `${year}-01-01`, `${year}-12-31` ]
-        let holidayListDetail = await holidayModel.find({ holidayDate : {$gte: new Date(holidaystartDate), $lte: new Date(holidayendDate) },leavefor:shiftName[0].shift._id,isActive: true,leaveType:{ $nin:["Optional"] } });
+        const [ holidaystartDate, holidayendDate ] = [ `${year}-01-01`, `${year}-12-31` ];
+        const holidayQuery = {holidayDate : {$gte: new Date(holidaystartDate), $lte: new Date(holidayendDate) },leavefor:shiftName[0].shift._id,isActive: true}
 
+        if(leaveType !== 'Optional Holiday')
+        {
+            holidayQuery.holidayType = { $nin:["Optional"] }
+        }
+
+        let holidayListDetail = await holidayModel.find(holidayQuery);
         let holidayList = FormatHolidayList(holidayListDetail)
 
         if(typeof(daysCount) === 'string'){
@@ -400,7 +406,7 @@ const cancelLeave = async (req, res) => {
 const addLeaveType = async (req, res) => {
     try {
         const { leaveType } = req.body;
-        if(req.role !== 'admin') return res.status(400).json({ success: false, message: "Permission Denied."})
+        if(req.role.toLowerCase() !== 'admin') return res.status(400).json({ success: false, message: "Permission Denied."})
         const existLeaveType = await leaveTypeModel.find({leaveType:leaveType});
 
         if(existLeaveType.length !== 0 ){
@@ -476,7 +482,7 @@ function compareDates(startDate, endDate, startDatetype, endDatetype, employeeSh
 
             return dayCount;
         }
-    }else{
+    }else if( employeeShift.toLowerCase() === 'night shift' ){
 
         if (start.getTime() === end.getTime()) {
 
@@ -484,7 +490,7 @@ function compareDates(startDate, endDate, startDatetype, endDatetype, employeeSh
                 return "Invalid Date and type combination";
             }
             
-            if( endDatetype === "Full Day" || startDatetype === "Full Day"){
+            if( endDatetype === "Full Day" || startDatetype === "Full Day" ){
                 return "Invalid Date and type combination";
             }
 
@@ -602,7 +608,6 @@ async function dataFromating(query){
             leaveStatus: leave.status,
             approvedBy: approvedBy?approvedBy:"",
             appliedOn: appliedOn
-
         }
         return leave_dtails;
     } );
@@ -610,16 +615,14 @@ async function dataFromating(query){
 }
 
 function FormatHolidayList(holidayList){
-    if(holidayList.length>0){
+    if( holidayList.length > 0 ){
         const formattedData = holidayList.map(holiday => {
             const holidayDate = dateFormating(holiday.holidayDate);
             return {holidayDate,holidayName:holiday.holidayName,description:holiday.description}
         })
-
-
         return formattedData;
     }
     return [];
-    
 }
+
 export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails, getLeaveTypes }

@@ -45,14 +45,15 @@ const leaveSlice = createSlice({
         builer.addCase(fetchLeaves.pending,(state)=>{
             state.status = "pending";
         }).addCase(fetchLeaves.fulfilled, (state,action) => {
-            state.status        = "fulfilled";
+
             const records       = action.payload.data || []
-            const page          =  action.payload.page || 1
+            const page          = action.payload.page || 1
             const limit         = action.payload.limit || 10
             const totalRecord   = action.payload.totalRecord || 0
-            
+
             if(action.payload.success){
                 state.data = { records, page, limit, totalRecord }
+                state.error = null
             }else{
 
                 if(!action.payload.success && action.payload.error !== undefined ) { 
@@ -62,6 +63,7 @@ const leaveSlice = createSlice({
                 // state.error = action.payload.message;
                 state.data = { records:{}, page:0, limit:10, totalRecord:0 };
             }
+            state.status  = "fulfilled";
         }).addCase(fetchLeaves.rejected, (state,action) => {
             state.status = "rejected";
         }).addCase(leaveAction.pending, (state)=>{
@@ -78,7 +80,6 @@ const leaveSlice = createSlice({
 
                     toast.success(`The Leave has been ${updatedLeave.leaveStatus} successfully.`, {
                         duration: 10000,
-                        position: "top-right",
                         hideProgressBar: false,
                         closeButton: true,
                     });
@@ -92,9 +93,9 @@ const leaveSlice = createSlice({
         }).addCase(applyLeave.pending, (state) => {
             state.status = "pending";
         }).addCase(applyLeave.fulfilled, (state,action) => {
-            
+
             if(action.payload.success){
-                console.log(action.payload.data[0]);
+
                 console.log(state.data.records.length);
                 // state.data.records.length?(state.data.records).unshift(action.payload.data[0]):(state.data.records).push(action.payload.data[0]);
                 if (state.data.records.length) {
@@ -109,6 +110,7 @@ const leaveSlice = createSlice({
 
                 state.data.totalRecord++;
                 state.status = "fulfilled";
+                state.error = null;
             }else{
                 state.error = action.payload.error;
             }

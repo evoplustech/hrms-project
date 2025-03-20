@@ -73,17 +73,16 @@ const BaseComponent = ()=>{
 
       const params = { "startDate":holidaystartDate, "endDate":holidayendDate };
       dispatch(getHolidayList(params))
-      
+
       await dispatch(fetchAllEmployees());
       await dispatch(fetchAllDepartment());
       await dispatch(fetchAllRoles());
       await dispatch(fetchAllDesignation());
       await dispatch(fetchAllShifts());
       await dispatch(getModules());
-      // await dispatch(fetchBiometricDevice());
-      await dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
+      dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
       dispatch(getLeaveTypes())
-      await dispatch(fetchPolicy())
+      dispatch(fetchPolicy())
 
       if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
 
@@ -154,15 +153,15 @@ const BaseComponent = ()=>{
             },
             {
               path:'/home/leaves',
-              element:<Suspense><Leave/></Suspense>,
+              element:<Suspense> <Leave/> </Suspense>,
               children: [
                 {
                   path:'/home/leaves/',
-                  element: <Suspense><LeaveList /></Suspense>
+                  element: <Suspense> <LeaveList /> </Suspense>
                 },
                 {
                   path:'/home/leaves/leaverequest',
-                  element: <Suspense><LeaveRequest /></Suspense>
+                  element: <Suspense> <LeaveRequest /> </Suspense>
                 }
               ]
             },{

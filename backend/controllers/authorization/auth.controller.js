@@ -69,7 +69,7 @@ const processPasswordRequest = async(request,response)=>{
 
     const ip_address = ip.address();
     const {username} = request.body;
-    console.log(request.body);
+
     if(!username)
       return response.status(400).json({error:"Username is Missing",success:false});
 
@@ -97,7 +97,7 @@ const processPasswordRequest = async(request,response)=>{
         html:`<h2 style="color:navy,fontSize:12px">Click On the Below Link To Reset Your Hrms Password<h2><br/><a href="http://${ip_address}:5173/reset-password/${empRecord._id}/${token}">http://localhost:5173/reset-password/${empRecord._id}/${token}</a>`
       }
 
-      console.log(receiver);
+      // console.log(receiver);
 
       await  transporter.sendMail(receiver,(error,emailResponse)=>{
          if(error)

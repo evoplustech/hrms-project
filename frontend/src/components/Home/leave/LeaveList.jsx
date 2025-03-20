@@ -94,7 +94,7 @@ const LeaveList = () => {
     return (<div><p>Loading.....</p></div>)
   }
 
-  if(error){
+  if(error !== null && status !== 'fulfilled'){
     return (<div><p>Unable to fetch the Leave Details Kindly contact your admin</p></div>)
   }
   
@@ -127,9 +127,9 @@ const LeaveList = () => {
           </thead>
           <tbody>
 
-            {data.records?.length ? data.records.map((leave)=>{
+            {data.records?.length ? data.records.map((leave,index)=>{
               return (<>
-                <LeaveLineItem  key={leave.leaveId} leave={leave} userDetail={userDetail} handleAction={handleAction} />
+                <LeaveLineItem  key={index} leave={leave} userDetail={userDetail} handleAction={handleAction} />
               </>)
             }):<tr><td className='text-center border p-4 border-gray-300' colSpan='10'>No Records Found</td></tr>}
 

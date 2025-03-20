@@ -18,9 +18,9 @@ const BiometricDeviceList = () => {
     const deleteDevice = async (name,id) => {
 
         const device_detail= {
-            isActive: false,
-            method: 'delete',
-            _id: id
+          isActive: false,
+          method: 'delete',
+          _id: id
         }
         if(confirm(`Are you sure you want to delete this Device ${name}`)){
             const response = await httpRequest({path:'/api/biometric/addbiometricdevice', method:'post', data:device_detail});
@@ -77,7 +77,7 @@ const BiometricDeviceList = () => {
               <div className="w-full text-center bg-gray-100 p-10 font-semibold">No Record Found</div>
             )
           ) : 
-            (status !== 'success' && status !== 'error') && (
+            (status !== 'success' && status !== 'error' && status !== 'rejected') && (
                 <div className="w-full justify-center relative h-svh">
                   <div className="p-6 rounded-lg">
                     <p className="absolute inset-0 flex items-center justify-center text-2xl text-white font-bold bg-opacity-50 bg-black">

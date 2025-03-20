@@ -17,8 +17,13 @@ const holidaySchema = new mongoose.Schema({
   },
   holidayType: {
     type: String,
-    enum: ['Public', 'Company', 'Custom'],
+    enum: ['Public', 'Company', 'Custom','Optional'],
     default: 'Public'
+  },
+  leavefor:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Shift",
+    required: true
   },
   isRecurring: {
     type: Boolean,

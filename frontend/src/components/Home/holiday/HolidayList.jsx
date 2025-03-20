@@ -26,9 +26,9 @@ const HolidayList = () => {
     }
 
   return (
-    <div className='w-full bg-gray-100 py-3 px-5 rounded-lg min-h-dvh'>
+    <div className='w-full py-3 px-5 rounded-lg'>
         <h1 className='text-3xl font-semibold'>HolidayList</h1>
-        <div className="overflow-x-auto rounded-box border border-gray-500 border-base-content/5 bg-base-100 w-2/3 mx-auto mt-10">
+        <div className="overflow-x-auto rounded-box border border-gray-500 border-base-content/5 bg-base-100 w-full mx-auto mt-10">
         <table className="table text-center items-center">
             <thead >
                 <tr className='font-bold text-black text-xl border-b border-gray-500'>
@@ -45,7 +45,6 @@ const HolidayList = () => {
                     const d = new Date(holiday.holidayDate);
                     let day = weekday[d.getDay()];
                     return (<HolidayListItem key={index} index={index} holiday={holiday} day={day} />)
-                    
                 }):<tr><td className='text-center' colSpan={4}>No Record Found</td></tr>}
                 
             </tbody>

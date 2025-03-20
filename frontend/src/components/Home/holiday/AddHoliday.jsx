@@ -1,34 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import useSelectorHook from '../../../../utils/useSelectorHook';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addHoliday, holidaySheetUpload } from '../../../slices/holidaySlice';
 import Excel from 'exceljs';
 import toast from 'react-hot-toast';
 import { IoMdCloudUpload } from "react-icons/io";
 import { RiAddCircleLine } from "react-icons/ri";
+import Notauthorize from '../Notauthorize';
+import { getUserRole } from '../../../slices/authSlice';
 
 
 const AddHoliday = () => {
+  // console. clear()
   const { data } = useSelectorHook('holiday');
+  const userRole = useSelector(getUserRole);
+  const shift = useSelectorHook("shift");
   const {id} = useParams();
-  const [holidayForm,setHolidayForm] = useState({_id:"", holidayDate:"", holidayName: "", description:"", recurring:false,holidayType:"",method: ""});
+  const [holidayForm,setHolidayForm] = useState({_id:"", holidayDate:"", holidayName: "", description:"",  recurring:false, holidayType:"", method: "", leavefor:""});
   const addHolidayBtn = useRef()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [sheetUploadFlag,setSheetUpload] = useState(false);
 
   useEffect(()=>{
-   
+
     if(id){
       const updatingHoliday = data.find(holiday=> holiday._id === id)
       setHolidayForm({...updatingHoliday, method: "update" })
     }else{
-      addHolidayBtn.current.disabled = false;
-      addHolidayBtn.current.classList.replace("bg-green-800","bg-green-500");
-      addHolidayBtn.current.style.cursor = "pointer";
+      if(addHolidayBtn.current !== undefined){
+        addHolidayBtn.current.disabled = false;
+        addHolidayBtn.current.classList.replace("bg-green-800","bg-green-500");
+        addHolidayBtn.current.style.cursor = "pointer";
+      }
       // setHolidayForm({...holidayForm, method: "add"});
-      setHolidayForm({_id:"", holidayDate:"", holidayName: "", description:"", recurring:false,holidayType:"",method: "add"})
+      setHolidayForm({ _id:"", holidayDate:"", holidayName: "", description:"", recurring:false, holidayType:"", method: "add", leavefor:"" })
     }
   },[id])
 
@@ -38,15 +45,19 @@ const AddHoliday = () => {
   }
 
   const handleAddHoliday = async (e) => {
-    addHolidayBtn.current.disabled = true;
-    addHolidayBtn.current.classList.add("bg-green-800");
-    addHolidayBtn.current.style.cursor = "no-drop";
+    if(addHolidayBtn.current !== undefined){
+      addHolidayBtn.current.disabled = true;
+      addHolidayBtn.current.classList.replace("bg-green-500","bg-green-800");
+      addHolidayBtn.current.style.cursor = "no-drop";
+    }
 
     if(holidayForm.holidayDate === "" || holidayForm.description === "" || holidayForm.holidayName === "" || holidayForm.holidayType === "" || holidayForm.recurring === ""){
-      toast.error('All the Fields must be filled', {duration:6000} )
-      addHolidayBtn.current.disabled = false;
-      addHolidayBtn.current.classList.replace("bg-green-800","bg-green-500");
-      addHolidayBtn.current.style.cursor = "pointer";
+      toast.error('All the Fields must be filled', {duration:5000} )
+      if(addHolidayBtn.current !== undefined){
+        addHolidayBtn.current.disabled = false;
+        addHolidayBtn.current.classList.replace("bg-green-800","bg-green-500");
+        addHolidayBtn.current.style.cursor = "pointer";
+      }
       return false;
 
     }
@@ -66,7 +77,7 @@ const AddHoliday = () => {
     const fileExtension = fileName.split('.').pop().toLowerCase();
     const wb = new Excel.Workbook();
     const reader = new FileReader();
-    const header = ["holidayDate", "holidayName", "holidayType", "description", "Recurring"];
+    const header = ["holidayDate", "holidayName", "holidayType", "description", "Recurring","leavefor"];
 
     if(!['xlsx','xls'].includes(fileExtension)){
       alert("File type must be xlsx OR xls");
@@ -84,13 +95,22 @@ const AddHoliday = () => {
 
                   if(rowIndex>1){
                     const datevalue = row.values[1]
-                    const date =`${datevalue.getFullYear()}-${datevalue.getMonth()+1}-${datevalue.getDate()}`;
+                    // const YY = datevalue.getFullYear();
+                    // const MM = datevalue.getMonth()+1;
+                    // const DD = datevalue.getDate();
+                    // console.log(YY,MM,DD)
+                    // console.log(DD.length)
+                    // const date =`${YY}-${MM}-${DD}`;
+                    const date = new Date(datevalue).toISOString().split("T")[0]
+                    
+                    console.log(date)
                       let data_row = {
                           [header[0]]: date,
                           [header[1]]: row.values[2],
                           [header[2]]: row.values[3],
                           [header[3]]: row.values[4],
                           [header[4]]: row.values[5],
+                          [header[5]]: row.values[6],
                       };
                       sheetData.push(data_row);
                     }
@@ -109,13 +129,20 @@ const AddHoliday = () => {
       alert("Holiday Sheet need to upload.");
       return false;
     }
-
+    console.log(sheetData)
+    // return false;
     const res = await dispatch(holidaySheetUpload({data:sheetData})).unwrap();
     if(res.success){
-      if(action.payload.data !== undefined){
+      if(res.data !== undefined){
         navigate('/home/holiday')
       }
     }
+  }
+
+  if(userRole.toLowerCase() !== 'admin'){
+    return (<>
+      <Notauthorize />
+    </>)
   }
 
   return (<>
@@ -206,6 +233,7 @@ const AddHoliday = () => {
               <option value="Public">Public</option>
               <option value="Company">Company</option>
               <option value="Custom">Custom</option>
+              <option value="Optional">Optional</option>
             </select>
           </div>
 
@@ -224,6 +252,27 @@ const AddHoliday = () => {
               </select>
           </div>
         </div>
+
+        {/* Leave For - Start */}
+        <div className='my-4'>
+            <label htmlFor='description' className='block text-lg font-semibold text-gray-700'>
+              Leave For
+            </label>
+            <select
+              name = 'leavefor'
+              id = 'leavefor'
+              value = {holidayForm.leavefor}
+              onChange = {handlechange}
+              className = 'border w-96 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
+            >
+              <option value="">Select</option>
+              {shift.data.map( (shift,index) =>{
+                return (<option key={index} value={shift.name} > {shift.name}</option>)
+              })}
+
+            </select>
+          </div>
+          {/* Leave For end */}
 
         <div className='my-4'>
           <label htmlFor='holidayDescription' className='block text-lg font-semibold text-gray-700'>

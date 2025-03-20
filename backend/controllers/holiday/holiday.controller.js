@@ -1,17 +1,28 @@
 
 import { holidayModel } from "../../models/attendance/holiday.model.js";
 import { dateFormating } from "../../helpers/dateFormating.js";
+import shiftModel from "../../models/attendance/shift.model.js";
+import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
 
 
 const getHolidayList = async (req,res) => {
     try {
         const  { startDate , endDate } = req.body;
+        const { empId } = req;
+        const shiftName = await employeeProfessionalModel.find({_id: empId}).populate([{
+            path: 'shift',
+            select:""
+        }]);
+
 
         if(startDate>endDate){
             return res.status(200).json({success: false, message:"Invalid Date to search."})
         }
 
-        const holidayListData = await holidayModel.find({ holidayDate : {$gte: new Date(startDate), $lte: new Date(endDate) } ,isActive: true});
+        const holidayListData = await holidayModel.find({ holidayDate : {$gte: new Date(startDate), $lte: new Date(endDate) } ,isActive: true,leavefor:shiftName[0].shift._id}).populate([{
+            path: 'leavefor',
+            select:""
+        }]);
 
         const holidayList = dataFormat(holidayListData);
 
@@ -28,11 +39,12 @@ const getHolidayList = async (req,res) => {
 
 const addHoliday = async (req,res) => {
     try {
-        const { _id="", holidayName, holidayDate, description, holidayType, recurring = false, method } = req.body;
+        const { _id="", holidayName, holidayDate, description, holidayType, recurring = false, method, leavefor } = req.body;
         const {role,empId} = req;
         const {holidayForm}= req.body
-        console.log(holidayForm);
-        
+
+        const shiftId = await shiftModel.findOne({name:leavefor,isActive:true})
+
         if(!['admin','hr'].includes(role.toLowerCase())){
             return res.status(200).json({ success: false, message: "Only Admin or Hr can Add / Edit the Holiday" });
         }
@@ -44,28 +56,38 @@ const addHoliday = async (req,res) => {
             }
 
             const addLeave = new holidayModel({
-                holidayName, holidayDate, description, holidayType, isRecurring: recurring, isActive:true
+                holidayName, holidayDate, description, holidayType, isRecurring: recurring, isActive:true, leavefor:shiftId._id
             });
 
             const addedLeave = await addLeave.save();
-            const holidayList = dataFormat([addedLeave]);
+            const getAddedHoliday = await holidayModel.find({_id:addedLeave._id}).populate([{
+                path:"leavefor",
+                select:""
+            }]);
+            const holidayList = dataFormat(getAddedHoliday);
             return res.status(200).json({ success: true, message: "Holiday Added Successfully", data: holidayList });
 
         }else if(method.toLowerCase() === 'update' && _id !== ""){
+
+            // return
             const existHoliday = await holidayModel.findOne({_id,isActive:true});
             if(!existHoliday){
                 return res.status(200).json({success: false, message: "The Holiday you are trying to update is not existing."});
             }
-            const updateHoliday = await holidayModel.findByIdAndUpdate( {_id}, {$set:{holidayName, holidayDate, description, holidayType, isRecurring: recurring, isActive:true }}, {new:true});
+            const updateHoliday = await holidayModel.findByIdAndUpdate( {_id}, {$set:{holidayName, holidayDate, description, holidayType, isRecurring: recurring, isActive:true, leavefor:shiftId._id }}, {new:true});
 
-            const holidayList = dataFormat([updateHoliday]);
+            const updateAddedHoliday = await holidayModel.find({_id:updateHoliday._id}).populate([{
+                path:"leavefor",
+                select:""
+            }]);
+
+            const holidayList = dataFormat(updateAddedHoliday);
 
             return res.status(200).json({ success: true, message: "Holiday Details Updated Successfully", data:holidayList });
         }
         return res.status(200).json({success: false, message: "Something went Wrong"})
     } catch (error) {
         console.log(`Error in the Holiday controller in addHoliday function.${error.message}`);
-        console.log(error);
         return res.status(409).json({ success: false, message: "Internal Server Error"});
     }
 }
@@ -102,6 +124,8 @@ const uploadHolidaySheet = async (req,res) => {
         let existingHolidayListArr = [];
         for(let i=0;i<data.length;i++){
 
+            const shift = await shiftModel.find({name:data[i].leavefor})
+            data[i] = {...data[i], leavefor:shift[0]._id}
             let exist = await holidayModel.find({holidayDate: new Date(data[i].holidayDate), isActive: true});
             if(!exist.length){
                 newInsertData.push( data[i] );
@@ -109,13 +133,14 @@ const uploadHolidaySheet = async (req,res) => {
                 existingHolidayListArr.push( data[i].holidayDate )
             }
         }
+
         const existingHolidayList = existingHolidayListArr.join(",");
         if(newInsertData.length !== 0 ){
             await holidayModel.insertMany(data);
             const year = new Date().getFullYear();
             const startDate = `${year}-01-01`;
             const endDate = `${year}-12-31`;
-            const holidayList = await holidayModel.find({ holidayDate : {$gte: new Date(startDate), $lte: new Date(endDate) } ,isActive: true});
+            const holidayList = await holidayModel.find({ holidayDate : {$gte: new Date(startDate), $lte: new Date(endDate) } ,isActive: true}).populate([{path:"leavefor",select:""}]);
             const holidayRecordFormat = dataFormat(holidayList);
 
             return res.status(200).json({
@@ -138,14 +163,14 @@ function dataFormat(holidayListData){
 
     const formatData = holidayListData.map(holiday => {
         const holidayDate = dateFormating(holiday.holidayDate);
-
         const data = {
             _id: holiday._id,
             holidayName: holiday.holidayName,
             holidayDate: holidayDate,
             description: holiday.description,
             holidayType: holiday.holidayType,
-            Recurring: holiday.isRecurring
+            Recurring: holiday.isRecurring,
+            leavefor: holiday.leavefor.name
         }
         return data;
     })

@@ -151,7 +151,7 @@ const applyLeave = async (req, res) => {
 
     try {
         const { employeeId, leaveTypeId, startDate, startDatetype, endDate, endDatetype, reason, status = "Pending", approvedBy, approvedOn, isActive } = req.body;
-        const {role,empId} = req;
+        const { role, empId } = req;
         const shiftName = await employeeProfessionalModel.find({_id: empId}).populate([{
             path: 'shift',
             select:""
@@ -161,12 +161,12 @@ const applyLeave = async (req, res) => {
         const start     = parseDate(startDate);
         const end       = parseDate(endDate);
         let daysCount   = compareDates(start, end, startDatetype, endDatetype,employeeShift);
-        const leaveType = (await leaveTypeModel.findOne( { _id: leaveTypeId } )).leaveType;
+        const leaveType = (await leaveTypeModel.findOne( { _id: leaveTypeId, isActive: true } )).leaveType;
         const year = new Date().getFullYear();
-        const holidaystartDate = `${year}-01-01`;
-        const holidayendDate = `${year}-12-31`;
-        const holidayListDetail = await holidayModel.find({ holidayDate : {$gte: new Date(holidaystartDate), $lte: new Date(holidayendDate) } ,isActive: true});
-        const holidayList = FormatHolidayList(holidayListDetail)
+        const [ holidaystartDate, holidayendDate ] = [ `${year}-01-01`, `${year}-12-31` ]
+        let holidayListDetail = await holidayModel.find({ holidayDate : {$gte: new Date(holidaystartDate), $lte: new Date(holidayendDate) },leavefor:shiftName[0].shift._id,isActive: true,leaveType:{ $nin:["Optional"] } });
+
+        let holidayList = FormatHolidayList(holidayListDetail)
 
         if(typeof(daysCount) === 'string'){
             return res.status(200).json({ success: false, error: daysCount });
@@ -213,20 +213,22 @@ const applyLeave = async (req, res) => {
 
                 return res.status(200).json({
                     success: false, 
-                    error: "Sick Leave request should be submitted 2 Working Days After Taking Leave."
+                    error: "Sick Leave request should be submitted 2 Working Days After a Taking Leave."
                 });
             }
 
         }
+        let holiday_count = 0;
+        if(holidayList.length > 0){
+            holiday_count = holidayList.filter( (holiday) => {
 
-        const holiday_count = holidayList.filter( (holiday) => {
-
-            const date = new Date(holiday.holidayDate)
-            if(date >= start && date <= end )
-            {
-                return holiday.holidayDate
-            }
-        });
+                const date = new Date(holiday.holidayDate)
+                if(date >= start && date <= end )
+                {
+                    return holiday.holidayDate
+                }
+            });
+        }
 
         if( holiday_count.length > 0 ) daysCount -= holiday_count.length;
 
@@ -608,12 +610,16 @@ async function dataFromating(query){
 }
 
 function FormatHolidayList(holidayList){
+    if(holidayList.length>0){
+        const formattedData = holidayList.map(holiday => {
+            const holidayDate = dateFormating(holiday.holidayDate);
+            return {holidayDate,holidayName:holiday.holidayName,description:holiday.description}
+        })
 
-    const formattedData = holidayList.map(holiday => {
-        const holidayDate = dateFormating(holiday.holidayDate);
-        return {holidayDate,holidayName:holiday.holidayName,description:holiday.description}
-    })
 
-    return formattedData;
+        return formattedData;
+    }
+    return [];
+    
 }
 export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails, getLeaveTypes }

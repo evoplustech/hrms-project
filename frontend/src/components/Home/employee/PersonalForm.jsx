@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 
 
 const PersonalForm = ({params={},path="",method="",button="",className="",navigation=""}) => {
-  
+  console.log('personal form',params);
   const navigate = useNavigate();
   let {firstName,lastName,dateOfBirth,gender,contactInfo,nationality,maritalStatus,emergencyContact,idProofs} = params || {};
    dateOfBirth = dateOfBirth?.split('T')[0];

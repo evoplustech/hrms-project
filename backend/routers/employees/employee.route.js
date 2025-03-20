@@ -1,5 +1,5 @@
 import express from 'express'
-import { createPersonalDetail,updatePersonalDetail,deletePersonalDetail, getAllPersonalDetail } from '../../controllers/employees/employee.personal.controller.js';
+import { createPersonalDetail,updatePersonalDetail,deletePersonalDetail, getAllPersonalDetail,getIncompleteRecords } from '../../controllers/employees/employee.personal.controller.js';
 import { createProfDetail,updateProRecord,deleteProRecord,resetPassword, getReportingManagerList,getAllEmployees } from '../../controllers/employees/employee.professional.controller.js';
 import { authenticate } from '../../helpers/authenticateEmployee.js';
 
@@ -15,6 +15,7 @@ employeeRouter.get('/getAll/personal',authenticate,getAllPersonalDetail)
 .delete('/delete/professional/:empId',authenticate,deleteProRecord)
 .put('/credentials/reset/:empId',authenticate,resetPassword)
 .get('/getAllRecords',authenticate,getAllEmployees)
+.get('/getIncompleteRecords',authenticate,getIncompleteRecords)
 .get('/getreportingmanagers',getReportingManagerList);
 
 

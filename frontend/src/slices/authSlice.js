@@ -44,7 +44,6 @@ const initialState = {
 
 // Asynchronous Operation To Be defined In the Extra Reducers
 const authSlice = createSlice({
-
   name:'authenticate',
   initialState,
   reducers:{},
@@ -56,6 +55,8 @@ const authSlice = createSlice({
       console.log('LoginMiddleware fulfilled');
         if(action.payload.success){
           state.data = action.payload.data;
+          const {empPersonalId,role:{name}} = action.payload.data;
+          const {firstName,lastName}=empPersonalId;
           localStorage.setItem("emplog",JSON.stringify(action.payload.data));
           state.isLogged =true;
           state.error = '';

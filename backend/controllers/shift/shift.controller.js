@@ -5,7 +5,7 @@ const createShift = async (request,response)=>{
   try{  
 
     const {role:empRole} = request;
-    if(empRole !=='admin')
+    if(empRole.toLowerCase() !=='admin')
       return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
 
     const isValid = validateFormFields(request);
@@ -13,9 +13,10 @@ const createShift = async (request,response)=>{
     if(!isValid)
       return response.status(422).json({error:"Validation failed Form Fields Missing",success: false});
 
-    const {name,startTime,endTime,days} = request.body;
-    
-    const newShift=  new shiftModel({name,startTime,endTime,days});
+    const {name,startTime,endTime,graceTime,days} = request.body;
+    const cumulativeStartTime= calculateStartTime(startTime,graceTime);
+    console.log('cumulativeStartTime',cumulativeStartTime);
+    const newShift=  new shiftModel({name,startTime,endTime,graceTime,cumulativeStartTime,days});
     await newShift.save();
 
      response.status(200).json({newShift,"success": true});
@@ -25,6 +26,29 @@ const createShift = async (request,response)=>{
     response.status(500).json({error:"Internal Server Error",success: false});
   }
 
+}
+
+// 
+
+const calculateStartTime = (time1,time2)=>{
+  const [hours,minutes,seconds,amorpm] = time1.split(/[: ]/);
+  const [hours2,minutes2] = time2.split(':').map(Number);
+
+  const inhours = parseInt(hours,10);
+  const inMinutes = parseInt(minutes,10);
+
+  if(inhours !==12 && amorpm=='PM') inhours += 12;
+  if(inhours==12 && amorpm==='AM')inhours =0;
+
+  const date1 = new Date();
+
+    date1.setHours(inhours,inMinutes,parseInt(seconds,10));
+
+
+  date1.setHours(date1.getHours() + hours2);
+  date1.setMinutes(date1.getMinutes() +minutes2);
+
+  return date1.toLocaleTimeString("en-US");
 }
 
 //  Functionality To Update a  Shift

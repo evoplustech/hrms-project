@@ -40,9 +40,8 @@ workLocation: {
 
 managerId: { 
   type:mongoose.Schema.Types.ObjectId,
-  ref:'Employee_professional_detail',
+  ref:'Employee_personal_detail',
   required : true
-
   },
 
 // experience: [

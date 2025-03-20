@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import useGetData from '../../../hooks/useGetData';
-import SearchBox from './SearchBox';
-import ListData from './ListData';
+import AllEmployees from './AllEmployees';
 
 const EmployeeList = () => {
 
@@ -10,8 +9,7 @@ const EmployeeList = () => {
 
   return (
     <>      
-        <SearchBox/>
-        <ListData/>
+      <AllEmployees/>
     </>
   )
 }

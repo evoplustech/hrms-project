@@ -3,22 +3,32 @@ import mongoose from "mongoose";
 
 const leaveSchema = new mongoose.Schema({
 
-  employee: {
+  employeeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee_professional_detail', // Refers to the employee professional details
     required: true
   },
-  leaveType: {
+  leaveTypeId: {
     type: mongoose.Schema.Types.ObjectId,
-    enum: 'LeaveType',  // Refers to the Leave Type Model details
+    ref: 'LeaveType',  // Refers to the Leave Type Model details
     required: true
   },
   startDate: {
     type: Date,
     required: true
   },
+  startDatetype:{
+    type: String,
+    enum: ['Half Day Morning','Half Day Afternoon','Full Day'],
+    required: true
+  },
   endDate: {
     type: Date,
+    required: true
+  },
+  endDatetype:{
+    type: String,
+    enum: ['Half Day Morning','Half Day Afternoon','Full Day'],
     required: true
   },
   daysCount: {
@@ -32,7 +42,7 @@ const leaveSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
+    enum: ['Pending', 'Approved', 'Rejected','Cancelled'],
     default: 'Pending'
   },
   appliedOn: {
@@ -40,7 +50,7 @@ const leaveSchema = new mongoose.Schema({
     default: Date.now
   },
   approvedBy: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee_professional_detail', // Refers to the approver (e.g., manager)
     required: false
   },
@@ -55,14 +65,3 @@ const leaveSchema = new mongoose.Schema({
 const leaveModel = mongoose.model('Leave',leaveSchema);
 
 export default leaveModel;
-
-
-
-
-
-
-
-
-
-
-

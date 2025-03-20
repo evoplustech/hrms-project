@@ -15,7 +15,7 @@ const useGetData = (param)=>{
             if(responseData.success)
               setList(responseData.data);
           }catch(error){
-            
+              
           }finally{
             setLoading(false);
           }

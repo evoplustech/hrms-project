@@ -13,6 +13,12 @@ import { fetchAllRoles } from './slices/roleSlice';
 import { fetchAllShifts } from './slices/shiftSlice';
 import Module from './components/home/cofiguration/Module';
 import { getModules } from './slices/moduleSlice';
+import { fetchAttendance } from './slices/attendanceSlice';
+import { fetchReasons } from './slices/reasonSlice';
+import { getAttendanceRequest } from './slices/attendanceRequestSlice';
+
+
+
 
 
 
@@ -41,13 +47,18 @@ const PersonalDetailsForm = React.lazy(()=>import('./components/home/employee/Pe
 const ProfessionalDetailsForm = React.lazy(()=>import('./components/home/employee/ProfessionalDetailsForm'));
 const EmployeeList = React.lazy(()=>import('./components/home/employee/EmployeeList'));
 const UpdateEmployee = React.lazy(()=>import('./components/home/employee/UpdateEmployee'));
+const EmployeeProfile = React.lazy(()=>import('./components/home/employee/EmployeeProfile'));
+const Myattendance = React.lazy(()=>import('./components/home/attendance/Myattendance'));
+const AllAttendance = React.lazy(()=>import('./components/home/attendance/AllAttendance'));
+const AttendanceRequest = React.lazy(()=>import('./components/home/attendance/AttendanceRequest'));
 
 
 
 const BaseComponent = ()=>{
   const dispatch = useDispatch();
   const loggedData =(localStorage.getItem("emplog") || '');
-  
+  const {employeeId,empPersonalId} = JSON.parse(loggedData || '{}') ;
+  // console.log('loggedData',empPersonalId );
 
   useEffect(()=>{
     console.log('hello world');
@@ -58,12 +69,18 @@ const BaseComponent = ()=>{
       await dispatch(fetchAllDesignation());
       await dispatch(fetchAllShifts());
       await dispatch(getModules());
+      await dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
+      await dispatch(fetchReasons());
 
+      // /api/attendance/getRequest?empid=${empid}&id=${id}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${requestType}&page=2&limit=1`
+
+      // api/attendance/getRequest?empid=${empid}&id=${id}&page=${page}&limit=${limit}
+      await dispatch(getAttendanceRequest({empid:empPersonalId._id,id:employeeId,status:'All',requestType:1,page:1,limit:10}));
     }
     storeData();
   },[loggedData]);
 
-  const {isLogged} = useSelectorHook('authenticateUser');
+  const {isLogged} = useSelectorHook('authenticate');
   const Router = createBrowserRouter([
     {
     path:'/',
@@ -86,7 +103,7 @@ const BaseComponent = ()=>{
               children:[
                 {
                   path:'/home/employee/',
-                  element:<Suspense><EmployeeList/></Suspense>
+                  element:<Suspense><EmployeeProfile/></Suspense>
                 },
                 {
                   path:'/home/employee/createEmployee',
@@ -95,6 +112,10 @@ const BaseComponent = ()=>{
                 {
                   path:'/home/employee/createEmployee/:id',
                   element:<Suspense><ProfessionalDetailsForm/></Suspense>
+                },
+                {
+                  path:'/home/employee/employeeList',
+                  element:<Suspense><EmployeeList/></Suspense>
                 }
                 ,
                 {
@@ -106,7 +127,20 @@ const BaseComponent = ()=>{
             },
             {
               path:'/home/attendance',
-              element:<Suspense><Attendance/></Suspense>
+              element:<Suspense><Attendance/></Suspense>,
+              children:[
+                {
+                  path:'/home/attendance/:id/',
+                  element:<Suspense><Myattendance/></Suspense>
+                },
+                {
+                  path:'/home/attendance/allAttendance',
+                  element:<Suspense><AllAttendance/></Suspense>
+                },{
+                  path:'/home/attendance/AttendanceRequest',
+                  element:<Suspense><AttendanceRequest/></Suspense>
+                }
+              ]
             },
             {
               path:'/home/devices',

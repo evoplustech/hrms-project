@@ -16,14 +16,16 @@ const pickStateSelector = (param)=>{
   const slice = param.toLowerCase();
 
   switch(slice){
-    case 'authenticateuser' : return (state)=>(state.authenticate);
+    case 'authenticate' : return (state)=>(state.authenticate);
     case 'employee' : return (state)=>(state.employee);
     case 'role' : return (state)=>(state.role);
     case 'department' : return (state)=>(state.department);
     case 'designation' : return (state)=>(state.designation);
     case 'shift' : return (state)=>(state.shift);
     case 'module' : return (state)=>(state.module);
-
+    case 'attendance' : return (state)=>(state.attendance);
+    case 'reason' : return (state)=>(state.reason);
+    case 'attendancerequest': return (state)=>(state.attendanceRequest)
   }
 }
 

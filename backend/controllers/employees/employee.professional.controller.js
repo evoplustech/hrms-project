@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import employeeProfessionalModel from '../../models/employee/EmployeeProfessional.model.js';
+import employeePersonalModel from '../../models/employee/employeePersonal.model.js';
 
 const createProfDetail = async (request,response)=>{
   try{
@@ -91,6 +92,7 @@ async function updateProRecord(request,response){
     // structure the object according to schema
     const updateData = {
       empPersonalId,
+      employeeId,
       email,
       department,
       conformation: conformation ?? false,
@@ -182,13 +184,51 @@ const getAllEmployees = async (request,response)=>{
     if(empRole.toLowerCase() !=='admin')
       return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
 
-    
-    const empData = await  employeeProfessionalModel.find().populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name');
+    const [getAllData,empData] = await  Promise.all([employeePersonalModel.find(),employeeProfessionalModel.find().populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name')]);
    
-    if(!empData)
+    if(!empData || !getAllData)
       return response.status(200).json({message:"No Records Found",success:true});
 
-    response.status(200).json({message:'employee Reords',data:empData,success:true});
+    const empProfessionalIds = empData.map((item) => item['empPersonalId']._id.toString()); 
+    
+    const incompleteRecords = getAllData.filter((value,key)=>{
+      return  !empProfessionalIds.includes(value._id.toString());
+    });
+
+    const employeeData = [...empData,...incompleteRecords];
+
+    response.status(200).json({message:'employee Reords',data:employeeData,success:true});
+
+  }catch(error){
+    console.log(error.message);
+    response.status(500).json({error:"Internal Server Error",success:false})
+  }
+}
+
+const getAllEmployeesbackup = async (request,response)=>{
+  try{
+    
+    const {role:empRole} = request;
+    const {designation,department,page,limit,search} = request.query;
+    const skipCount = (Number(page) - 1)*Number(limit);
+
+    if(empRole.toLowerCase() !=='admin')
+      return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
+
+    const [getAllData,empData] = await  Promise.all([employeePersonalModel.find(),employeeProfessionalModel.find().populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name')]);
+   
+    if(!empData || !getAllData)
+      return response.status(200).json({message:"No Records Found",success:true});
+
+    const empProfessionalIds = empData.map((item) => item['empPersonalId']._id.toString()); 
+    
+    const incompleteRecords = getAllData.filter((value,key)=>{
+      return  !empProfessionalIds.includes(value._id.toString());
+    });
+
+    const employeeData = [...empData,...incompleteRecords];
+
+    response.status(200).json({message:'employee Reords',data:employeeData,success:true});
 
   }catch(error){
     console.log(error.message);

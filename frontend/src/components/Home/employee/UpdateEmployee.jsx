@@ -17,7 +17,9 @@ const UpdateEmployee = () => {
 
        
  if(btnState==='personal'){
-  empPersonalId = data.find((value)=>(value['empPersonalId']._id===empObj));
+  empPersonalId = data.find((value)=>{
+    return value['empPersonalId'] ? (value['empPersonalId']._id===empObj) : (value._id===empObj);
+  });
   console.log('personalpersonalpersonalpersonalpersonal');
  }else{
   empPersonalId = data.find((value)=>(value._id===empObj));
@@ -26,14 +28,21 @@ const UpdateEmployee = () => {
  
  const formHandler = (params)=>{
     let id = '';
+    let path='/home/employee/updateEmployee';
     if(params==='personal')
-      id = empPersonalId['empPersonalId']._id;
+      id = empPersonalId['empPersonalId']? empPersonalId['empPersonalId']._id : empPersonalId._id;
     else
       id = empPersonalId._id;
       
     localStorage.setItem('employeeTab',params);
     setState(params);
-    const navLink = `/home/employee/updateEmployee/${id}`;
+    if(!empPersonalId['empPersonalId']){
+      path = '/home/employee/createEmployee';
+      localStorage.removeItem('employeeTab');
+    }
+     
+
+    const navLink = `${path}/${id}`;
     navigate(navLink);
  }
   return (
@@ -51,7 +60,7 @@ const UpdateEmployee = () => {
         </button> <hr></hr>
       </div>
       {
-        btnState==='personal' ? <PersonalForm params = {empPersonalId.empPersonalId} path={`/api/employee/update/personal/${empObj}`}  method='put' button ='Update Details' className = {`text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2`} />: 
+        btnState==='personal' ? <PersonalForm params = {!empPersonalId.empPersonalId ? empPersonalId : empPersonalId.empPersonalId } path={`/api/employee/update/personal/${empObj}`}  method='put' button ='Update Details' className = {`text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2`} />: 
         <ProfessionalForm params = {empPersonalId} path={`/api/employee/update/professional/${empObj}`}  method='put' buttontext ='Update Details' className = {`text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2`}/>
       }
     </>

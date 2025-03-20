@@ -1,24 +1,36 @@
 import React, { useEffect } from 'react'
 import MUIDataTable from "mui-datatables";
-import useGetData from '../../../hooks/useGetData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import useSelectorHook from '../../../../utils/useSelectorHook';
-import { PiDotsThreeVerticalDuotone,PiDotsThreeOutlineVerticalDuotone  } from "react-icons/pi";
 import EmployeePopUp from './EmployeePopUp';
+import { useDispatch } from 'react-redux';
+import { fetchAttendance } from '../../../slices/attendanceSlice';
 
-const ListData = () => {
+const ListData = ({route}) => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const employeeList = useSelectorHook('employee');
+    const empData = useSelectorHook('authenticate');
+    let columns;let data;
 
-  const employeeHandler = (param)=>{
-    localStorage.removeItem('employeeTab');
-    const navLink = `/home/employee/updateEmployee/${param}`;
-    navigate(navLink);
+  const employeeHandler = async (param)=>{
+    console.log('tharakkioioioioi',param,'route',route);
+    if(route ==='Employee'){
+      localStorage.removeItem('employeeTab');
+      const navLink = `/home/employee/updateEmployee/${param}`;
+      navigate(navLink);
+    }else{
+      console.log('ddddddddddddd',empData['data'].employeeId);
+      const navLink = `/home/attendance/${empData['data'].employeeId}`;
+      await dispatch(fetchAttendance({id:param,dateParam:new Date()}));
+      navigate(navLink);
+    }
+    
     // route to the updating component
   }
-
-  const columns = [
+  columns = [
     {
       name:'_id',
       label:'id',
@@ -62,14 +74,23 @@ const ListData = () => {
       name:'active'
     },{
       name:'action',
-      label:' '
+      label:'Action'
     },];
 
-  // const [loaddept,employeeList] = useGetData({path : '/api/employee/getAllRecords',method:'get'});
-  const employeeList = useSelectorHook('employee');
-  console.log('employee List',employeeList);
+    data = employeeList['data'].map((value)=>{
   
-
+      return  {
+         '_id':value._id,
+         'perId':value['empPersonalId'] ? value['empPersonalId']._id:value._id,
+         'Employee Name': value['empPersonalId'] ? value['empPersonalId'].firstName+' '+value['empPersonalId'].lastName : value.firstName+' '+value.lastName,
+         'Username' : value.email,
+         'Department':value['department'] ? value['department'].name :'',
+         'Designation' : value['designation']? value['designation'].name :'',
+         'Role' : value['role'] ? value['role'].name :'',
+         'active' : value.isActive ? 'yes':'no' ,
+         'action' :value['empPersonalId']? <span className= "w-2" onClick={(e)=>(e.stopPropagation())}><EmployeePopUp personId={value['empPersonalId']._id} isActive = {value.isActive} id="dropdownDelayButton" /></span>:''
+       }
+   });
 const getMuiTheme = () => createTheme({
   components: {
     MuiTableCell: {
@@ -88,24 +109,6 @@ const getMuiTheme = () => createTheme({
   }
 })
  
-const data = employeeList['data'].map((value)=>{
- 
-   return  {
-      '_id':value._id,
-      'perId':value['empPersonalId']._id,
-      'Employee Name': value['empPersonalId'].firstName+' '+value['empPersonalId'].lastName,
-      'Username' : value.email,
-      'Department':value['department'].name,
-      'Designation' : value['designation'].name,
-      'Role' : value['role'].name,
-      'active' : value.isActive ? 'yes':'no' ,
-      'action' :<span className= "w-2" onClick={(e)=>(e.stopPropagation())}><EmployeePopUp personId={value['empPersonalId']._id} id="dropdownDelayButton" /></span>
-      
-    }
-});
-
-console.log(data);
-
   const options = {
     selectableRows:'none',
     elevation:0,
@@ -116,6 +119,7 @@ console.log(data);
       // const empid={} ;
       // empid.perId = data[0];
       // empid.proId = data[1];
+      console.log('dataoooo',data,data[1]);
       return (
       <tr className="hover:cursor-pointer hover:bg-gray-200"  onClick={()=>employeeHandler(data[1])}>
         {

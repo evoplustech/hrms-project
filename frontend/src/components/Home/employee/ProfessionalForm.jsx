@@ -24,7 +24,7 @@ const ProfessionalForm = ({params={},path="",method="",buttontext="",className="
   const reporting  = useSelectorHook('employee').data;
   console.log('reporting',reporting);
   const reportingList = reporting.filter((value)=>{
-    return value['role'].name.toLowerCase() !=='employee';
+    return value['role']?.name.toLowerCase() !=='employee';
   });
   const shiftList  = useSelectorHook('shift').data;
   let {email,employeeId,role:paramRoles,department,designation,dateOfJoining,employmentType,conformation,workLocation,managerId,shift,salary,empPersonalId:{_id}} = params || {};
@@ -110,7 +110,6 @@ const deptHandle = (e)=>{
   setValue('designation', designation);
   setValue('department', selectedDept);
   setDesig(designation);
-  console.log('deptdddddddd',selectedDept,designation);
 }
 
 const {id} = useParams();
@@ -121,8 +120,8 @@ const formSubmitHandler = async (data)=>{
   console.log('clicked');
   const result = await httpRequest({path,method,data});
   if(result.success){
+    await dispatch(fetchAllEmployees());
     if(navigation){
-      await dispatch(fetchAllEmployees());
       await navigate(navigation);
     }else{
       toast.success('Employee Details Updated Successfully');

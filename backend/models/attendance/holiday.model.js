@@ -32,3 +32,5 @@ const holidaySchema = new mongoose.Schema({
 
 
 const holidayModel = mongoose.model('Holiday',holidaySchema);
+
+export default holidayModel;

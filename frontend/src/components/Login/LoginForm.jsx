@@ -15,9 +15,9 @@ const LoginForm = () => {
   const [togglehide,setToggleHide] = useState(false);
   const passref = useRef()
   const dispatch = useDispatch();
-  const {status} = useSelectorHook('authenticateUser'); 
+  const {status} = useSelectorHook('authenticate'); 
   
-  // console.log(useSelectorHook('authenticateUser'));
+  // console.log(useSelectorHook('authenticate'));
   // console.log(username,password,status);
 
   const loginFormSubmit = async (e)=>{

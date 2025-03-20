@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const attendanceSchema = new mongoose.Schema(
   {
     employeeId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Employee_professional_detail', // Reference to the Employee collection
+      type: String,
       required: true
     },
     date: {
@@ -14,15 +13,15 @@ const attendanceSchema = new mongoose.Schema(
     },
     checkInTime: {
       type: String,
-      required: true
+      // required: true
     },
     checkOutTime: {
-      type: String
+      type: String,
+      // required: true
     },
     status: {
       type: String,
-      enum: ['Present', 'Absent', 'Leave', 'Half-Day'], // Attendance status
-      default: 'Present'
+      enum: ['Present', 'Absent', 'Leave','Half-Day','Late-In','Holiday','Week Off','Early Left'], // Attendance status
     },
     totalHours: {
       type: String, // Total hours worked
@@ -37,11 +36,11 @@ const attendanceSchema = new mongoose.Schema(
       trim: true
     },
    
-    isActive: { type: Boolean, default: true } // Logical delete flag
-    // createdAt: {
-    //   type: Date,
-    //   default: Date.now
-    // },
+    isActive: { type: Boolean, default: true }, // Logical delete flag
+    trackingTime: {
+      type: Date,
+      default:null
+    },
     // updatedAt: {
     //   type: Date,
     //   default: Date.now

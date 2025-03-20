@@ -15,10 +15,19 @@ const ShiftSchema = new mongoose.Schema({
     type: String,
     required: true // Store time as string (e.g., '05:00 PM')
   },
+  graceTime :{
+    type: String,
+    default:null // Store time as string (e.g., '05:00 PM') 
+  },
+  cumulativeStartTime :{
+    type:'String',
+    default: null // Initially set as null, will be set via setter
+  },
   days: {
     type: [String],
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    required: true  // Array of days the shift applies to
+    enum: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+    required: true,  // Array of days the shift applies to,
+    set:(values)=>(values.map(value=>value.toLowerCase()))
   },
   isActive: {
     type: Boolean,

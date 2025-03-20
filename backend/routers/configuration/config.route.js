@@ -3,7 +3,8 @@ import { createRole,updateRole,deleteAndRestoreRole,getAllRoles } from '../../co
 import { getAllDept,createDept,updateDept,deleteAndRestoreDept } from '../../controllers/configuration/picklist.department.js';
 import { getAllDesig,getRevelentDesig,createDesig,updateDesig,deleteAndRestoreDesig} from '../../controllers/configuration/picklist.designation.js';
 import { authenticate } from '../../helpers/authenticateEmployee.js';
-import { createModule,getAllModules } from '../../controllers/configuration/module.controller.js';
+import { createModule,getAllModules,createUpdateCron } from '../../controllers/configuration/module.controller.js';
+import { getAllReason,createReasons,updateReasons,deleteAndRestoreReasons } from '../../controllers/configuration/reason.controller.js';
 
 
 const picklistRouter = express.Router();
@@ -22,8 +23,13 @@ picklistRouter
 .post('/picklist/designation/create',authenticate,createDesig)
 .put('/picklist/designation/update/:id',authenticate,updateDesig)
 .get('/picklist/designation/activateDeactivate/:id',authenticate,deleteAndRestoreDesig)
+.get('/picklist/reason/getAll',authenticate,getAllReason)
+.post('/picklist/reason/create',authenticate,createReasons)
+.put('/picklist/reason/update/:id',authenticate,updateReasons)
+.delete('/picklist/reason/activateDeactivate/:id',authenticate,deleteAndRestoreReasons)
 .post('/module/create',authenticate,createModule)
-.get('/module/getAll',authenticate,getAllModules);
+.get('/module/getAll',authenticate,getAllModules)
+.put('/cron/update/:id',authenticate,createUpdateCron);
 
 
 

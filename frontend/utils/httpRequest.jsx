@@ -4,7 +4,7 @@ const httpRequest = async ({path,method='',params='',data={}}) => {
     let url = path;
     const options = {
       method: method.toUpperCase(),
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", 'Cache-Control': 'no-cache' },
     };
 
     // Handle GET request: Add query params if `params` is provided

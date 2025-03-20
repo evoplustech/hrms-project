@@ -74,7 +74,7 @@ const deletePersonalDetail = async(request,response)=>{
     if(!empData || !empProfessionalData)
       return response.status(404).json({error:"User not found",success: false});
 
-    await Promise.all([employeePersonalModel.updateOne({_id:empID},{$set:{isActive:false}}),employeeProfessionalModel.updateOne({_id:empProfessionalData._id},{$set:{isActive:false}})])
+    await Promise.all([employeePersonalModel.updateOne({_id:empID},{$set:{isActive:!empData.isActive}}),employeeProfessionalModel.updateOne({_id:empProfessionalData._id},{$set:{isActive:!empProfessionalData.isActive}})])
     return response.status(200).json({message:"Employee Deleted Successfully",success: true});
 
   }catch(error){
@@ -102,6 +102,38 @@ const getAllPersonalDetail = async (request,response)=>{
     response.status(500).json({error:"Internal Server Error",success: false});
   }
 
+}
+
+const getIncompleteRecords = async (request,response)=>{
+  try{
+    
+    const {role:empRole} = request;
+    if(empRole.toLowerCase() !=='admin')
+      return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
+
+    const [getAllData,empProfessionalData] = await  Promise.all([employeePersonalModel.find(),employeeProfessionalModel.find()]);
+    if(!getAllData || !empProfessionalData)
+      return response.status(200).json({message:"No Employee Data Found",success: true});
+
+    const empProfessionalIds = empProfessionalData.map((item) => item.empPersonalId.toString()); // Extract IDs as strings
+    // console.log('ids====>',empProfessionalIds);
+  //   getAllData.forEach((value, key) => {
+  //     getAllData[key].empPersonalId = value._id; // Modify elements
+  //  });
+
+    const incompleteRecords = getAllData.filter((value,key)=>{
+          return  !empProfessionalIds.includes(value._id.toString());
+                // {{...value},{value.empPersonalId:value._id}}
+      // return  !empProfessionalIds.includes(value._id.toString());
+    });
+
+    // console.log('recordsssss',incompleteRecords);
+
+    response.status(200).json({data:incompleteRecords,message:'Records Fetched Successfully',success:true});
+  }catch(error){
+    console.log(error.message);
+    response.status(500).json({error:"Internal Server Error",success: false});
+  }
 }
 
 
@@ -137,6 +169,6 @@ const validateFormFields = (request)=>{
   return formField;
 
 }
-export {createPersonalDetail,updatePersonalDetail,deletePersonalDetail,getAllPersonalDetail}
+export {createPersonalDetail,updatePersonalDetail,deletePersonalDetail,getAllPersonalDetail,getIncompleteRecords}
 
 

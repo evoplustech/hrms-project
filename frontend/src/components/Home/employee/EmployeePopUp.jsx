@@ -2,6 +2,7 @@ import React , { useState } from 'react'
 import { Modal, Box } from '@mui/material';
 import { PiDotsThreeOutlineVerticalDuotone  } from "react-icons/pi";
 import { RiDeleteBin2Line, RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { BsFillPersonCheckFill } from "react-icons/bs";
 import toast from 'react-hot-toast';
 import httpRequest from '../../../../utils/httpRequest';
 import { useDispatch } from 'react-redux';
@@ -12,7 +13,7 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 
-const EmployeePopUp = ({personId}) => {
+const EmployeePopUp = ({personId,isActive}) => {
 
   const schema = z.object({
     password: z.string().min(8,'Password must be at least 8 characters long').regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
@@ -39,9 +40,12 @@ const EmployeePopUp = ({personId}) => {
         // delee the employee
         const response = await httpRequest({path:'/api/employee/delete/personal',method:'delete',params:personId});
         if(response.success){
+          let msg=response.message;
           await dispatch(fetchAllEmployees());
-            toast.success(response.message);
-            setOpen(false);
+          if(!isActive)
+            msg='Employee Activated Successfully';
+          toast.success(msg);
+          setOpen(false);
         }else{
             toast.error(response.error);
         }
@@ -51,7 +55,7 @@ const EmployeePopUp = ({personId}) => {
     toast(
       (t) => (
         <div>
-          <p>Are you sure you want to delete this Employee?</p>
+          <p>{`${param?'Are you sure you want to delete this Employee?':'Activate This Employee ?'}`}</p>
           <div className="flex gap-2 mt-2">
             <button
               className="bg-red-500 text-white px-4 py-2 rounded"
@@ -142,13 +146,17 @@ const EmployeePopUp = ({personId}) => {
             <>
               <h2 className="flex justify-center font-semibold text-xl text-gray-600">Employee Configuration</h2>
               <div className="flex justify-around mt-14">
-                <button className="flex flex-col items-center" onClick={()=>setpassword(true)}>
-                  <TbPasswordFingerprint className="w-12 h-12 text-green-400" />
-                  <label className="text-md font-semibold p-2">Reset Password</label>
-                </button>
-                <button className="flex flex-col items-center" onClick={deleteHandler}>
-                  <RiDeleteBin2Line  className="w-12 h-12 text-red-600" />
-                  <label className="text-md font-semibold p-2">Delete Customer</label>
+               {
+                isActive ? <button className="flex flex-col items-center" onClick={()=>setpassword(true)}>
+                <TbPasswordFingerprint className="w-12 h-12 text-green-400" />
+                <label className="text-md font-semibold p-2">Reset Password</label>
+              </button>:''
+               } 
+                <button className="flex flex-col items-center" onClick={()=>(deleteHandler(isActive))}>
+                  {
+                    isActive ? <RiDeleteBin2Line  className="w-12 h-12 text-red-600" /> : <BsFillPersonCheckFill   className="w-12 h-12 text-green-600" />
+                  }
+                  <label className="text-md font-semibold p-2">{isActive? 'Delete Employee' : 'Retrive Employee'}</label>
                 </button>
               </div>
             </>

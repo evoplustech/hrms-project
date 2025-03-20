@@ -7,12 +7,13 @@ import { GiTimeBomb,GiIsland } from "react-icons/gi";
 import { IoFingerPrint } from "react-icons/io5";
 import { TbSettingsCog } from "react-icons/tb";
 import { Link } from 'react-router-dom';
+import useSelectorHook from '../../../utils/useSelectorHook';
 
 const Sidebar = ({tab}) => {
 
 const [sidebarToggle,setToggle]= useState(false);
 console.log('toggle state=> ',sidebarToggle);
-
+const {data} = useSelectorHook('authenticate');
 const active = 'text-orange-600 bg-orange-100';
 
 const imgSize = {
@@ -56,7 +57,7 @@ const sideWidth = {
           <Link to="/home/employee" className= {`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='employee' ? active:''}`}><FaPeopleGroup className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Employee Management'}
           </Link>
-          <Link to="/home/attendance" className={`px-4 py-2  font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='attendance' ? active:''}`}><GiTimeBomb className="w-6 h-6 me-2 text-orange-600"/>
+          <Link to={`/home/attendance/${data.employeeId}`} className={`px-4 py-2  font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='attendance' ? active:''}`}><GiTimeBomb className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Attendance'}</Link>
           <Link to="/home/devices" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='devices' ? active:''}`}><IoFingerPrint  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Bio-Metric'}</Link>

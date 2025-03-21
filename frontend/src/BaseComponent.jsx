@@ -14,13 +14,11 @@ import { fetchAllShifts } from './slices/shiftSlice';
 import { fetchBiometricDevice } from './slices/biometricSlice'
 import Module from './components/home/cofiguration/Module';
 import { getModules } from './slices/moduleSlice';
-<<<<<<< HEAD
 import { fetchAttendance } from './slices/attendanceSlice';
 import { fetchReasons } from './slices/reasonSlice';
 import { getAttendanceRequest } from './slices/attendanceRequestSlice';
 
 
-=======
 import { fetchPolicy } from './slices/policySlice';
 import { fetchLeaves } from './slices/leaveSlice';
 import { getLeaveTypes } from './slices/leavetypeSlice';
@@ -28,7 +26,6 @@ import HolidayLayout from './components/Home/holiday/holidayLayout';
 import HolidayList from './components/Home/holiday/HolidayList';
 import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
->>>>>>> Features
 
 
 
@@ -58,14 +55,12 @@ const PersonalDetailsForm = React.lazy(()=>import('./components/home/employee/Pe
 const ProfessionalDetailsForm = React.lazy(()=>import('./components/home/employee/ProfessionalDetailsForm'));
 const EmployeeList = React.lazy(()=>import('./components/home/employee/EmployeeList'));
 const UpdateEmployee = React.lazy(()=>import('./components/home/employee/UpdateEmployee'));
-<<<<<<< HEAD
 const EmployeeProfile = React.lazy(()=>import('./components/home/employee/EmployeeProfile'));
 const Myattendance = React.lazy(()=>import('./components/home/attendance/Myattendance'));
 const AllAttendance = React.lazy(()=>import('./components/home/attendance/AllAttendance'));
 const AttendanceRequest = React.lazy(()=>import('./components/home/attendance/AttendanceRequest'));
 
 
-=======
 const BiometricDeviceList = React.lazy(()=>import('./components/home/devices/BiometricDeviceList'))
 const AddDevice = React.lazy(()=>import('./components/home/devices/AddDevice'));
 const Policy = React.lazy(()=>import('./components/home/policy/Policy'));
@@ -73,7 +68,6 @@ const PolicyList = React.lazy(()=>import('./components/home/policy/PolicyList'))
 const AddPolicy  = React.lazy(()=>import('./components/home/policy/AddPolicy'));
 const LeaveList = React.lazy(()=> import('./components/home/leave/LeaveList'));
 const LeaveRequest = React.lazy(()=> import('./components/home/leave/LeaveRequest'));
->>>>>>> Features
 
 const BaseComponent = ()=>{
   const dispatch = useDispatch();
@@ -98,16 +92,13 @@ const BaseComponent = ()=>{
       await dispatch(fetchAllDesignation());
       await dispatch(fetchAllShifts());
       await dispatch(getModules());
-<<<<<<< HEAD
       await dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
       await dispatch(fetchReasons());
-=======
       dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
       dispatch(getLeaveTypes())
       dispatch(fetchPolicy())
 
       if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
->>>>>>> Features
 
       // /api/attendance/getRequest?empid=${empid}&id=${id}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${requestType}&page=2&limit=1`
 

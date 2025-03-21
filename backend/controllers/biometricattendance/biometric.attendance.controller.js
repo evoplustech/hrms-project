@@ -6,7 +6,7 @@ import {parse,isWithinInterval,parseISO,subDays, addDays,isSameDay  } from 'date
 import { toZonedTime, format } from 'date-fns-tz';
 import  moment from 'moment-timezone';
 import leaveModel from '../../models/attendance/leave.model.js';
-import holidayModel from '../../models/attendance/holiday.model.js';
+import { holidayModel } from '../../models/attendance/holiday.model.js';
 
 
 const fetchAttendance = async (request,response)=>{

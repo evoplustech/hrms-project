@@ -9,6 +9,7 @@ const useSelectorHook = (param) => {
       return selectState;
     }catch(error){
       console.log(error.message);
+      throw error;
     }
 }
 
@@ -25,7 +26,13 @@ const pickStateSelector = (param)=>{
     case 'module' : return (state)=>(state.module);
     case 'attendance' : return (state)=>(state.attendance);
     case 'reason' : return (state)=>(state.reason);
-    case 'attendancerequest': return (state)=>(state.attendanceRequest)
+    case 'attendancerequest': return (state)=>(state.attendanceRequest);
+    case 'biometric': return (state) => (state.biometric);
+    case 'policy': return (state)=> (state.policy);
+    case 'leave': return (state) => (state.leave);
+    case 'leavetype': return (state) => (state.leavetype);
+    case "holiday": return (state)=> (state.holiday);
+
   }
 }
 

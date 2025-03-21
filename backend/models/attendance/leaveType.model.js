@@ -11,3 +11,5 @@ const leaveTypeSchema = new mongoose.Schema({
 
 
 const leaveTypeModel = mongoose.model('LeaveType',leaveTypeSchema);
+
+export default leaveTypeModel

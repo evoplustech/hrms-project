@@ -65,6 +65,7 @@ const useActiveTab = () => {
       ],
       devices : [
         {
+<<<<<<< HEAD
           label  :'Organization',
           catvalue:'profile',
           url : `/${tab}/createEmployee`
@@ -73,10 +74,21 @@ const useActiveTab = () => {
           label  :'Anncouncement',
           catvalue:'profile',
           url : `/${tab}/employeeList`
+=======
+          label  :'Device Details',
+          url : `/home/${tab}`,
+          isActve : catagoryLink === 'devices' && true || false
+        },
+        {
+          label  :'Add Device',
+          url : `/home/${tab}/adddevice`,
+          isActve : catagoryLink === 'adddevice' && true || false
+>>>>>>> Features
         }
       ],
       leaves : [
         {
+<<<<<<< HEAD
           label  :'Leave Requests',
           catvalue:'profile',
           url : `/${tab}/createEmployee`
@@ -85,6 +97,16 @@ const useActiveTab = () => {
           label  :'Apply Leave',
           catvalue:'profile',
           url : `/${tab}/employeeList`
+=======
+          label  :'Leaves',
+          url : `/home/${tab}`,
+          isActve : catagoryLink === 'leaves' && true || false
+        },
+        {
+          label  :'Leave Requests',
+          url : `/home/${tab}/leaverequest`,
+          isActve : catagoryLink === 'leaverequest' && true || false
+>>>>>>> Features
         }
       ],
       configuration : [
@@ -97,6 +119,31 @@ const useActiveTab = () => {
           label  :'Dummy',
           catvalue:'profile',
           url : `/${tab}/employeeList`
+        }
+      ],
+      policy : [
+        {
+          label  :'Policy List',
+          url : `/home/${tab}`,
+          isActve : catagoryLink === 'policy' && true || false
+
+        },
+        {
+          label  :'Add Policy',
+          url : `/home/${tab}/addpolicy`,
+          isActve : catagoryLink === 'addpolicy' && true || false
+        }
+      ],
+      holiday: [
+        {
+          label: "Holiday List",
+          url: `/home/${tab}`,
+          isActve : catagoryLink === 'holiday' && true || false
+        },
+        {
+          label: "Add Holiday",
+          url: `/home/${tab}/addholiday`,
+          isActve : catagoryLink === 'addholiday' && true || false
         }
       ]
     }

@@ -28,7 +28,8 @@ const LoginForm = () => {
 
       const response = await dispatch(LoginMiddleware({username,password}));
       if(response.payload.error)
-        return toast.error('Login Failed! Invalid Credentials');
+        // return toast.error('Login Failed! Invalid Credentials');
+      return toast.error(response.payload.error,{duration:5000})
 
       
     }catch(error){

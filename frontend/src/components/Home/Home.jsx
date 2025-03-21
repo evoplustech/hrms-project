@@ -6,11 +6,11 @@ import Catogary from '../layouts/Catogary'
 import { Outlet } from 'react-router-dom'
 import useActiveTab from '../../hooks/useActiveTab'
 
-const Home = () => {
+const Home = React.memo(() => {
   const [tab,subCatagory] = useActiveTab();
 
   console.log(useActiveTab());
-  
+  // console.log(tab)
   return (
     <>
       <div className="">
@@ -22,13 +22,9 @@ const Home = () => {
         </div>
         <Footer/>
       </div>
-      
-      
+    </>
 
-  
-      </>   
-   
   )
-}
+});
 
 export default Home

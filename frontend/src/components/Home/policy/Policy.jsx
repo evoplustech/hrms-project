@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-const Leave = () => {
+const Policy = () => {
   return (
     <main className=" mt-36 w-full p-6  ms-6 me-2 mb-40">
         <Outlet />
@@ -9,4 +9,4 @@ const Leave = () => {
   )
 }
 
-export default Leave
+export default Policy

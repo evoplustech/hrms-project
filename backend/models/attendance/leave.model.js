@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 
 const leaveSchema = new mongoose.Schema({
 
-  employeeId: {
+  employeeIdId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee_professional_detail', // Refers to the employee professional details
     required: true
   },
-  leaveTypeId: {
+  leaveTypeIdId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'LeaveType',  // Refers to the Leave Type Model details
     required: true
@@ -19,7 +19,7 @@ const leaveSchema = new mongoose.Schema({
   },
   startDatetype:{
     type: String,
-    enum: ['Half Day Morning','Half Day Afternoon','Full Day'],
+    enum: ['First Half','Second Half','Full Day'],
     required: true
   },
   endDate: {
@@ -28,7 +28,7 @@ const leaveSchema = new mongoose.Schema({
   },
   endDatetype:{
     type: String,
-    enum: ['Half Day Morning','Half Day Afternoon','Full Day'],
+    enum: ['First Half','Second Half','Full Day'],
     required: true
   },
   daysCount: {

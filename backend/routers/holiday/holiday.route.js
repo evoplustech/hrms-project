@@ -1,12 +1,14 @@
-import express  from 'express'
-import { addHolidays } from '../../controllers/holiday/holiday.controller.js'; 
+import express from 'express'
+import { getHolidayList, addHoliday, deleteHoliday, uploadHolidaySheet } from "../../controllers/holiday/holiday.controller.js";
 import { authenticate } from '../../helpers/authenticateEmployee.js';
 
-const holidayRouter = express.Router();
+
+const holidayRoute = express.Router()
+
+holidayRoute.post('/getholiday', authenticate, getHolidayList)
+.post('/addholiday', authenticate, addHoliday)
+.post("/deleteholiday",authenticate,deleteHoliday)
+.post("/uploadholidaysheet",uploadHolidaySheet)
 
 
-holidayRouter.post('/addHolidays',authenticate,addHolidays);
-
-
-export default holidayRouter;
-
+export default holidayRoute

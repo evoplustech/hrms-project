@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LeaveList = () => {
   const {data, error, status} = useSelectorHook('leave');
-  const authenticate =  useSelectorHook('authenticateuser')
+  const authenticate =  useSelectorHook('authenticate')
   const [ searchParams,setSearchParams ] = useState({status:'',AppliedStartDate:'',AppliedEndDate:'',mine:'',page:data?.page || 1,limit:data?.limit||10});
   const navigate = useNavigate()
 

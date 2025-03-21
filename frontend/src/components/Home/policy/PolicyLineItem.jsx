@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const PolicyLineItem = ({policy}) => {
-  const authenticateUser = useSelectorHook('authenticateUser');
+  const authenticateUser = useSelectorHook('authenticate');
   const dispatch = useDispatch();
 
   const deletePolicy = (id) => {

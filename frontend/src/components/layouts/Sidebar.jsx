@@ -8,25 +8,20 @@ import { IoFingerPrint } from "react-icons/io5";
 import { TbSettingsCog } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 import useSelectorHook from '../../../utils/useSelectorHook';
-<<<<<<< HEAD
-
-const Sidebar = ({tab}) => {
-
-const [sidebarToggle,setToggle]= useState(false);
-console.log('toggle state=> ',sidebarToggle);
-const {data} = useSelectorHook('authenticate');
-=======
 import { MdPolicy } from "react-icons/md";
 import { MdOutlineHolidayVillage } from "react-icons/md";
 
 const Sidebar = ({tab}) => {
 
-const [ sidebarToggle, setToggle ]= useState(false);
-const { isLogged, data } = useSelectorHook('authenticateUser');
+  
+  
+  const {data} = useSelectorHook('authenticate');
 
+  const [ sidebarToggle, setToggle ]= useState(false);
+  // const { isLogged, data } = useSelectorHook('authenticateUser');
+  console.log('toggle state=> ',sidebarToggle);
 // console.log('toggle state=> ',sidebarToggle);
 
->>>>>>> Features
 const active = 'text-orange-600 bg-orange-100';
 
 const imgSize = {

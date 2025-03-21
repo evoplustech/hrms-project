@@ -10,7 +10,7 @@ const LeaveRequest = () => {
   // console.log( { data, error, status } )
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const authenticateUser = useSelectorHook('authenticateuser')
+  const authenticateUser = useSelectorHook('authenticate')
   const [leaveForm,setLeaveForm] = useState({leaveTypeId:"", startDate:"", startDatetype:"", endDate:"", endDatetype:"", reason:"" })
 
   const handleChange = (e) => {

@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 
 const leaveSchema = new mongoose.Schema({
 
-  employeeIdId: {
+  employeeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Employee_professional_detail', // Refers to the employee professional details
     required: true
   },
-  leaveTypeIdId: {
+  leaveTypeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'LeaveType',  // Refers to the Leave Type Model details
     required: true

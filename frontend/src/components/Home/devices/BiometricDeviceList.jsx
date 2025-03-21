@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import useSelectorHook from '../../../../utils/useSelectorHook';
 import httpRequest from '../../../../utils/httpRequest';
 import { deleteBiometericDevice } from '../../../slices/biometricSlice';
-import Notauthorize from '../Notauthorize';
+import Notauthorize from '../Notauthorize.jsx';
 import toast from 'react-hot-toast';
 import { getUserRole } from '../../../slices/authSlice';
 

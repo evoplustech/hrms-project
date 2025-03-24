@@ -66,6 +66,12 @@ const AddHoliday = () => {
 
     if(res.success){
       navigate('/home/holiday')
+    }else{
+      if(addHolidayBtn.current !== undefined){
+        addHolidayBtn.current.disabled = false;
+        addHolidayBtn.current.classList.replace("bg-green-800","bg-green-500");
+        addHolidayBtn.current.style.cursor = "pointer";
+      }
     }
 
   }

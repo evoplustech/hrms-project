@@ -8,17 +8,18 @@ import useSelectorHook from '../../../utils/useSelectorHook';
 
 const Catogary = ({subCatagory}) => {
   let categoryList = subCatagory;
-   const {data :{role :{name}}}= useSelectorHook('authenticate');
-   const categoryAccess = Array('profile','myattendance');
-   if(name.toLowerCase()==='employee')
-      categoryList =  subCatagory.filter((value)=>(categoryAccess.includes(value.catvalue.toLowerCase())));
+  console.log(categoryList)
+  const {data :{role :{name}}}= useSelectorHook('authenticate');
+  const categoryAccess = Array('profile','myattendance','leaves','policy','leaverequest','holidaylist');
+  if(name.toLowerCase() === 'employee' )
+    categoryList =  subCatagory.filter((value)=>(categoryAccess.includes(value.catvalue.toLowerCase() )));
   return (
     <div className="flex fixed p-3 bg-gray-100 mt-16 w-full z-50">
        <div className="mx-72">
           <ul className="flex flex-row space-x-4">
             {
               categoryList.map((value)=>(
-                <CatagoryList key={value.label} value={value}/>
+                <CatagoryList key={value?.label} value={value}/>
               ))
             }
             

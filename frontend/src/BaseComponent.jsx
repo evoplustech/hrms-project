@@ -82,28 +82,39 @@ const BaseComponent = ()=>{
       const year = new Date().getFullYear();
       const holidaystartDate = `${year}-01-01`;
       const holidayendDate = `${year}-12-31`;
-
+      console.log("user");
+      console.log(user);
       const params = { "startDate":holidaystartDate, "endDate":holidayendDate };
+
+      if(user !== null){
       dispatch(getHolidayList(params))
+        await dispatch(fetchAllEmployees());
+        await dispatch(fetchAllDepartment());
+        await dispatch(fetchAllRoles());
+        await dispatch(fetchAllDesignation());
+        await dispatch(fetchAllShifts());
+        await dispatch(getModules());
+        await dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
+        await dispatch(fetchReasons());
+        dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
+        dispatch(getLeaveTypes())
+        dispatch(fetchPolicy())
 
-      await dispatch(fetchAllEmployees());
-      await dispatch(fetchAllDepartment());
-      await dispatch(fetchAllRoles());
-      await dispatch(fetchAllDesignation());
-      await dispatch(fetchAllShifts());
-      await dispatch(getModules());
-      await dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
-      await dispatch(fetchReasons());
-      dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
-      dispatch(getLeaveTypes())
-      dispatch(fetchPolicy())
-
-      if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
+        if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
+        dispatch(getAttendanceRequest({
+          empid:empPersonalId._id,
+          id:employeeId,
+          status:'All',
+          requestType:1,
+          page:1,
+          limit:10
+        }));
+      }
 
       // /api/attendance/getRequest?empid=${empid}&id=${id}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${requestType}&page=2&limit=1`
 
       // api/attendance/getRequest?empid=${empid}&id=${id}&page=${page}&limit=${limit}
-      await dispatch(getAttendanceRequest({empid:empPersonalId._id,id:employeeId,status:'All',requestType:1,page:1,limit:10}));
+      
     }
     storeData();
   },[loggedData]);

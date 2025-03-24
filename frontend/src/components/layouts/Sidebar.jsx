@@ -13,10 +13,9 @@ import { MdOutlineHolidayVillage } from "react-icons/md";
 
 const Sidebar = ({tab}) => {
 
-  
-  
-  const {data} = useSelectorHook('authenticate');
 
+  const {data} = useSelectorHook('authenticate');
+  console.log(data.profilepic)
   const [ sidebarToggle, setToggle ]= useState(false);
   // const { isLogged, data } = useSelectorHook('authenticateUser');
   console.log('toggle state=> ',sidebarToggle);
@@ -45,7 +44,7 @@ const sideWidth = {
     <aside className={`shadow-lg h-full p-2 ${sideWidth[sidebarToggle]}`}>
       <div className="p-4 flex flex-col items-center text-center">
         {/* <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Profile" className={` border-gray-300 rounded-full ${imgSize[sidebarToggle]}`} /> */}
-        <img src={data.profilepic} alt="Profile" className={` border-gray-300 rounded-full ${imgSize[sidebarToggle]}`} />
+        <img src={data.empPersonalId.profilepic} alt="Profile" className={` border-gray-300 rounded-full ${imgSize[sidebarToggle]}`} />
         {sidebarToggle ? '':
         <div className="ml-3">
           <h2 className="text-lg font-bold">{data.firstName} {data.lastName}</h2>

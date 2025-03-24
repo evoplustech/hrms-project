@@ -27,12 +27,12 @@ const PORT = process.env.PORT || 8000;
 // testing end points
 app.get('/ten/one',(req,res)=>{
   const x= new Date();
-console.log(typeof x,x);
-res.status(200).send(x);
+  console.log(typeof x,x);
+  res.status(200).send(x);
   // res.redirect(301,'https://localhost:6500/api/authorize/logout');
 })
 app.get("/connectioncheck",(req,res)=>{
-  res.send('<h1>BackEnd Running...</h1>')
+  res.status(200).send('<h1>BackEnd Running...</h1>')
 })
 // endpoint to add bio-metric data to our db
 app.use('/api/biometric',biometricRouter);

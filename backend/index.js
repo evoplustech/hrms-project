@@ -20,7 +20,7 @@ app.use(cors()); // to sort out the cross origin error
 app.use(express.json()); // to Access the form body data
 app.use(cookieParser()); // to Access the request Cookie
 
-
+console.log("TESET Index.js")
 
 const PORT = process.env.PORT || 8000;
 

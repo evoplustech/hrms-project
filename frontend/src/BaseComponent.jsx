@@ -82,12 +82,10 @@ const BaseComponent = ()=>{
       const year = new Date().getFullYear();
       const holidaystartDate = `${year}-01-01`;
       const holidayendDate = `${year}-12-31`;
-      console.log("user");
-      console.log(user);
       const params = { "startDate":holidaystartDate, "endDate":holidayendDate };
 
       if(user !== null){
-      dispatch(getHolidayList(params))
+        dispatch(getHolidayList(params))
         await dispatch(fetchAllEmployees());
         await dispatch(fetchAllDepartment());
         await dispatch(fetchAllRoles());

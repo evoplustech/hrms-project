@@ -6,4 +6,5 @@ function generateKey(){
 
 }
 
-console.log(generateKey());
+// console.log(generateKey());
+generateKey()

@@ -3,7 +3,7 @@ import generateJWTtoken from "../../helpers/JWT.js";
 import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
 import nodemailer from  'nodemailer';
 import jwt from 'jsonwebtoken'
-import ip from 'ip'
+import ip6  from 'ip6'
 
 
 
@@ -67,7 +67,7 @@ const logOutEmployee = async (request,response)=>{
 const processPasswordRequest = async(request,response)=>{
   try{
 
-    const ip_address = ip.address();
+    const ip_address = ip6.address();
     const {username} = request.body;
 
     if(!username)

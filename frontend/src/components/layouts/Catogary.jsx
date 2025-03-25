@@ -8,7 +8,7 @@ import useSelectorHook from '../../../utils/useSelectorHook';
 
 const Catogary = ({subCatagory}) => {
   let categoryList = subCatagory;
-  console.log(categoryList)
+
   const {data :{role :{name}}}= useSelectorHook('authenticate');
   const categoryAccess = Array('profile','myattendance','leaves','policy','leaverequest','holidaylist');
   if(name.toLowerCase() === 'employee' )

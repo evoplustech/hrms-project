@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/server.js",
+    "start": "node index.js",
     "dev": "vite",
-    "server": "nodemon backend/server.js" 
+    "server": "nodemon index.js" 
   },
   "author": "",
   "license": "ISC",

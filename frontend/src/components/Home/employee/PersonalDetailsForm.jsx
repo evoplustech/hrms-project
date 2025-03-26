@@ -1,5 +1,5 @@
 import React from 'react'
-import PersonalForm from './personalForm';
+import PersonalForm from './PersonalForm';
 
 
 

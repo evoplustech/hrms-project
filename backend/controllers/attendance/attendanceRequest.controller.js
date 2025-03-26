@@ -1,6 +1,8 @@
 import {format,parse} from 'date-fns';
 import attendanceRequestModel from "./../../models/attendance/attendanceRequest.model.js";
 import employeeProfessionalModel from './../../models/employee/EmployeeProfessional.model.js';
+import attendanceRequestModel from "./../../models/attendance/attendanceRequest.model.js";
+import employeeProfessionalModel from "./../../models/employee/EmployeeProfessional.model.js";
 
 
 const createAttendanceRequest = async (request,response)=>{
@@ -135,4 +137,4 @@ const getAttendanceRequestbackup2 = async (request,response)=>{
   }
 }
 
-export { createAttendanceRequest, approveRequest, getAttendanceRequest }
+export {createAttendanceRequest,approveRequest,getAttendanceRequest}

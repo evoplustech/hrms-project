@@ -42,33 +42,33 @@ import { getHolidayList } from './slices/holidaySlice';
 
 
 const App = React.lazy(()=>import('./App'));
-const Home = React.lazy(()=>import('./components/home/Home'));
+const Home = React.lazy(()=>import('./components/Home/Home'));
 const Login = React.lazy(()=>import('./components/Login/Login'));
 const ForgetPassword = React.lazy(()=>import('./components/Login/ForgetPassword'));
 const ResetPassword = React.lazy(()=>import('./components/Login/ResetPassword'));
-const EmployeeManagement = React.lazy(()=>import('./components/home/employee/EmployeeManagement'));
-const Dashboard = React.lazy(()=>import('./components/home/dashboard/Dashboard'));
-const Attendance = React.lazy(()=>import('./components/home/attendance/Attendance'));
-const Biometric = React.lazy(()=>import('./components/home/devices/Biometric'));
-const Leave = React.lazy(()=>import('./components/home/leave/Leave'));
-const Configuration = React.lazy(()=>import('./components/home/cofiguration/Configuration'));
-const PersonalDetailsForm = React.lazy(()=>import('./components/home/employee/PersonalDetailsForm'));
-const ProfessionalDetailsForm = React.lazy(()=>import('./components/home/employee/ProfessionalDetailsForm'));
-const EmployeeList = React.lazy(()=>import('./components/home/employee/EmployeeList'));
-const UpdateEmployee = React.lazy(()=>import('./components/home/employee/UpdateEmployee'));
-const EmployeeProfile = React.lazy(()=>import('./components/home/employee/EmployeeProfile'));
-const Myattendance = React.lazy(()=>import('./components/home/attendance/Myattendance'));
-const AllAttendance = React.lazy(()=>import('./components/home/attendance/AllAttendance'));
-const AttendanceRequest = React.lazy(()=>import('./components/home/attendance/AttendanceRequest'));
+const EmployeeManagement = React.lazy(()=>import('./components/Home/employee/EmployeeManagement'));
+const Dashboard = React.lazy(()=>import('./components/Home/dashboard/Dashboard'));
+const Attendance = React.lazy(()=>import('./components/Home/attendance/Attendance'));
+const Biometric = React.lazy(()=>import('./components/Home/devices/Biometric'));
+const Leave = React.lazy(()=>import('./components/Home/leave/Leave'));
+const Configuration = React.lazy(()=>import('./components/Home/cofiguration/Configuration'));
+const PersonalDetailsForm = React.lazy(()=>import('./components/Home/employee/PersonalDetailsForm'));
+const ProfessionalDetailsForm = React.lazy(()=>import('./components/Home/employee/ProfessionalDetailsForm'));
+const EmployeeList = React.lazy(()=>import('./components/Home/employee/EmployeeList'));
+const UpdateEmployee = React.lazy(()=>import('./components/Home/employee/UpdateEmployee'));
+const EmployeeProfile = React.lazy(()=>import('./components/Home/employee/EmployeeProfile'));
+const Myattendance = React.lazy(()=>import('./components/Home/attendance/Myattendance'));
+const AllAttendance = React.lazy(()=>import('./components/Home/attendance/AllAttendance'));
+const AttendanceRequest = React.lazy(()=>import('./components/Home/attendance/AttendanceRequest'));
 
 
-const BiometricDeviceList = React.lazy(()=>import('./components/home/devices/BiometricDeviceList'))
-const AddDevice = React.lazy(()=>import('./components/home/devices/AddDevice'));
-const Policy = React.lazy(()=>import('./components/home/policy/Policy'));
-const PolicyList = React.lazy(()=>import('./components/home/policy/PolicyList'));
-const AddPolicy  = React.lazy(()=>import('./components/home/policy/AddPolicy'));
-const LeaveList = React.lazy(()=> import('./components/home/leave/LeaveList'));
-const LeaveRequest = React.lazy(()=> import('./components/home/leave/LeaveRequest'));
+const BiometricDeviceList = React.lazy(()=>import('./components/Home/devices/BiometricDeviceList'))
+const AddDevice = React.lazy(()=>import('./components/Home/devices/AddDevice'));
+const Policy = React.lazy(()=>import('./components/Home/policy/Policy'));
+const PolicyList = React.lazy(()=>import('./components/Home/policy/PolicyList'));
+const AddPolicy  = React.lazy(()=>import('./components/Home/policy/AddPolicy'));
+const LeaveList = React.lazy(()=> import('./components/Home/leave/LeaveList'));
+const LeaveRequest = React.lazy(()=> import('./components/Home/leave/LeaveRequest'));
 
 const BaseComponent = ()=>{
   const dispatch = useDispatch();

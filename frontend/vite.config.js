@@ -7,10 +7,10 @@ export default defineConfig({
   server:{
     proxy:{
       "/api":{
-        // target:"http://localhost:6500"
+        // target:"http://localhost:6500",
         target: 'https://hrms-project-backend.onrender.com', 
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        // rewrite: (path) => path.replace(/^\/api/, ''),
       }
     },
     // port: 8080,

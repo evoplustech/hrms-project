@@ -3,7 +3,7 @@ import React from 'react'
 const LoginHeader = () => {
   return (
     <div className="mb-10">
-        <img src="./public/logo-evo.png" />
+        <img src="../logo-evo.png" />
     </div>
   )
 }

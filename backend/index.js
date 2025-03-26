@@ -16,7 +16,9 @@ import policyRouter from './routers/policy/policy.route.js';
 
 const app = express();
 dotenv.config();
-app.use(cors()); // to sort out the cross origin error
+app.use(cors({
+  origin: 'https://hrms-project-frontend.onrender.com/', // Allow requests from the frontend
+})); // to sort out the cross origin error
 app.use(express.json()); // to Access the form body data
 app.use(cookieParser()); // to Access the request Cookie
 

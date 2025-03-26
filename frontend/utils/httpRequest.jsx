@@ -29,7 +29,7 @@ const httpRequest = async ({path,method='',params='',data={}}) => {
 
     // Perform the HTTP request
     const backendurl = "https://hrms-project-backend.onrender.com"+url;
-    const response = await fetch(url, options);
+    const response = await fetch(backendurl, options);
     
     if (!response.ok) throw new Error("Http Request Failed. Try Again");
 

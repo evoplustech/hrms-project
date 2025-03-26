@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import categoryModel from "../../models/configuration/Category.model.js";
+import categoryModel from "../../models/configuration/category.model.js";
 import moduleModel from "../../models/configuration/module.model.js";
 import cronModel from "../../models/configuration/cronJob.model.js";
 import { getAttendanceFromDevice } from '../biometricattendance/biometric.attendance.controller.js'; 

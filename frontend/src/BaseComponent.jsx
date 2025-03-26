@@ -23,7 +23,7 @@ import { getAttendanceRequest } from './slices/attendanceRequestSlice';
 import { fetchPolicy } from './slices/policySlice';
 import { fetchLeaves } from './slices/leaveSlice';
 import { getLeaveTypes } from './slices/leavetypeSlice';
-import HolidayLayout from './components/Home/holiday/holidayLayout';
+import HolidayLayout from './components/Home/holiday/HolidayLayout';
 import HolidayList from './components/Home/holiday/HolidayList';
 import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';

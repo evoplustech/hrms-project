@@ -1,5 +1,5 @@
 import employeePersonalModel from "../../models/employee/employeePersonal.model.js";
-import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
+import employeeProfessionalModel from "../../models/employee/employeeProfessional.model.js";
 
 // Function To Create New Employee In The Db
 const createPersonalDetail = async (request,response)=>{

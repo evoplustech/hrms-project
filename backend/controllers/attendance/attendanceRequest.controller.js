@@ -1,6 +1,6 @@
 import {format,parse} from 'date-fns';
 import attendanceRequestModel from "../../models/attendance/attendanceRequest.model.js";
-import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
+import employeeProfessionalModel from "../../models/employee/employeeProfessional.model.js";
 
 
 const createAttendanceRequest = async (request,response)=>{

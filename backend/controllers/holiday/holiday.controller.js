@@ -2,7 +2,7 @@
 import { holidayModel } from "../../models/attendance/holiday.model.js";
 import { dateFormating } from "../../helpers/dateFormating.js";
 import shiftModel from "../../models/attendance/shift.model.js";
-import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
+import employeeProfessionalModel from "../../models/employee/employeeProfessional.model.js";
 
 
 const getHolidayList = async (req,res) => {

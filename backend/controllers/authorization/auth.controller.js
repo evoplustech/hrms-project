@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import generateJWTtoken from "../../helpers/JWT.js";
-import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
+import employeeProfessionalModel from "../../models/employee/employeeProfessional.model.js";
 import nodemailer from  'nodemailer';
 import jwt from 'jsonwebtoken'
 import ip6  from 'ip6'

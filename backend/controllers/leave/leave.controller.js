@@ -2,7 +2,7 @@
 import { holidayModel } from "../../models/attendance/holiday.model.js";
 import leaveModel from "../../models/attendance/leave.model.js";
 import leaveTypeModel from "../../models/attendance/leaveType.model.js";
-import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
+import employeeProfessionalModel from "../../models/employee/employeeProfessional.model.js";
 
 
 const getLeaveDetails = async (req,res)=>{

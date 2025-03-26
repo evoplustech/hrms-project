@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# Dependency directories (e.g., yarn)
+.yarn/
+
+# npm package lock file
+package-lock.json
+
+# Build directories (e.g., for React, Vue, Angular, etc.)
+build/
+dist/
+
+# IDE configurations
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-generated files (e.g., macOS)
+.DS_Store
+
+# Other system files
+Thumbs.db

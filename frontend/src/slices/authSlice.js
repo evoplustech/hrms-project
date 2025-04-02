@@ -13,7 +13,7 @@ export const LoginMiddleware = createAsyncThunk('auth/login',async (formData)=>{
   }catch(error){
     console.log(error.message);
   }
-      
+
 })
 
 export const LogOutMiddleware = createAsyncThunk('auth/logout',async()=>{

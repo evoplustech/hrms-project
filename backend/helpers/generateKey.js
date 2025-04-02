@@ -5,5 +5,3 @@ function generateKey(){
   return key;
 
 }
-
-console.log(generateKey());

@@ -120,7 +120,9 @@ const formSubmitHandler = async (data)=>{
   console.log('clicked');
   const result = await httpRequest({path,method,data});
   if(result.success){
-    await dispatch(fetchAllEmployees());
+    await dispatch(fetchAllEmployees({
+      designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
+    }));
     if(navigation){
       await navigate(navigation);
     }else{

@@ -1,3 +1,24 @@
+    import ZKLib  from 'node-zklib';
+    const zkInstance = new ZKLib('10.101.0.7', 4370, 5200, 5000);
+    await zkInstance.createSocket();
+    const attendanceLog = await zkInstance.getAttendances();
+
+    console.log(attendanceLog);
+    await zkInstance.disconnect();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import  ZKLib from 'node-zklib';
 // import {format } from 'date-fns-tz'
 // import { parse } from 'date-fns'
@@ -138,17 +159,49 @@ import { parseISO, parse, set } from 'date-fns';
 
 // console.log(datess);
 
-const parsedDate = parseISO("2025-01-07T00:00:00.000Z");
-  const parsedTime = parse("9:52:49 AM", 'h:mm:ss a', new Date());
-  const combinedDateTime = set(parsedDate, {
-    hours: parsedTime.getHours(),
-    minutes: parsedTime.getMinutes(),
-    seconds: parsedTime.getSeconds(),
-  });
-  console.log('combinedDateTimev',combinedDateTime);
+// const parsedDate = parseISO("2025-01-07T00:00:00.000Z");
+//   const parsedTime = parse("9:52:49 AM", 'h:mm:ss a', new Date());
+//   const combinedDateTime = set(parsedDate, {
+//     hours: parsedTime.getHours(),
+//     minutes: parsedTime.getMinutes(),
+//     seconds: parsedTime.getSeconds(),
+//   });
+//   console.log('combinedDateTimev',combinedDateTime);
 
 
 
+// Debounce Function 
+
+// const abc= ()=>console.log(`this is abc function.......`);
+
+// const debounce = (func,sec)=>{
+//   let timeout;
+
+//   return function(){
+//     console.log('this is returnens function');
+//     timeout = setTimeout(()=>{
+//       func()
+//     },sec);
+//   }
+// }
+// function fun(){
+//   const test = setTimeout(()=>{
+//     abc()
+//   },1000);
+//   console.log(test);
+// }
+
+
+// const debounced = debounce(abc,2000);
+// console.log(fun());
+
+// function collection(a,b){
+ 
+//   console.log(`this is colon function with two params ${a} and ${b} if you need the self then ${this.name}`);
+// }
+
+// collection.apply({name:'hiraku'},'tom','jerry');
+// collection('tom','hanks');
 
 
 

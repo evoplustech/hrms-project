@@ -2,9 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import useSelectorHook from '../../../utils/useSelectorHook';
 
-const CatagoryList = ({value}) => {
-  console.log('catlistststsststt',value);
-  
+const CatagoryList = ({value}) => {  
   const {isLogged, data} = useSelectorHook('authenticate');
   let show_hide = false;
 

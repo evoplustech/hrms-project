@@ -85,39 +85,73 @@ const createUpdateCron = async (request,response)=>{
   }
 }
 
-const cronStart  = async({schedule,isActive})=>{
+
+// const cronStart  = async({schedule,isActive})=>{
   
-  // const id = data._id;
-  const min = +schedule;
-  const time = `0 */${min} * * * *`;
-  const cron = new CronJob(time,async ()=>{
-    console.log("Cron job started...");
-    try{
-      console.log(`the cron shedule time is ${time}`);
-      // to trigger the fetch attendace
+//   // const id = data._id;
+//   const min = +schedule;
+//   const time = `0 */${min} * * * *`;
+//   const cron = new CronJob(time,async ()=>{
+//     console.log("Cron job started...");
+//     try{
+//       console.log(`the cron shedule time is ${time}`);
+//       // to trigger the fetch attendace
+//       await getAttendanceFromDevice({"port":4370,"ip":"10.101.0.7"});
+//       console.log("Cron job running...");
+//       // await cronModel.findOneAndUpdate({_id:id},{status:"running"});
+//     }catch(error){
+//       console.log('cron job failed',error);
+//       // await cronModel.findOneAndUpdate({_id:id},{status:"failed"});
+//     }
+//   }, null, false, 'Asia/Kolkata');
 
-      await getAttendanceFromDevice({"port":4370,"ip":"10.101.0.7"});
+//   // cron.start();
 
+//   if(isActive){
+//     console.log('cron started to run')
+//     cron.start();
 
-      console.log("Cron job running...");
-      // await cronModel.findOneAndUpdate({_id:id},{status:"running"});
-    }catch(error){
-      console.log('cron job failed',error);
-      // await cronModel.findOneAndUpdate({_id:id},{status:"failed"});
-    }
-  }, null, false, 'Asia/Kolkata');
-
-  // cron.start();
-
-  if(isActive){
-    console.log('cron started to run')
-    cron.start();
-
-  }else{
-   console.log('cron stopped')
-   cron.stop();
+//   }else{
+//    console.log('cron stopped')
+//    cron.stop();
+//   }
+  
+// }
+let activeCronJob = null;
+const cronStart = async ({ schedule, isActive }) => {
+  // Cleanup previous cron job
+  if (activeCronJob) {
+    activeCronJob.stop();
+    activeCronJob = null;
   }
-  
-}
+
+  if (!isActive) {
+    console.log('Cron stopped');
+    return;
+  }
+
+  const min = +schedule;
+  const cronTime = `0 */${min} * * * *`;
+
+  // Create new cron job
+  activeCronJob = new CronJob(
+    cronTime,
+    async () => {
+      console.log("Executing cron job...");
+      try {
+        await getAttendanceFromDevice({ port: 4370, ip: "10.101.0.7" });
+      } catch (error) {
+        console.error('Cron job failed:', error);
+      }
+    },
+    null, // onComplete
+    false, // don't start immediately
+    'Asia/Kolkata'
+  );
+
+  // Start the new instance
+  activeCronJob.start();
+  console.log(`Cron started with schedule: ${cronTime}`);
+};
 
 export {createModule,getAllModules,createUpdateCron}

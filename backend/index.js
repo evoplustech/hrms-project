@@ -21,7 +21,7 @@ dotenv.config();
 // }));
 app.use(cors({
   origin: 'https://hrms-project-frontend.onrender.com', // Replace with your actual frontend URL
-  methods: ['GET', 'POST','PUT'],
+  methods: ['GET', 'POST','PUT','DELETE'],
   credentials: true,
 }));
 app.use(express.json()); // to Access the form body data

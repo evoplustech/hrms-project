@@ -5,16 +5,17 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server:{
-    // proxy:{
-    //   "/api":{
-    //     // target:"http://localhost:6500",
-    //     target: 'https://hrms-project-backend.onrender.com', 
-    //     changeOrigin: true,
-    //     // rewrite: (path) => path.replace(/^\/api/, ''),
-    //   }
-    // },
+    proxy:{
+      "/api":{
+        // target:"http://localhost:6500",
+        target: 'https://hrms-project-backend.onrender.com', 
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    },
     // port: 8080,
-    host: '0.0.0.0', 
+    host: '0.0.0.0',
     // strictPort: true
   }
 })

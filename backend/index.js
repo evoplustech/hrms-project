@@ -16,9 +16,14 @@ import policyRouter from './routers/policy/policy.route.js';
 
 const app = express();
 dotenv.config();
+// app.use(cors({
+//   origin: ['https://hrms-project-frontend.onrender.com', 'http://localhost:5173'],
+// }));
 app.use(cors({
-  origin: 'https://hrms-project-frontend.onrender.com/', // Allow requests from the frontend
-})); // to sort out the cross origin error
+  origin: 'https://hrms-project-frontend.onrender.com/', // Replace with your actual frontend URL
+  methods: ['GET', 'POST','PUT'],
+  credentials: true,
+}));
 app.use(express.json()); // to Access the form body data
 app.use(cookieParser()); // to Access the request Cookie
 

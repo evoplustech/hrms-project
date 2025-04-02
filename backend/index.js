@@ -20,7 +20,7 @@ dotenv.config();
 //   origin: ['https://hrms-project-frontend.onrender.com', 'http://localhost:5173'],
 // }));
 app.use(cors({
-  origin: 'https://hrms-project-frontend.onrender.com/', // Replace with your actual frontend URL
+  origin: 'https://hrms-project-frontend.onrender.com', // Replace with your actual frontend URL
   methods: ['GET', 'POST','PUT'],
   credentials: true,
 }));

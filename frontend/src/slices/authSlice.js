@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 export const LoginMiddleware = createAsyncThunk('auth/login',async (formData)=>{
   try{
-    const  response = await fetch('/api/authorize/login',{
+    const  response = await fetch('https://hrms-project-backend.onrender.com/api/authorize/login',{
       method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(formData)
     });
     const result = await response.json();

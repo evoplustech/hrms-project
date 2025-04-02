@@ -7,8 +7,9 @@ async function generateJWTtoken (payload,response){
   response.cookie("webtoken",token,{
     maxAge:9*60*60*1000,
     httpOnly : true,
-    strict : true,
-    secure : process.env.STATUS !=='development'
+    strict : false,
+    samesite: "None",
+    secure : process.env.STATUS === 'production'
   });
 
 }

@@ -5,6 +5,7 @@ const httpRequest = async ({path,method='',params='',data={}}) => {
     const options = {
       method: method.toUpperCase(),
       headers: { "Content-Type": "application/json", 'Cache-Control': 'no-cache' },
+      credentials: 'include',
     };
 
     // Handle GET request: Add query params if `params` is provided
@@ -29,6 +30,7 @@ const httpRequest = async ({path,method='',params='',data={}}) => {
 
     // Perform the HTTP request
     const backendurl = "https://hrms-project-backend.onrender.com"+url;
+    // const backendurl = url;
 
     const response = await fetch(backendurl, options);
     

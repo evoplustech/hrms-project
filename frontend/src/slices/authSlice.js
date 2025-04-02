@@ -5,8 +5,11 @@ import toast from "react-hot-toast";
 
 export const LoginMiddleware = createAsyncThunk('auth/login',async (formData)=>{
   try{
+    // const  response = await fetch('/api/authorize/login',{
     const  response = await fetch('https://hrms-project-backend.onrender.com/api/authorize/login',{
-      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(formData)
+      method:"POST",headers:{"Content-Type":"application/json"},
+      credentials: 'include',
+      body:JSON.stringify(formData)
     });
     const result = await response.json();
     return result;
@@ -22,7 +25,8 @@ export const LogOutMiddleware = createAsyncThunk('auth/logout',async()=>{
     console.log('logout triggered');
       const  response = await fetch('https://hrms-project-backend.onrender.com/api/authorize/logout',{
         method:"GET",
-        headers:{"Content-Type":"application/json"}
+        headers:{"Content-Type":"application/json"},
+        credentials: 'include',
       });
       const result = await response.json();
       console.log(result);

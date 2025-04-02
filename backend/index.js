@@ -20,10 +20,10 @@ dotenv.config();
 //   origin: ['https://hrms-project-frontend.onrender.com', 'http://localhost:5173'],
 // }));
 app.use(cors({
-  origin:  ['https://hrms-project-frontend.onrender.com', 'http://localhost:5173'],
+  origin:  'https://hrms-project-frontend.onrender.com',
   methods: ['GET', 'POST','PUT','DELETE'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization','cache-control']
 }));
 app.use(express.json()); // to Access the form body data
 app.use(cookieParser()); // to Access the request Cookie

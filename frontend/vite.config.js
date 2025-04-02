@@ -5,7 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server:{
-    proxy:{
+    historyApiFallback: true,
+    proxy:{      
       "/api":{
         target:"http://localhost:6500",
         // target: 'https://hrms-project-backend.onrender.com', 

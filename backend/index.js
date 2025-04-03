@@ -31,7 +31,7 @@ app.use(cors({
 }));
 app.use(express.json()); // to Access the form body data
 app.use(cookieParser()); // to Access the request Cookie
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, '../frontend')));
 const PORT = process.env.PORT || 8000;
 
 // testing end points
@@ -43,7 +43,7 @@ app.get('/ten/one',(req,res)=>{
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '../frontend', 'index.html'));
 });
 
 

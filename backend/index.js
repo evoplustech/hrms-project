@@ -19,7 +19,7 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const buildPath = path.join(__dirname, '../frontend/build');
+const buildPath = path.join(__dirname, '../frontend');
 app.use(express.static(buildPath));
 
 dotenv.config();

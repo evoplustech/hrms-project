@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path';
 import dotenv   from 'dotenv';
 import dbConnection from './config/dbConnection.js';
 import cors from 'cors'
@@ -12,7 +13,10 @@ import picklistRouter from './routers/configuration/config.route.js';
 import holidayRouter from './routers/holiday/holiday.route.js';
 import attendanceRouter from './routers/attendance/attendance.router.js';
 import policyRouter from './routers/policy/policy.route.js';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 dotenv.config();
@@ -27,7 +31,7 @@ app.use(cors({
 }));
 app.use(express.json()); // to Access the form body data
 app.use(cookieParser()); // to Access the request Cookie
-
+app.use(express.static(path.join(__dirname, 'build')));
 const PORT = process.env.PORT || 8000;
 
 // testing end points
@@ -36,7 +40,13 @@ app.get('/ten/one',(req,res)=>{
   console.log(typeof x,x);
   res.status(200).send(x);
   // res.redirect(301,'https://localhost:6500/api/authorize/logout');
-})
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
+
+
 app.get("/connectioncheck",(req,res)=>{
   res.status(200).send('<h1>BackEnd Running...</h1>')
 })

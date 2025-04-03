@@ -171,7 +171,7 @@ const AddHoliday = () => {
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="flex flex-col items-center">
                 <a
-                  href="../samplesheet/holidaysamplesheet.xlsx"
+                  href="/samplesheet/holidaysamplesheet.xlsx"
                   className="text-blue-600 hover:text-blue-800 mb-4 text-lg"
                 >
                   (Sample Sheet)

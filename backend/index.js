@@ -12,6 +12,8 @@ import picklistRouter from './routers/configuration/config.route.js';
 import holidayRouter from './routers/holiday/holiday.route.js';
 import attendanceRouter from './routers/attendance/attendance.router.js';
 import policyRouter from './routers/policy/policy.route.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);

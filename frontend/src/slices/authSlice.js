@@ -24,6 +24,7 @@ export const LogOutMiddleware = createAsyncThunk('auth/logout',async()=>{
   try{
     console.log('logout triggered');
       const  response = await fetch('https://hrms-project-backend.onrender.com/api/authorize/logout',{
+      // const  response = await fetch('/api/authorize/logout',{
         method:"GET",
         headers:{"Content-Type":"application/json"},
         credentials: 'include',

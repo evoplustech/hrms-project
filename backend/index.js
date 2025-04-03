@@ -12,16 +12,9 @@ import picklistRouter from './routers/configuration/config.route.js';
 import holidayRouter from './routers/holiday/holiday.route.js';
 import attendanceRouter from './routers/attendance/attendance.router.js';
 import policyRouter from './routers/policy/policy.route.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
+
 
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const buildPath = path.join(__dirname, '../frontend');
-app.use(express.static(buildPath));
-
 dotenv.config();
 // app.use(cors({
 //   origin: ['https://hrms-project-frontend.onrender.com', 'http://localhost:5173'],
@@ -34,11 +27,6 @@ app.use(cors({
 }));
 app.use(express.json()); // to Access the form body data
 app.use(cookieParser()); // to Access the request Cookie
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(buildPath, 'index.html'));
-});
-
 
 const PORT = process.env.PORT || 8000;
 

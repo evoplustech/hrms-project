@@ -22,13 +22,16 @@ const Header = () => {
   <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div className=" flex h-16 items-center justify-between">
       <div className="flex flex-1 items-center justify-around sm:items-stretch ">
-        <div className="hidden sm:ml-6 sm:block">
-          <div className="flex space-x-4">
+        <div className="text-white flex justify-end">
+          <div class="marquee-content flex gap-4 items-center animate-marquee">
+            <p className="text-xl"><span className="text-orange-400"><span className="text-3xl">🌏</span> Evoplus</span> IT <span className="text-cyan-500">Services</span>  <span className="text-green-500">And Solution HRMS </span></p>
+          </div>
+          {/* <div className="flex space-x-4">
             <a href="#" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
             <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
             <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
             <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
-          </div>
+          </div> */}
         </div>
       </div>
       <button className="transform translate-x-40 rounded-full p-2 space-x-3  flex ms-center sm:static sm:inset-auto sm:ml-6 sm:pr-0 hover:text-md " onClick={LogOutHandler}>

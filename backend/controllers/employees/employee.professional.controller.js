@@ -231,18 +231,17 @@ const getAllEmployees= async (request,response)=>{
     }
     if(search){
         const escapeRegex = (search) => search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-        const sanitizedSearch = escapeRegex(search);
+        const sanitizedSearch = escapeRegex(search.trim());
         filter = {$or: [
           { firstName: { $regex: new RegExp(sanitizedSearch), $options: 'i' } }, 
           { lastName: { $regex: new RegExp(sanitizedSearch), $options: 'i' } }
         ]}
-        if(empRole.toLowerCase()==='tl')
-          filter.managerId = managerId;
        const PersonalData = await employeePersonalModel.find(filter).skip(skipCount).limit(+limit);
        const refIds = new Set(PersonalData.map(item => item._id.toString()));
-       responseData = await employeeProfessionalModel.find({
-        empPersonalId: { $in: Array.from(refIds)},  // Exclude _id's that are in refIds
-      }).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name');
+       const searchCondition = {empPersonalId: { $in: Array.from(refIds)}};
+       if(empRole.toLowerCase()==='tl')
+        searchCondition.managerId = managerId;
+       responseData = await employeeProfessionalModel.find(searchCondition).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name');
        totalRecords = await employeePersonalModel.countDocuments(filter);
     }else if(+profile===1){
       console.log(skipCount , +limit);
@@ -266,7 +265,6 @@ const getAllEmployees= async (request,response)=>{
     response.status(500).json({error:"Internal Server Error",success:false})
   }
 }
-
 
 const getAllEmployeesbackup = async (request,response)=>{
   try{

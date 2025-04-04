@@ -27,7 +27,6 @@ export const approveAttendanceRequest = createAsyncThunk('/update/attendanceRequ
     console.log('attendance response',response);
     return  response;
   }catch(error){
-
   }
 })
 

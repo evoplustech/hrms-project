@@ -10,26 +10,26 @@ const useActiveTab = () => {
     const urlarray = path.split('/');
     let tab = urlarray[2];
     let catagoryLink = path.split('/')[urlarray.length-1];
-    console.log(catagoryLink)
 
     const catagory =  {
       employee : [
         {
+          label:'My Profile',
+          catvalue:'profile',
+          url:`/home/${tab}`,
+          isActive : catagoryLink==='employee' && true || false
+        },
+        {
           label  :'Create Employee Profile',
-          catvalue:'createemployee',
+          catvalue:'create_employee',
           url : `/home/${tab}/createEmployee`,
           isActive : catagoryLink==='createEmployee' && true || false
         },
         {
           label  :'Employee List',
-          catvalue:'employeelist',
+          catvalue:'employee_list',
           url : `/home/${tab}/employeeList`,
           isActive : catagoryLink==='employeeList' && true || false
-        },{
-          label:'My Profile',
-          catvalue:'profile',
-          url:`/home/${tab}`,
-          isActive : catagoryLink==='employee' && true || false
         }
       ],
       home : [
@@ -49,19 +49,19 @@ const useActiveTab = () => {
       attendance : [
         {
           label  :'All Attendance',
-          catvalue:'allattendance',
+          catvalue:'all_attendance',
           url : `/home/${tab}/allAttendance`,
           isActive : catagoryLink==='allAttendance' && true || false
         },
         {
           label  :'My Attendance',
-          catvalue:'myattendance',
+          catvalue:'my_attendance',
           url : `/home/${tab}/${data.employeeId}`,
           isActive : isNaN(+catagoryLink) ? false : true
         },
         {
           label  :'Attendance Request',
-          catvalue:'myattendance',
+          catvalue:'attendance_request',
           url : `/home/${tab}/AttendanceRequest`,
           isActive : catagoryLink==='AttendanceRequest' && true || false
         }
@@ -70,22 +70,26 @@ const useActiveTab = () => {
         {
           label  :'Device Details',
           url : `/home/${tab}`,
+          catvalue:'device_detail',
           isActive : catagoryLink === 'devices' && true || false
         },
         {
           label  :'Add Device',
           url : `/home/${tab}/adddevice`,
+          catvalue:'add_device',
           isActive : catagoryLink === 'adddevice' && true || false
         }
       ],
       leaves : [
         {
           label  :'Leaves',
+          catvalue : "leaves",
           url : `/home/${tab}`,
           isActive : catagoryLink === 'leaves' && true || false
         },
         {
           label  :'Leave Requests',
+          catvalue : "leave_request",
           url : `/home/${tab}/leaverequest`,
           isActive : catagoryLink === 'leaverequest' && true || false
         }
@@ -93,24 +97,22 @@ const useActiveTab = () => {
       configuration : [
         {
           label  :'Modules',
-          catvalue:'profile',
-          url : `/home/${tab}/`
-        },
-        {
-          label  :'Dummy',
-          catvalue:'profile',
-          url : `/${tab}/employeeList`
+          catvalue:'module',
+          url : `/home/${tab}/`,
+          isActive : catagoryLink === 'configuration' && true || false
         }
       ],
       policy : [
         {
           label  :'Policy List',
+          catvalue : "policy",
           url : `/home/${tab}`,
           isActive : catagoryLink === 'policy' && true || false
 
         },
         {
           label  :'Add Policy',
+          catvalue: "add_policy",
           url : `/home/${tab}/addpolicy`,
           isActive : catagoryLink === 'addpolicy' && true || false
         }
@@ -118,11 +120,13 @@ const useActiveTab = () => {
       holiday: [
         {
           label: "Holiday List",
+          catvalue: "holiday_list",
           url: `/home/${tab}`,
           isActive : catagoryLink === 'holiday' && true || false
         },
         {
           label: "Add Holiday",
+          catvalue: "add_holiday",
           url: `/home/${tab}/addholiday`,
           isActive : catagoryLink === 'addholiday' && true || false
         }

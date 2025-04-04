@@ -40,7 +40,6 @@ const AllAttendance = () => {
       console.log(error.message);
     } 
   }
-
   return (
   <>
     {/* <div className="flex flex-row space-y-2  ">

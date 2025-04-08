@@ -10,7 +10,6 @@ const createProfDetail = async (request,response)=>{
     
 
     const {role:empRole} = request;
-    console.log(request.body);
     // console.log(empRole);
       if(empRole.toLowerCase() !=='admin')
          return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
@@ -66,7 +65,6 @@ const createProfDetail = async (request,response)=>{
 
 async function updateProRecord(request,response){
   try{
-    console.log('this is response====>',request.body);
     const {empPersonalId,employeeId,email,department,designation,dateOfJoining,employmentType,managerId,role,shift,conformation,basic,hra,allowances,total,office,city} = request.body || {};
     const {role:empRole} = request;
     
@@ -176,7 +174,7 @@ if(reportingList.length ===0 )
 
 }
 
-const getAllEmployees = async (request,response)=>{
+const getAllEmployeesbackupd = async (request,response)=>{
   try{
 
     const {role:empRole} = request;
@@ -205,9 +203,71 @@ const getAllEmployees = async (request,response)=>{
   }
 }
 
+const getAllEmployees= async (request,response)=>{
+  try{
+    const {role:empRole,empId} = request;
+    let responseData;
+    let totalRecords;
+    let managerId;
+    const {designation,department,status,role,search,profile,page,limit} = request.query;
+     
+    const skipCount = (Number(page) - 1)*Number(limit);
+    let filter = {department,designation,role,isActive:status};
+    const roles = new Set(['manager','admin','hr','tl']);
+    if(department==='All')
+      delete filter.department;
+    if(designation==='All')
+      delete filter.designation;
+    if(role==='All')
+      delete filter.role;
+
+    if(!roles.has(empRole.toLowerCase()))
+      return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
+
+    if(empRole.toLowerCase()==='tl'){
+      const {empPersonalId} = await employeeProfessionalModel.findById(empId);
+      managerId = empPersonalId;
+      filter = {managerId} 
+    }
+    if(search){
+        const escapeRegex = (search) => search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+        const sanitizedSearch = escapeRegex(search.trim());
+        filter = {$or: [
+          { firstName: { $regex: new RegExp(sanitizedSearch), $options: 'i' } }, 
+          { lastName: { $regex: new RegExp(sanitizedSearch), $options: 'i' } }
+        ]}
+       const PersonalData = await employeePersonalModel.find(filter).skip(skipCount).limit(+limit);
+       const refIds = new Set(PersonalData.map(item => item._id.toString()));
+       const searchCondition = {empPersonalId: { $in: Array.from(refIds)}};
+       if(empRole.toLowerCase()==='tl')
+        searchCondition.managerId = managerId;
+       responseData = await employeeProfessionalModel.find(searchCondition).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name');
+       totalRecords = await employeePersonalModel.countDocuments(filter);
+    }else if(+profile===1){
+      console.log(skipCount , +limit);
+      const profData = await employeeProfessionalModel.find().select('empPersonalId -_id');
+      const refIds = new Set(profData.map(item => item.empPersonalId.toString()));
+       responseData = await employeePersonalModel.find({
+        _id: { $nin: Array.from(refIds) },  // Exclude _id's that are in refIds
+      })
+      .skip(skipCount)  // Apply pagination skip
+      .limit(limit);
+      totalRecords = await employeePersonalModel.countDocuments({
+        _id: { $nin: Array.from(refIds) },  // Exclude _id's that are in refIds
+      });
+    }else{
+       totalRecords = await employeeProfessionalModel.countDocuments(filter);
+       responseData = await employeeProfessionalModel.find(filter).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name').skip(skipCount).limit(+limit).lean(true);
+    }
+    response.status(200).json({message:'employee Reords',data:responseData,success:true,count:totalRecords});
+  }catch(error){
+    console.log(error.message);
+    response.status(500).json({error:"Internal Server Error",success:false})
+  }
+}
+
 const getAllEmployeesbackup = async (request,response)=>{
   try{
-    
     const {role:empRole} = request;
     const {designation,department,page,limit,search} = request.query;
     const skipCount = (Number(page) - 1)*Number(limit);

@@ -1,21 +1,31 @@
 import ZKLib  from 'node-zklib';
+import  moment from 'moment-timezone';
 
-async function  test(){
-  try{
-      let zkInstance = new ZKLib('10.101.0.7', 4370, 5200, 5000);
-      await zkInstance.createSocket();
-        // const attendanceLog = await zkInstance.getUsers();
-        const attendanceLog =  await  zkInstance.getAttendances();
+const checkInTime = "Tue Apr 01 2025 10:30:33 GMT+0530 (India Standard Time)";
+// const da = new Date(checkInTime)
+const date = new Date(checkInTime);
+// Get the time in 12-hour format with AM/PM
+const cumulativeStartTime = "10:00:00 AM";
+const cumulativeStartMoment = moment(checkInTime).format('YYYY-MM-DD') + ' ' + cumulativeStartTime;
+const result = moment(checkInTime).isAfter(moment(cumulativeStartMoment, 'YYYY-MM-DD hh:mm:ss A'));
+console.log('this is reault ',result,cumulativeStartMoment);
 
-      //  console.log(attendanceLog);
+// async function  test(){
+//   try{
+//       let zkInstance = new ZKLib('10.101.0.7', 4370, 5200, 5000);
+//       await zkInstance.createSocket();
+//         // const attendanceLog = await zkInstance.getUsers();
+//         const attendanceLog =  await  zkInstance.getAttendances();
 
-        console.log(attendanceLog);
-        zkInstance.disconnect();
+//       //  console.log(attendanceLog);
+
+//         console.log(attendanceLog);
+//         zkInstance.disconnect();
    
-  }catch(error){
-      console.log(error);
-  }
-}
+//   }catch(error){
+//       console.log(error);
+//   }
+// }
 
 // import Zkteco from "zkteco-js";
 
@@ -82,9 +92,9 @@ async function  test(){
 // test();
 
 // import { parse, isWithinInterval ,parseISO,subDays,differenceInSeconds ,isAfter, isBefore, isEqual,addDays } from 'date-fns';
-import  moment from 'moment-timezone';
-import { isSameDay } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
+// import  moment from 'moment-timezone';
+// import { isSameDay } from 'date-fns';
+// import { toZonedTime } from 'date-fns-tz';
 
 // // function isTimeBetween(time3, time1, time2) {
 // //   // Parse times into Date objects
@@ -268,30 +278,30 @@ import { toZonedTime } from 'date-fns-tz';
 
 
 
-const initialDate = new Date("2025-01-31");
-const x = new Date();
+// const initialDate = new Date("2025-01-31");
+// const x = new Date();
 
 
-console.log(initialDate,',',x);
+// console.log(initialDate,',',x);
 // 1,2,3    ===> length <= 1 || 1,2,3  2,3,4  3,4,5, 4,5,6 5,6,7  6,7,8  7,8,9  ||    7,8,9 ---> length === page
 
-const arr = [1,2,3,4,5,6,7,8,9];
+// const arr = [1,2,3,4,5,6,7,8,9];
 
- arr.forEach((value,key)=>{
-  const y = 7; const pageno = ++key;
-  let next = y+1;
-  let prev = y-1;
-  if(y < 2){
-    next = y+2;
-    prev = y;
-  }else if(arr.length == y){
-    next = y;
-    prev = y-2;
-  }
-  if(pageno >= prev && pageno <=next){
-    console.log(key);
-  }
-});
+//  arr.forEach((value,key)=>{
+//   const y = 7; const pageno = ++key;
+//   let next = y+1;
+//   let prev = y-1;
+//   if(y < 2){
+//     next = y+2;
+//     prev = y;
+//   }else if(arr.length == y){
+//     next = y;
+//     prev = y-2;
+//   }
+//   if(pageno >= prev && pageno <=next){
+//     console.log(key);
+//   }
+// });
 
 
 

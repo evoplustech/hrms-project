@@ -20,8 +20,8 @@ const getEmployeeAttendance = async (request,response)=>{
     if(!employeeId || !date)
       return response.status(400).json({ error: 'Missing required parameter: param' });
 
-    const attendanceData = await attendanceModel.find({employeeId,isActive:true,date:{$gte:new Date(startDate),$lte:new Date(endDate)}}).lean(true);
-
+    const attendanceData = await attendanceModel.find({employeeId,isActive:true,date:{$gte:new Date(startDate),$lte:new Date(endDate)}}).sort({ date: 1 }).lean(true);
+    console.log('date ==->',attendanceData);
     if(attendanceData.length < 1)
        return response.status(204).json({data:attendanceData,success:true,message:'No Records Found for the Employee'});
 
@@ -53,7 +53,7 @@ const getEmployeeAttendancebackup = async (request,response)=>{
     if(!employeeId || !date)
       return response.status(400).json({ error: 'Missing required parameter: param' });
 
-    const attendanceData = await attendanceModel.find({employeeId,isActive:true,date:{$gte:new Date(startDate),$lte:new Date(endDate)}});
+    const attendanceData = await attendanceModel.find({employeeId,isActive:true,date:{$gte:new Date(startDate),$lte:new Date(endDate)}},{ sort: { date: 1 } });
 
     console.log(employeeId,'attendance data',attendanceData);
 

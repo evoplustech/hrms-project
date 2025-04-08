@@ -24,8 +24,12 @@ const AttendanceRequestPopUp = ({record,popup,popupHandler}) => {
  const dispatch = useDispatch();
   // console.log('reasons it herere',reasons);
   useEffect(()=>{
-    const intime = dateConversion({date:record.date,time:record.checkInTime});
-    const out_time = dateConversion({date:record.date,time:record.checkOutTime});
+    // const intime = dateConversion({date:record.date,time:record.checkInTime});
+    // const out_time = dateConversion({date:record.date,time:record.checkOutTime});
+    
+    const intime = format(new Date(record.checkInTime), 'yyyy-MM-dd HH:mm:ss');
+    const out_time = format(new Date(record.checkOutTime), 'yyyy-MM-dd HH:mm:ss');
+    console.log(';;;;;;;;;;;;;;;;;;;',intime,out_time);
     setIntime(intime);setoutTime(out_time);setLoginhrs(record.totalHours);setfieldError('');
   },[record.date]);
   
@@ -121,17 +125,17 @@ const submitHandler = async ()=>{
                   <tr className="font-semibold text-rose-700">
                     <td>{record.date.split('T')[0] || ''}</td>
                     <td>{record.status}</td>
-                    <td>{record.checkInTime || '00.00.00'}</td>
-                    <td>{record.checkOutTime || '00.00.00'}</td>
+                    <td>{format(new Date(record.checkInTime),'hh:mm:ss a') || '00.00.00'}</td>
+                    <td>{format(new Date(record.checkOutTime),'hh:mm:ss a') || '00.00.00'}</td>
                   </tr>
                 </table>
                 {/* <div> */}
                   <div className="font-semibold mt-6 space-x-4 flex flex-row justify-center items-center w-full">
                     <div className="w-1/4 ">
-                      <DateCalander className="smoke border-2 border-sky-600  border-x-white border-t-white hover:none w-36" selected={intime} onChange={(date)=>dateHandler({dateparam:date,time:'InTime'})} name="inTime" showTimeSelect label={"In-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
+                      <DateCalander className="smoke border-2 border-sky-600  border-x-white border-t-white hover:none w-36" selected={new Date(intime)} onChange={(date)=>dateHandler({dateparam:date,time:'InTime'})} name="inTime" showTimeSelect label={"In-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
                     </div>
                     <div className="w-1/4 ">
-                      <DateCalander className="smoke border-2 border-sky-600  border-x-white border-t-white hover:none w-36" name="outTime" selected={outtime} onChange={(date)=>dateHandler({dateparam:date,time:'outTime'})} showTimeSelect label={"Out-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
+                      <DateCalander className="smoke border-2 border-sky-600  border-x-white border-t-white hover:none w-36" name="outTime" selected={new Date(outtime)} onChange={(date)=>dateHandler({dateparam:date,time:'outTime'})} showTimeSelect label={"Out-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
                     </div>
                     <div className="w-1/4 relative">
                     <Select  ref={reason} label='Reasons *' options={data} name='reasons' onChange={selectHandler}/>

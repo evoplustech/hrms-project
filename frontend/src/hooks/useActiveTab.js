@@ -10,7 +10,6 @@ const useActiveTab = () => {
     const urlarray = path.split('/');
     let tab = urlarray[2];
     let catagoryLink = path.split('/')[urlarray.length-1];
-    console.log(catagoryLink)
 
     const catagory =  {
       employee : [
@@ -22,13 +21,13 @@ const useActiveTab = () => {
         },
         {
           label  :'Create Employee Profile',
-          catvalue:'createemployee',
+          catvalue:'create_employee',
           url : `/home/${tab}/createEmployee`,
           isActive : catagoryLink==='createEmployee' && true || false
         },
         {
           label  :'Employee List',
-          catvalue:'employeelist',
+          catvalue:'employee_list',
           url : `/home/${tab}/employeeList`,
           isActive : catagoryLink==='employeeList' && true || false
         }
@@ -50,19 +49,19 @@ const useActiveTab = () => {
       attendance : [
         {
           label  :'All Attendance',
-          catvalue:'allattendance',
+          catvalue:'all_attendance',
           url : `/home/${tab}/allAttendance`,
           isActive : catagoryLink==='allAttendance' && true || false
         },
         {
           label  :'My Attendance',
-          catvalue:'myattendance',
+          catvalue:'my_attendance',
           url : `/home/${tab}/${data.employeeId}`,
           isActive : isNaN(+catagoryLink) ? false : true
         },
         {
           label  :'Attendance Request',
-          catvalue:'myattendance',
+          catvalue:'attendance_request',
           url : `/home/${tab}/AttendanceRequest`,
           isActive : catagoryLink==='AttendanceRequest' && true || false
         }
@@ -71,11 +70,13 @@ const useActiveTab = () => {
         {
           label  :'Device Details',
           url : `/home/${tab}`,
+          catvalue:'device_detail',
           isActive : catagoryLink === 'devices' && true || false
         },
         {
           label  :'Add Device',
           url : `/home/${tab}/adddevice`,
+          catvalue:'add_device',
           isActive : catagoryLink === 'adddevice' && true || false
         }
       ],
@@ -88,7 +89,7 @@ const useActiveTab = () => {
         },
         {
           label  :'Leave Requests',
-          catvalue : "leaverequest",
+          catvalue : "leave_request",
           url : `/home/${tab}/leaverequest`,
           isActive : catagoryLink === 'leaverequest' && true || false
         }
@@ -96,13 +97,9 @@ const useActiveTab = () => {
       configuration : [
         {
           label  :'Modules',
-          catvalue:'profile',
-          url : `/home/${tab}/`
-        },
-        {
-          label  :'Dummy',
-          catvalue:'profile',
-          url : `/${tab}/employeeList`
+          catvalue:'module',
+          url : `/home/${tab}/`,
+          isActive : catagoryLink === 'configuration' && true || false
         }
       ],
       policy : [
@@ -115,7 +112,7 @@ const useActiveTab = () => {
         },
         {
           label  :'Add Policy',
-          catvalue: "addpolicy",
+          catvalue: "add_policy",
           url : `/home/${tab}/addpolicy`,
           isActive : catagoryLink === 'addpolicy' && true || false
         }
@@ -123,13 +120,13 @@ const useActiveTab = () => {
       holiday: [
         {
           label: "Holiday List",
-          catvalue: "holidaylist",
+          catvalue: "holiday_list",
           url: `/home/${tab}`,
           isActive : catagoryLink === 'holiday' && true || false
         },
         {
           label: "Add Holiday",
-          catvalue: "addholiday",
+          catvalue: "add_holiday",
           url: `/home/${tab}/addholiday`,
           isActive : catagoryLink === 'addholiday' && true || false
         }

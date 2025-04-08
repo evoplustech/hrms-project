@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 
 const AttendanceRequest = () => {
   const [date1,date2] = currentMonthDates();
-  const [requestData,setRequestData] = useState({startDate:date1,endDate:date2,request:1,status:'All',page:1,limit:1});
+  const [requestData,setRequestData] = useState({startDate:date1,endDate:date2,request:1,status:'All',page:1,limit:10});
   const dispatch = useDispatch();
   const {data} = useSelectorHook("authenticate");
   const {data : attendanceState,count} = useSelectorHook("attendancerequest");
@@ -25,9 +25,9 @@ const AttendanceRequest = () => {
         limit = value;
         page=1;
       }
-      const url = `/api/attendance/getRequest?empid=${data["empPersonalId"]._id}&id=${data.employeeId}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${request}&page=${page}&limit=${limit}`;
-      console.log(url);
-      await dispatch(getAttendanceRequest(url));
+      // const url = `/api/attendance/getRequest?empid=${data["empPersonalId"]._id}&id=${data.employeeId}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${request}&page=${page}&limit=${limit}`;
+      const urlData = {empid:data["empPersonalId"]._id,id:data.employeeId,startDate,endDate,status,requestType:request,page,limit};
+      await dispatch(getAttendanceRequest(urlData));
     }catch(error){
       toast.error(error.message);
     }

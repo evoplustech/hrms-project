@@ -28,55 +28,228 @@ const fetchAttendance = async (request,response)=>{
   }
 }
 
-const getAttendanceFromDevice= async ({ip,port})=>{
+// Optimiized Code starts
+
+const TIME_ZONE = 'Asia/Kolkata';
+const DEFAULT_DATE = new Date('2025-04-01');
+
+const getAttendanceFromDevice = async ({ ip, port }) => {
+  try {
+    const [latestAttendance, employees, holidays] = await Promise.all([
+      attendanceModel.findOne().sort({ trackingTime: -1 }).lean(true),
+      employeeProfessionalModel.find({ employeeId: { $in: ['208','1069'] }}).populate('shift','cumulativeStartTime startTime days name'),
+      holidayModel.find().lean(true)
+    ]);
+
+    const zkInstance = new ZKLib(ip, port, 5200, 5000);
+    await zkInstance.createSocket();
+    
+    const { data: attendanceLog } = await zkInstance.getAttendances();
+    const recordTime = latestAttendance?.trackingTime 
+      ? moment.utc(latestAttendance.trackingTime).tz(TIME_ZONE).toDate()
+      : DEFAULT_DATE;
+
+    const processingPromises = employees.map(async (employeeData) => {
+      const employeeLogs = attendanceLog.filter(log => 
+        log.deviceUserId === employeeData.employeeId &&
+        moment(log.recordTime).tz(TIME_ZONE).toDate() > recordTime
+      );
+
+      if (employeeLogs.length > 0) {
+        await groupAttendance({ 
+          attendanceLogs: employeeLogs, 
+          employeeData, 
+          recordTime,
+          holidays 
+        });
+      }
+    });
+
+    await Promise.all(processingPromises);
+    await zkInstance.disconnect();
+
+    return await attendanceModel.countDocuments();
+
+  } catch (error) {
+    console.error(`Attendance Error: ${error.message}`);
+    throw new Error('Failed to process attendance data');
+  }
+};
+
+const groupAttendance = async ({ attendanceLogs, employeeData, recordTime, holidays }) => {
+  try {
+    const attendanceList = [...attendanceLogs];
+    const dateMap = new Map();
+
+    // Date range processing
+    for (let date = new Date(recordTime); date <= new Date(); date = addDays(date, 1)) {
+      const dateKey = format(date, 'yyyy-MM-dd');
+      if (!attendanceLogs.some(log => format(log.recordTime, 'yyyy-MM-dd') === dateKey)) {
+        attendanceList.push({
+          deviceUserId: employeeData.employeeId,
+          recordTime: date,
+          ip: "10.101.0.7",
+          data: true
+        });
+      }
+    }
+
+    // Employee data fetching
+    const [employeeRecord, leaveRecord] = await Promise.all([
+      employeeProfessionalModel.findOne({ employeeId: employeeData.employeeId })
+        .populate('shift', 'cumulativeStartTime startTime days name')
+        .lean(true),
+      leaveModel.findOne({ employeeId: employeeData._id })
+        .populate('leaveTypeId', 'leaveType')
+        .lean(true)
+    ]);
+
+    // Attendance grouping
+    const attendanceListObj = attendanceList.reduce((acc, log) => {
+      const logDate = toZonedTime(log.recordTime, TIME_ZONE);
+      let dateKey = format(logDate, 'yyyy-MM-dd');
+
+      console.log();
+
+      if (employeeRecord?.shift?.name.toLowerCase() === 'night shift' && 
+          format(logDate, 'a') === 'AM') {
+        dateKey = format(subDays(logDate, 1), 'yyyy-MM-dd');
+      }
+
+      if (!log.data) {
+        acc[dateKey] = acc[dateKey] || [];
+        acc[dateKey].push(logDate);
+      }
+      return acc;
+    }, {});
+
+    // Attendance processing
+    await Promise.all(Object.entries(attendanceListObj).map(async ([date, punches]) => {
+      const dateObj = new Date(`${date}T00:00:00Z`);
+      const existingRecord = await attendanceModel.findOne({ 
+        employeeId: employeeData.employeeId, 
+        date: dateObj
+      });
+
+      const { status, checkInTime, checkOutTime, totalHours } = await calculateAttendanceStatus({
+        punches,
+        employeeRecord,
+        leaveRecord,
+        holidays,
+        date: dateObj
+      });
+
+      const updateData = {
+        employeeId: employeeData.employeeId,
+        date: dateObj,
+        checkInTime,
+        checkOutTime,
+        totalHours,
+        status,
+        trackingTime: new Date()
+      };
+
+      existingRecord 
+        ? await attendanceModel.updateOne({ _id: existingRecord._id }, updateData)
+        : await attendanceModel.create(updateData);
+    }));
+
+    return true;
+
+  } catch (error) {
+    console.error(`Group Attendance Error: ${error.message}`);
+    throw error;
+  }
+};
+
+// Helper function
+const calculateAttendanceStatus = async ({ punches, employeeRecord, leaveRecord, holidays, date }) => {
+  let status = 'Absent';
+  let checkInTime = '';
+  let checkOutTime = '';
+  let totalHours = '0:0';
+
+  if (punches.length > 0) {
+    checkInTime = punches[0];
+    checkOutTime = punches[punches.length - 1];
+    const cumulativeStartTime =  moment(checkInTime).format('YYYY-MM-DD') + ' ' + employeeRecord.shift.cumulativeStartTime;
+    const diffMs = checkOutTime - checkInTime;
+    const hours = Math.floor(diffMs / 3600000);
+    const minutes = Math.floor((diffMs % 3600000) / 60000);
+    totalHours = `${hours}:${minutes}`;
+
+    status = hours < 9 ? 'Early Left' : 'Present';
+    
+    if (moment(checkInTime).isAfter(moment(cumulativeStartTime, 'YYYY-MM-DD hh:mm:ss A'))) {
+      status = 'Late-In';
+    }
+
+
+  } else {
+    const dayOfWeek = format(date, 'eeee').toLowerCase();
+    const isWorkingDay = employeeRecord.shift.days.includes(dayOfWeek);
+    
+    if (!isWorkingDay) status = "Week Off";
+    if (holidays.some(h => isSameDay(h.holidayDate, date))) status = 'Holiday';
+    if (leaveRecord && isWithinInterval(date, { 
+      start: new Date(leaveRecord.startDate), 
+      end: new Date(leaveRecord.endDate) 
+    })) {
+      status = leaveRecord.startDatetype === 'Full Day' ? 'Leave' : 'Half-Day';
+    }
+  }
+
+  return { status, checkInTime, checkOutTime, totalHours };
+};
+
+// Optimizzed Code ends
+
+
+
+const getAttendanceFromDevicebackup= async ({ip,port})=>{
+try{
+
 
   // const attendanceData = await  attendanceModel.find();
   const attendanceData = await  attendanceModel.findOne().sort({ trackingTime: -1 });
   let recordTime;
 
-  // const employeeRecords = await employeeProfessionalModel.find().populate('shift','cumulativeStartTime startTime').select('employeeId shift');
-  const userId = [{employeeId : '204',shift:'nightg'},{employeeId : '208',shift:'nightg'}];
-  // const userId = employeeRecords;
+  const userId = await employeeProfessionalModel.find({ employeeId: { $in: ['208','1069'] } }).populate('shift');
+  // const userId = [{employeeId : '1069',shift:'night'},{employeeId : '208',shift:'nightd'}];
   let zkInstance = new ZKLib(ip, port, 5200, 5000);
   await zkInstance.createSocket();
   // const attendanceLog = await zkInstance.getUsers();
   const attendanceLog =  await zkInstance.getAttendances();
+  // console.log('this is attendanceLog==>',attendanceLog);
   // return attendanceLog;
   for(const employeeData of userId) {
-    console.log('employeeData',employeeData);
     const attendanceLogs = attendanceLog.data.filter((value)=>{
-       recordTime = attendanceData?.trackingTime ? moment.utc(attendanceData.trackingTime).tz('Asia/Kolkata').toDate() : new Date("2024-12-01");
-
+       recordTime = attendanceData?.trackingTime ? moment.utc(attendanceData.trackingTime).tz('Asia/Kolkata').toDate() : new Date("2025-04-01");
       // console.log('recordTime jolllksldkflskdlfklskd',recordTime);
       return (
         employeeData.employeeId === value.deviceUserId
          &&
         moment(value.recordTime).tz('Asia/Kolkata').toDate() > recordTime
-         
       );
   });
-  // console.log('attendanceLogs this is gpgpgpgpgpgp',attendanceLogs);
-  //   // return attendanceLogs;
-  //   console.log('recordTime this is recordTime',recordTime);
   if(attendanceLogs.length > 0){
     const attendanceRecords = await groupAttendance({attendanceLogs, employeeData,recordTime });
     // return attendanceRecords;
   }
-    
-    
   }        
   await zkInstance.disconnect();
   const documentPresent = await attendanceModel.countDocuments();
   // console.log('documentPresent',documentPresent);
   // return documentPresent;
+  }catch(error){
+    console.log(error.message);
+  }
 }
 
-const groupAttendance = async ({attendanceLogs,employeeData,recordTime})=>{
+const groupAttendancebbackup = async ({attendanceLogs,employeeData,recordTime})=>{
+  try{
 
-// Checking For Every Day
-// return attendanceLogs;
-// const initialDate = new Date("2024-12-01");
-let attendanceList =attendanceLogs;
+const attendanceList = [...attendanceLogs]; // copy the logs for processing
 // return attendanceList;
 for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays(dateNow,1)){
     // console.log('dateNow]]>',dateNow);
@@ -93,9 +266,6 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
       attendanceList.push({"userSn":'',"deviceUserId":employeeData.employeeId,"recordTime":dateNow,"ip":"10.101.0.7",data:true});
     }
 }
-// return attendanceList;
-// let attendanceList =attendanceLogs;
-
   const employeeRecords = await employeeProfessionalModel.findOne({employeeId:employeeData.employeeId}).populate('shift','cumulativeStartTime startTime days').select('employeeId shift');
   const leaveRecords = await leaveModel.findOne({employeeId:employeeData._id}).populate('leaveTypeId','leaveType');
   const timeZone = 'Asia/Kolkata';
@@ -111,7 +281,7 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
         if(!attendanceListObj[date]){
           attendanceListObj[date] = [];
         }
-        if(employeeData.shift==='night'){
+        if(employeeData['shift'].name.toLowerCase()==='night shift'){
           if(newDate.includes('AM')){
             const dateConversion = new Date(date); // Original date
             const prevDate = subDays(dateConversion, 1).toISOString().split(/[T]/)[0];
@@ -125,13 +295,10 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
         if(!object.data)
           attendanceListObj[date].push(newDate);
       });
-      
-      // return attendanceListObj;
-        const dataaa = [];
-        let  updateResult ;
+  console.log('this is attendanceListObj==>',attendanceListObj);
+     
  // to get First and last punch object of the day of employee
-    const finalAttendanceObject = Object.entries(attendanceListObj).map(async ([date,punch])=>{
-
+    Object.entries(attendanceListObj).map(async ([date,punch])=>{
       let status;
       let InTime;
       let OutTime;
@@ -142,10 +309,10 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
       const selectRecord = await attendanceModel.findOne({ employeeId : employeeData.employeeId,date :new Date(`${date}T00:00:00Z`)});
     if(punch.length > 0){
           checkInTime  = punch[0];
-          console.log('checkInTime',checkInTime);
+          // console.log('checkInTime',checkInTime);
           if(selectRecord){
             checkInTime = `${date} ${selectRecord.checkInTime}`;
-            console.log('if conditiom inside',checkInTime);
+            // console.log('if conditiom inside',checkInTime);
           }
          
           checkOutTime = punch[punch.length-1];
@@ -165,9 +332,6 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
         status = hours < 9 ? 'Early Left' : 'Present';
         if(punchInTime.isAfter(shiftTime)) 
           status = 'Late-In';
-
-        // update the data in the db here
-    
     }else{
     //  check weather the shift for the employeee is started before update of the attendance
       status = 'Absent';
@@ -181,8 +345,6 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
       // const holidayDate = holidayModel?.holidayDate || '1970-01-01T00:00:00.000+00:00';
       if(!workingDays.includes(todayDay)){  // for cron change to the current time 
         status = "Week Off";
-        // console.log(workingDays);
-        // console.log(date,'todayDay',todayDay);
       }
 
      const leaveStartDate =  moment.utc(checkStartDate).tz('Asia/Kolkata').format('YYYY-MM-DD');
@@ -204,7 +366,9 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
     }
       
       if(selectRecord){
-        
+
+          const IntimeData = selectRecord.checkInTime ? selectRecord.checkInTime : OutTime;
+
           await attendanceModel.updateOne({
             employeeId : employeeData.employeeId,
             date :new Date(`${date}T00:00:00Z`)
@@ -213,7 +377,7 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
             $set: {
             employeeId : employeeData.employeeId,
             date,
-            checkInTime: selectRecord.checkInTime,
+            checkInTime: IntimeData,
             checkOutTime : OutTime,
             totalHours,
             status,
@@ -232,23 +396,192 @@ for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays
             trackingTime: new Date()
           });
       }
-    // console.log('hello worldsshshdghgdsgdjgs ',updateResult);
-
-   
-    
-    // const sortedPunch =  punch.sort((a,b)=>{ return (new Date(a.recordTime)-new Date(b.recordTime))});
-    // dataaa.push({
-    //   employeeId : employeeData.employeeId,
-    //   date,
-    //   checkInTime : InTime,
-    //   checkOutTime : OutTime,
-    //   totalHours,
-    //   status,
-    //   trackingTime: new Date()
-    // });
   })
   return true;
+}catch(error){
+    console.log(error.message);
 }
+}
+
+
+const groupAttendance_backup = async ({attendanceLogs,employeeData,recordTime})=>{
+
+  // Checking For Every Day
+  // return attendanceLogs;
+  // const initialDate = new Date("2024-12-01");
+  let attendanceList =attendanceLogs;
+  // return attendanceList;
+  for(let dateNow = new Date(recordTime) ; dateNow <= new Date();dateNow = addDays(dateNow,1)){
+      // console.log('dateNow]]>',dateNow);
+      const format_today = dateNow.toISOString().split("T")[0];
+      // console.log('this isn jjsformat_today->',format_today);
+      let arr = [];
+      attendanceLogs.find((value)=>{
+        if(value.recordTime.toISOString().includes(format_today)){
+          arr.push(1);
+        } 
+      });
+  
+      if(arr.length <= 0){     
+        attendanceList.push({"userSn":'',"deviceUserId":employeeData.employeeId,"recordTime":dateNow,"ip":"10.101.0.7",data:true});
+      }
+  }
+  // return attendanceList;
+  // let attendanceList =attendanceLogs;
+  
+    const employeeRecords = await employeeProfessionalModel.findOne({employeeId:employeeData.employeeId}).populate('shift','cumulativeStartTime startTime days').select('employeeId shift');
+    const leaveRecords = await leaveModel.findOne({employeeId:employeeData._id}).populate('leaveTypeId','leaveType');
+    const timeZone = 'Asia/Kolkata';
+    const currentDate = toZonedTime(new Date(), timeZone);
+    const currentDateTime = format(currentDate, 'yyyy-MM-dd hh:mm:ss a', { timeZone });
+    const holiday = await holidayModel.find();
+        const attendanceListObj = {}; // formted attendance Object List
+        
+        attendanceList.forEach((object)=>{
+          const dateString = object.recordTime.toISOString();
+          let newDate = format(dateString, 'yyyy-MM-dd hh:mm:ss a', { timeZone });
+          let date= newDate.split(/[ ]/)[0];
+          if(!attendanceListObj[date]){
+            attendanceListObj[date] = [];
+          }
+          if(employeeData.shift==='night'){
+            if(newDate.includes('AM')){
+              const dateConversion = new Date(date); // Original date
+              const prevDate = subDays(dateConversion, 1).toISOString().split(/[T]/)[0];
+              date = prevDate;
+  
+               if(!attendanceListObj[date]){
+                attendanceListObj[date] = [];
+              }
+            }
+          }
+          if(!object.data)
+            attendanceListObj[date].push(newDate);
+        });
+        
+        // return attendanceListObj;
+          const dataaa = [];
+          let  updateResult ;
+   // to get First and last punch object of the day of employee
+      const finalAttendanceObject = Object.entries(attendanceListObj).map(async ([date,punch])=>{
+  
+        let status;
+        let InTime;
+        let OutTime;
+        let totalHours;
+        let datenow = new Date("2025-01-02");
+        let  checkInTime;
+        let  checkOutTime;
+        const selectRecord = await attendanceModel.findOne({ employeeId : employeeData.employeeId,date :new Date(`${date}T00:00:00Z`)});
+      if(punch.length > 0){
+            checkInTime  = punch[0];
+            console.log('checkInTime',checkInTime);
+            if(selectRecord){
+              checkInTime = `${date} ${selectRecord.checkInTime}`;
+              console.log('if conditiom inside',checkInTime);
+            }
+           
+            checkOutTime = punch[punch.length-1];
+          // Converting to local time in ISO format
+           InTime = new Date(checkInTime).toLocaleTimeString('en-US', { hour12: true });
+           OutTime = new Date(checkOutTime).toLocaleTimeString('en-US', { hour12: true });
+  
+          const differenceInMilliseconds = new Date(checkOutTime) - new Date(checkInTime);
+          const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+          const hours = Math.floor(differenceInSeconds / 3600);
+          
+          const minutes = Math.floor((differenceInSeconds % 3600) / 60);
+          totalHours = `${hours}:${minutes}`;
+          const punchInTime = moment(InTime, 'hh:mm:ss A'); 
+          const shiftTime =moment(employeeRecords['shift'].cumulativeStartTime, 'hh:mm:ss A');
+          //  console.log('cumulative timeeeeeeff',employeeRecords['shift'].cumulativeStartTime);
+          status = hours < 9 ? 'Early Left' : 'Present';
+          if(punchInTime.isAfter(shiftTime)) 
+            status = 'Late-In';
+  
+          // update the data in the db here
+      
+      }else{
+      //  check weather the shift for the employeee is started before update of the attendance
+        status = 'Absent';
+        checkInTime ="";
+        checkOutTime ="";
+        // const todayDay = new Date().toLocaleDateString("en-US",{weekday:"long"}).toLowerCase(); 
+        const todayDay = new Date(date).toLocaleDateString("en-US",{weekday:"long"}).toLowerCase(); 
+        const workingDays= employeeRecords['shift'].days;
+        const checkStartDate = leaveRecords?.startDate || '1970-01-01T00:00:00.000+00:00';
+        const checkEndDate = leaveRecords?.endDate || '1970-01-01T00:00:00.000+00:00';
+        // const holidayDate = holidayModel?.holidayDate || '1970-01-01T00:00:00.000+00:00';
+        if(!workingDays.includes(todayDay)){  // for cron change to the current time 
+          status = "Week Off";
+          // console.log(workingDays);
+          // console.log(date,'todayDay',todayDay);
+        }
+  
+       const leaveStartDate =  moment.utc(checkStartDate).tz('Asia/Kolkata').format('YYYY-MM-DD');
+       const leaveEndDate =  moment.utc(checkEndDate).tz('Asia/Kolkata').format('YYYY-MM-DD');
+      //  const holiday = moment.utc(holidayDate).tz('Asia/Kolkata').format('YYYY-MM-DD');
+        
+        if(leaveStartDate <= currentDateTime && currentDateTime <= leaveEndDate){
+          status=leaveRecords.startDatetype==='Full Day'?'Leave':'Half-Day';
+          if(currentDateTime===leaveEndDate)
+            status=leaveRecords.endDatetype==='Full Day'?'Leave':'Half-Day';
+        }
+  
+       const holidayPresent =  holiday.filter((value)=>{
+            return isSameDay(new Date(value.holidayDate),new Date(date))
+        })
+       
+        if(holidayPresent.length > 0 )
+          status = 'Holiday';
+      }
+        
+        if(selectRecord){
+          
+            await attendanceModel.updateOne({
+              employeeId : employeeData.employeeId,
+              date :new Date(`${date}T00:00:00Z`)
+            },{
+              // $setOnInsert: { checkInTime: InTime }, // Set only when inserting
+              $set: {
+              employeeId : employeeData.employeeId,
+              date,
+              checkInTime: selectRecord.checkInTime,
+              checkOutTime : OutTime,
+              totalHours,
+              status,
+              trackingTime: new Date()
+              }
+            });
+        }else{
+             // insert the Records in the db
+            await attendanceModel.create({
+              employeeId : employeeData.employeeId,
+              date,
+              checkInTime : InTime,
+              checkOutTime : OutTime,
+              totalHours,
+              status,
+              trackingTime: new Date()
+            });
+        }
+      // console.log('hello worldsshshdghgdsgdjgs ',updateResult);
+  
+     
+      
+      // const sortedPunch =  punch.sort((a,b)=>{ return (new Date(a.recordTime)-new Date(b.recordTime))});
+      // dataaa.push({
+      //   employeeId : employeeData.employeeId,
+      //   date,
+      //   checkInTime : InTime,
+      //   checkOutTime : OutTime,
+      //   totalHours,
+      //   status,
+      //   trackingTime: new Date()
+      // });
+    })
+    return true;
+  }
 
 
 const addBiometricDevice = async (req,res) =>{

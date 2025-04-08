@@ -21,9 +21,9 @@ const setterHandlers =  ({name,value})=>{
       <div>
         <label>Per-Page : </label>
         <select value={limit} name="limit" onChange={(e)=>{setterHandlers(e.target)}} className="px-4 py-2">
-            <option value="1">1</option>
             <option value="10">10</option>
             <option value="20">20</option>
+            <option value="30">30</option>
         </select>
       </div>
       <nav aria-label="Page navigation example">

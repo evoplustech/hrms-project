@@ -2,7 +2,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 const useSelectorHook = (param) => {
-  
     try{
       const stateData = pickStateSelector(param);
       const selectState = useSelector(stateData);

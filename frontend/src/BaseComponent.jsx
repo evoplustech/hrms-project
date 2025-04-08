@@ -26,6 +26,7 @@ import HolidayLayout from './components/Home/holiday/holidayLayout';
 import HolidayList from './components/Home/holiday/HolidayList';
 import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
+import currentMonthDates from '../utils/dateOfMonth';
 
 
 
@@ -73,48 +74,43 @@ const BaseComponent = ()=>{
   const dispatch = useDispatch();
   const loggedData =(localStorage.getItem("emplog") || '');
   const {employeeId,empPersonalId} = JSON.parse(loggedData || '{}') ;
+   const [firstDayOfMonth,lastDayOfMonth] = currentMonthDates();
+  
   // console.log('loggedData',empPersonalId );
 
-  useEffect(()=>{
+  useEffect(()=> {
     // console.log('hello world');
-    async function storeData(){
+    function storeData(){
       const user = JSON.parse(localStorage.getItem("emplog"));
       const year = new Date().getFullYear();
       const holidaystartDate = `${year}-01-01`;
       const holidayendDate = `${year}-12-31`;
-      console.log("user");
-      console.log(user);
+      const roleType= new Set(['manager','admin','hr','tl']);
       const params = { "startDate":holidaystartDate, "endDate":holidayendDate };
 
       if(user !== null){
-      dispatch(getHolidayList(params))
-        await dispatch(fetchAllEmployees());
-        await dispatch(fetchAllDepartment());
-        await dispatch(fetchAllRoles());
-        await dispatch(fetchAllDesignation());
-        await dispatch(fetchAllShifts());
-        await dispatch(getModules());
-        await dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
-        await dispatch(fetchReasons());
-        dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
-        dispatch(getLeaveTypes())
-        dispatch(fetchPolicy())
-
-        if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
-        dispatch(getAttendanceRequest({
-          empid:empPersonalId._id,
-          id:employeeId,
-          status:'All',
-          requestType:1,
-          page:1,
-          limit:10
-        }));
+        dispatch(getHolidayList(params))
       }
 
-      // /api/attendance/getRequest?empid=${empid}&id=${id}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${requestType}&page=2&limit=1`
-
-      // api/attendance/getRequest?empid=${empid}&id=${id}&page=${page}&limit=${limit}
+      if(roleType.has(user.role.name.toLowerCase())) dispatch(fetchAllEmployees({
+        designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
+      }));
       
+      dispatch(fetchAllDepartment());
+      dispatch(fetchAllRoles());
+      dispatch(fetchAllDesignation());
+      dispatch(fetchAllShifts());
+      dispatch(getModules());
+      dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
+      dispatch(fetchReasons());
+      dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
+      dispatch(getLeaveTypes())
+      dispatch(fetchPolicy())
+
+      if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
+      // console.log(firstDayOfMonth,lastDayOfMonth,'ooooohhhhhhhhhhhhhhhhhhhhhhohhhhhh');
+      const urlData = {empid:empPersonalId._id,id:employeeId,startDate:firstDayOfMonth,endDate:lastDayOfMonth,status:'All',requestType:1,page:1,limit:10};
+       dispatch(getAttendanceRequest(urlData));
     }
     storeData();
   },[loggedData]);

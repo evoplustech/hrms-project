@@ -17,17 +17,13 @@ const Myattendance = () => {
     const {data} = useSelectorHook("attendance");
     const dispatch = useDispatch();
     const {id} = useParams();
-    const employeeDetails  = useSelectorHook('employee');
-    const employeeDetailss  = useSelectorHook('authenticate');
-    console.log('params',id,employeeDetailss);
+    const {data:employeeDetails}  = useSelectorHook('employee');
+    let {data:employeedata}  = useSelectorHook('authenticate');
+    console.log('params',id,employeedata,'id type',typeof id,typeof employeedata['employeeId']);
 
+  if(id !== employeedata['employeeId'])
+    employeedata = employeeDetails.length > 0 && employeeDetails.find((value)=>value.employeeId === id);
 
-    const employeedata = employeeDetailss['data'].role.name.toLowerCase()=== 'admin' ? employeeDetails['data'].find((value)=>{
-          return value.employeeId === id;
-        }) : employeeDetailss['data'] ;
-    // const employeedata= employeeDetails['data'].find((value)=>{
-    //     return value.employeeId === id;
-    //   });
 
     const handleDateChange = async (dateParam) => {
       try{

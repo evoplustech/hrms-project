@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { IoIosSearch } from "react-icons/io";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoChevronBackCircleOutline,IoChevronForwardCircleOutline  } from "react-icons/io5";
@@ -6,6 +6,7 @@ import { AiOutlinePieChart } from "react-icons/ai";
 import { GiTimeBomb,GiIsland } from "react-icons/gi";
 import { IoFingerPrint } from "react-icons/io5";
 import { TbSettingsCog } from "react-icons/tb";
+import { IoMdArrowDropdown } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import useSelectorHook from '../../../utils/useSelectorHook';
 import { MdPolicy } from "react-icons/md";
@@ -17,6 +18,7 @@ const Sidebar = ({tab}) => {
   const {data} = useSelectorHook('authenticate');
   console.log(data.profilepic)
   const [ sidebarToggle, setToggle ]= useState(false);
+  const configDropdown = useRef();
   // const { isLogged, data } = useSelectorHook('authenticateUser');
   console.log('toggle state=> ',sidebarToggle);
 // console.log('toggle state=> ',sidebarToggle);
@@ -71,9 +73,11 @@ const sideWidth = {
           {sidebarToggle ? '':'Bio-Metric'}</Link>}
           <Link to="/home/leaves" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='leaves' ? active:''}`}><GiIsland  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Leave'}</Link>
-          <Link to="/home/configuration" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='configuration' ? active:''}`}><TbSettingsCog  className="w-6 h-6 me-2 text-orange-600"/>
-          {sidebarToggle ? '':'Configuration'}</Link>
-
+          {data.role.name.toLowerCase() === 'admin'&&
+          
+          <div to="/home/configuration" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='configuration' ? active:''}`}><TbSettingsCog  className="w-6 h-6 me-2 text-orange-600"/>
+          {sidebarToggle ? '':'Configuration'}<IoMdArrowDropdown className="ms-2 h-6 w-6 pt-1"/> </div>
+          }
           <Link to="/home/policy" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='policy' ? active:''}`}><MdPolicy  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Policy'}</Link>
 

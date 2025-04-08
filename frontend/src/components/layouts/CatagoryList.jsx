@@ -15,8 +15,6 @@ const CatagoryList = ({value}) => {
   // }else{
   //   show_hide = true;
   // }
-
-
   return (
     <>  
     { show_hide ? 

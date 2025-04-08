@@ -36,6 +36,10 @@ const AttendanceTimesView = ({data,employeedata}) => {
                 <tbody>
                   {
                   data.length > 0 &&  data.map((value)=>{
+                    const dateinTime = new Date(value.checkInTime);
+                    const formattedInTime = format(dateinTime, 'h:mm a');
+                    const dateOutTime = new Date(value.checkOutTime);
+                    const formattedOutTime = format(dateOutTime, 'h:mm a');
                      return  (<tr key={value.date} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-xl font-semibold">
                         <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {format(new Date(value.date),'dd-MM-yyyy')}
@@ -48,18 +52,20 @@ const AttendanceTimesView = ({data,employeedata}) => {
                         </td>
                         
                         <td className="px-6 py-4">
-                            {value.checkInTime || "00:00:00"}{value.status.toLowerCase()==='late-in' && <span className="text-2xl ml-3">🐌</span>}
+                            {formattedInTime || "00:00:00"}{value.status.toLowerCase()==='late-in' && <span className="text-2xl ml-3">🐌</span>}
+                            {/* {value.checkInTime || ''} */}
                         </td>
                         <td className="px-6 py-4">
-                           {value.checkOutTime || "00:00:00"}
+                           {formattedOutTime || "00:00:00"}
+                           {/* {value.checkOutTime || ''} */}
                         </td>
                         <td className="px-6 py-4">
                             {value.totalHours}
                         </td>
                         <td className="px-6 py-4 text-right">
                           {
-                            value.status.toLowerCase() !=='present' && 
-                                value?.related?.status ==='Pending' ? <FaHourglassHalf  className="w-8 h-8 text-yellow-700 translate-x-12"></FaHourglassHalf> : value?.related?.status==='Rejected' ? <FaTimesCircle className="w-8 h-8 text-orange-600 translate-x-12"></FaTimesCircle> : value?.related?.status ==='Approved' ? <FaCheckCircle className="w-8 h-8 text-green-500 translate-x-12"></FaCheckCircle>:  <span className="cursor-pointer"><button onClick={()=>(setRecord(value),popupHandler(true))}><LiaRocketchat  className="w-12 h-12 text-cyan-400"/></button></span>
+                            value.status.toLowerCase() !=='present' &&( 
+                                value?.related?.status ==='Pending' ? <FaHourglassHalf  className="w-8 h-8 text-yellow-700 translate-x-12"></FaHourglassHalf> : value?.related?.status==='Rejected' ? <FaTimesCircle className="w-8 h-8 text-orange-600 translate-x-12"></FaTimesCircle> : value?.related?.status ==='Approved' ? <FaCheckCircle className="w-8 h-8 text-green-500 translate-x-12"></FaCheckCircle>:  <span className="cursor-pointer"><button onClick={()=>(setRecord(value),popupHandler(true))}><LiaRocketchat  className="w-12 h-12 text-cyan-400"/></button></span>)
                           }
                             {/* <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> */}
                         </td>

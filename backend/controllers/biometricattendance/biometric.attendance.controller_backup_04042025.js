@@ -28,185 +28,7 @@ const fetchAttendance = async (request,response)=>{
   }
 }
 
-// Optimiized Code starts
-
-const TIME_ZONE = 'Asia/Kolkata';
-const DEFAULT_DATE = new Date('2025-04-01');
-
-const getAttendanceFromDevice = async ({ ip, port }) => {
-  try {
-    const [latestAttendance, employees, holidays] = await Promise.all([
-      attendanceModel.findOne().sort({ trackingTime: -1 }).lean(true),
-      employeeProfessionalModel.find({ employeeId: { $in: ['208','1069'] }}).populate('shift','cumulativeStartTime startTime days name'),
-      holidayModel.find().lean(true)
-    ]);
-
-    const zkInstance = new ZKLib(ip, port, 5200, 5000);
-    await zkInstance.createSocket();
-    
-    const { data: attendanceLog } = await zkInstance.getAttendances();
-    const recordTime = latestAttendance?.trackingTime 
-      ? moment.utc(latestAttendance.trackingTime).tz(TIME_ZONE).toDate()
-      : DEFAULT_DATE;
-
-    const processingPromises = employees.map(async (employeeData) => {
-      const employeeLogs = attendanceLog.filter(log => 
-        log.deviceUserId === employeeData.employeeId &&
-        moment(log.recordTime).tz(TIME_ZONE).toDate() > recordTime
-      );
-
-      if (employeeLogs.length > 0) {
-        await groupAttendance({ 
-          attendanceLogs: employeeLogs, 
-          employeeData, 
-          recordTime,
-          holidays 
-        });
-      }
-    });
-
-    await Promise.all(processingPromises);
-    await zkInstance.disconnect();
-
-    return await attendanceModel.countDocuments();
-
-  } catch (error) {
-    console.error(`Attendance Error: ${error.message}`);
-    throw new Error('Failed to process attendance data');
-  }
-};
-
-const groupAttendance = async ({ attendanceLogs, employeeData, recordTime, holidays }) => {
-  try {
-    const attendanceList = [...attendanceLogs];
-    const dateMap = new Map();
-
-    // Date range processing
-    for (let date = new Date(recordTime); date <= new Date(); date = addDays(date, 1)) {
-      const dateKey = format(date, 'yyyy-MM-dd');
-      if (!attendanceLogs.some(log => format(log.recordTime, 'yyyy-MM-dd') === dateKey)) {
-        attendanceList.push({
-          deviceUserId: employeeData.employeeId,
-          recordTime: date,
-          ip: "10.101.0.7",
-          data: true
-        });
-      }
-    }
-
-    // Employee data fetching
-    const [employeeRecord, leaveRecord] = await Promise.all([
-      employeeProfessionalModel.findOne({ employeeId: employeeData.employeeId })
-        .populate('shift', 'cumulativeStartTime startTime days name')
-        .lean(true),
-      leaveModel.findOne({ employeeId: employeeData._id })
-        .populate('leaveTypeId', 'leaveType')
-        .lean(true)
-    ]);
-
-    // Attendance grouping
-    const attendanceListObj = attendanceList.reduce((acc, log) => {
-      const logDate = toZonedTime(log.recordTime, TIME_ZONE);
-      let dateKey = format(logDate, 'yyyy-MM-dd');
-
-      console.log();
-
-      if (employeeRecord?.shift?.name.toLowerCase() === 'night shift' && 
-          format(logDate, 'a') === 'AM') {
-        dateKey = format(subDays(logDate, 1), 'yyyy-MM-dd');
-      }
-
-      if (!log.data) {
-        acc[dateKey] = acc[dateKey] || [];
-        acc[dateKey].push(logDate);
-      }
-      return acc;
-    }, {});
-
-    // Attendance processing
-    await Promise.all(Object.entries(attendanceListObj).map(async ([date, punches]) => {
-      const dateObj = new Date(`${date}T00:00:00Z`);
-      const existingRecord = await attendanceModel.findOne({ 
-        employeeId: employeeData.employeeId, 
-        date: dateObj
-      });
-
-      const { status, checkInTime, checkOutTime, totalHours } = await calculateAttendanceStatus({
-        punches,
-        employeeRecord,
-        leaveRecord,
-        holidays,
-        date: dateObj
-      });
-
-      const updateData = {
-        employeeId: employeeData.employeeId,
-        date: dateObj,
-        checkInTime,
-        checkOutTime,
-        totalHours,
-        status,
-        trackingTime: new Date()
-      };
-
-      existingRecord 
-        ? await attendanceModel.updateOne({ _id: existingRecord._id }, updateData)
-        : await attendanceModel.create(updateData);
-    }));
-
-    return true;
-
-  } catch (error) {
-    console.error(`Group Attendance Error: ${error.message}`);
-    throw error;
-  }
-};
-
-// Helper function
-const calculateAttendanceStatus = async ({ punches, employeeRecord, leaveRecord, holidays, date }) => {
-  let status = 'Absent';
-  let checkInTime = '';
-  let checkOutTime = '';
-  let totalHours = '0:0';
-
-  if (punches.length > 0) {
-    checkInTime = punches[0];
-    checkOutTime = punches[punches.length - 1];
-    const cumulativeStartTime =  moment(checkInTime).format('YYYY-MM-DD') + ' ' + employeeRecord.shift.cumulativeStartTime;
-    const diffMs = checkOutTime - checkInTime;
-    const hours = Math.floor(diffMs / 3600000);
-    const minutes = Math.floor((diffMs % 3600000) / 60000);
-    totalHours = `${hours}:${minutes}`;
-
-    status = hours < 9 ? 'Early Left' : 'Present';
-    
-    if (moment(checkInTime).isAfter(moment(cumulativeStartTime, 'YYYY-MM-DD hh:mm:ss A'))) {
-      status = 'Late-In';
-    }
-
-
-  } else {
-    const dayOfWeek = format(date, 'eeee').toLowerCase();
-    const isWorkingDay = employeeRecord.shift.days.includes(dayOfWeek);
-    
-    if (!isWorkingDay) status = "Week Off";
-    if (holidays.some(h => isSameDay(h.holidayDate, date))) status = 'Holiday';
-    if (leaveRecord && isWithinInterval(date, { 
-      start: new Date(leaveRecord.startDate), 
-      end: new Date(leaveRecord.endDate) 
-    })) {
-      status = leaveRecord.startDatetype === 'Full Day' ? 'Leave' : 'Half-Day';
-    }
-  }
-
-  return { status, checkInTime, checkOutTime, totalHours };
-};
-
-// Optimizzed Code ends
-
-
-
-const getAttendanceFromDevicebackup= async ({ip,port})=>{
+const getAttendanceFromDevice= async ({ip,port})=>{
 try{
 
 
@@ -214,7 +36,7 @@ try{
   const attendanceData = await  attendanceModel.findOne().sort({ trackingTime: -1 });
   let recordTime;
 
-  const userId = await employeeProfessionalModel.find({ employeeId: { $in: ['208','1069'] } }).populate('shift');
+  const userId = await employeeProfessionalModel.find({ employeeId: { $in: ['208','1069'] } }).populate('shift','cumulativeStartTime startTime days name');
   // const userId = [{employeeId : '1069',shift:'night'},{employeeId : '208',shift:'nightd'}];
   let zkInstance = new ZKLib(ip, port, 5200, 5000);
   await zkInstance.createSocket();
@@ -246,7 +68,7 @@ try{
   }
 }
 
-const groupAttendancebbackup = async ({attendanceLogs,employeeData,recordTime})=>{
+const groupAttendance = async ({attendanceLogs,employeeData,recordTime})=>{
   try{
 
 const attendanceList = [...attendanceLogs]; // copy the logs for processing

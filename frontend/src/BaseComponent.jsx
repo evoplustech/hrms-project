@@ -26,6 +26,7 @@ import HolidayLayout from './components/Home/holiday/holidayLayout';
 import HolidayList from './components/Home/holiday/HolidayList';
 import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
+import currentMonthDates from '../utils/dateOfMonth';
 
 
 
@@ -73,6 +74,7 @@ const BaseComponent = ()=>{
   const dispatch = useDispatch();
   const loggedData =(localStorage.getItem("emplog") || '');
   const {employeeId,empPersonalId} = JSON.parse(loggedData || '{}') ;
+   const [firstDayOfMonth,lastDayOfMonth] = currentMonthDates();
   
   // console.log('loggedData',empPersonalId );
 
@@ -101,8 +103,9 @@ const BaseComponent = ()=>{
       dispatch(fetchPolicy())
 
       if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
-      
-       dispatch(getAttendanceRequest({empid:empPersonalId._id,id:employeeId,status:'All',requestType:1,page:1,limit:10}));
+      console.log(firstDayOfMonth,lastDayOfMonth,'ooooohhhhhhhhhhhhhhhhhhhhhhohhhhhh');
+      const urlData = {empid:empPersonalId._id,id:employeeId,startDate:firstDayOfMonth,endDate:lastDayOfMonth,status:'All',requestType:1,page:1,limit:10};
+       dispatch(getAttendanceRequest(urlData));
     }
     storeData();
   },[loggedData]);

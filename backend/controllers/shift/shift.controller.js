@@ -114,7 +114,7 @@ const getAllShifts = async (request,response)=>{
     const allShifts = await shiftModel.find();
     const {role:empRole} = request;
 
-    console.log(request);
+    // console.log(request);
 
     if(empRole.toLowerCase() !=='admin')
       return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });

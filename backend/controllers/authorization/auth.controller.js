@@ -38,7 +38,7 @@ const loginEmployee = async (request,response)=>{
         generateJWTtoken({_id,role},response);
 
         // console.log(empRecord);
-        const {firstName,lastName,profilepic} = empRecord.empPersonalId;
+        const { firstName, lastName, profilepic } = empRecord.empPersonalId;
         
         response.status(200).json({data:empRecord,success:true});
 
@@ -100,7 +100,7 @@ const processPasswordRequest = async(request,response)=>{
       // console.log(receiver);
 
       await  transporter.sendMail(receiver,(error,emailResponse)=>{
-         if(error)
+        if(error)
           console.log(error);
 
         return response.status(200).json({message:"Password Resest Link Sent To Your Email Account",success:true});

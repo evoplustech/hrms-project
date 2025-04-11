@@ -143,7 +143,7 @@ const validateFormFields = (request)=>{
 
   let formField = {}; 
   // ,idProofs
-  console.log(request.body);
+  // console.log(request.body);
   const {firstName,lastName,dateOfBirth,gender,contactInfo,maritalStatus,emergencyContact,nationality,idProofs} = request.body;
   
   const {phone,email} = contactInfo;

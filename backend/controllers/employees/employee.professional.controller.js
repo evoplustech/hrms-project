@@ -10,7 +10,7 @@ const createProfDetail = async (request,response)=>{
     
 
     const {role:empRole} = request;
-    console.log(request.body);
+    // console.log(request.body);
     // console.log(empRole);
       if(empRole.toLowerCase() !=='admin')
          return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });

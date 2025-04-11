@@ -87,14 +87,14 @@ const BaseComponent = ()=>{
 
       if(user !== null){
         dispatch(getHolidayList(params))
-        await dispatch(fetchAllEmployees());
-        await dispatch(fetchAllDepartment());
-        await dispatch(fetchAllRoles());
-        await dispatch(fetchAllDesignation());
-        await dispatch(fetchAllShifts());
-        await dispatch(getModules());
-        await dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
-        await dispatch(fetchReasons());
+        dispatch(fetchAllEmployees());
+        dispatch(fetchAllDepartment());
+        dispatch(fetchAllRoles());
+        dispatch(fetchAllDesignation());
+        dispatch(fetchAllShifts());
+        dispatch(getModules());
+        dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
+        dispatch(fetchReasons());
         dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))
         dispatch(getLeaveTypes())
         dispatch(fetchPolicy())

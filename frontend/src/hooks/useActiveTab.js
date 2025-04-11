@@ -52,7 +52,7 @@ const useActiveTab = () => {
           label  :'All Attendance',
           catvalue:'allattendance',
           url : `/home/${tab}/allAttendance`,
-          isActive : catagoryLink==='allAttendance' && true || false
+          isActive : catagoryLink === 'allAttendance' && true || false
         },
         {
           label  :'My Attendance',

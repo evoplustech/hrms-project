@@ -1,17 +1,51 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Product Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
+}
+
+h1, h2, h3, h4, h5, h6, p, strong, span, ul, li, ol, table, tr, td, label, input, select, button, a {
+  font-family: 'Product Sans';
+  font-style: inherit;
+}
+
+.login-form-wrapper{ padding-top:140px;}
+
+.eyecon{right:1rem; position: relative;  top: -0.1rem;}
+
 .login {
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url("../hrmslogo4.jpg");
+  background: linear-gradient(rgba(200, 200, 200, 0.2), rgba(140, 140, 140, 0.2)), url("../hrmslogo4.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
 }
 
+.login-field { border:1px solid #eee;margin: 0.5em 0;}
+
+.backdrop-blur-md {
+  background-color: #fff;
+}
+
+.login-btn{ background-color: rgb(175, 203, 8);font-weight: 600;}
+.login-btn:hover{ background-color: rgb(251, 185, 0);}
+
 .haldi {
   width: 50px;
   height: 50px;
 }
+
+/* .logo-container{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.logo{
+  width: 250px;
+} */

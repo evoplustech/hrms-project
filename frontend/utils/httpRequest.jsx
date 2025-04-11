@@ -29,8 +29,8 @@ const httpRequest = async ({path,method='',params='',data={}}) => {
     }
 
     // Perform the HTTP request
-    const backendurl = "https://hrms-project-backend.onrender.com"+url;
-    // const backendurl = url;
+    // const backendurl = "https://hrms-project-backend.onrender.com"+url;
+    const backendurl = url;
 
     const response = await fetch(backendurl, options);
     

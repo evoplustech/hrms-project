@@ -6,7 +6,7 @@ const Login = () => {
   return (
     <>
       <div className="flex flex-col justify-center items-center login-page pt-10">
-            <LoginHeader/>
+            {/* <LoginHeader/> */}
             <LoginForm/>
       </div>
     </>

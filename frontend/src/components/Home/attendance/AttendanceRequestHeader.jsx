@@ -30,14 +30,14 @@ const AttendanceRequestHeader = React.memo(({requestData,setRequestData,searchHa
         <button type="button"  className=""><FcSearch className=" w-7 h-7 transform -translate-y-14 translate-x-40" tabindex="1" /></button>
       </div> */}
       <div className="flex  h-fit mt-3">
-          <label className="font-serif font-semibold">From </label>
-          <DateCalander className="border-solid border-cyan-500 border-2 ms-1 text-center text-xl w-36"     timeIntervals={1} timeCaption={"Time"} dateFormat="dd/MM/yyyy" placeholderText={"dd/mm/yyyy"} selected={startDate} showMonthDropdown showYearDropdown dropdownMode="select" onChange={(date)=>setterHandler({name:'startDate',value:date})}/>
-         <span className="ms-1 font-semibold">To</span>   
-         <DateCalander className="border-solid border-cyan-500 border-2 text-center text-xl w-36"  name="outTime"    timeIntervals={1} timeCaption={"Time"} placeholderText={"dd/mm/yyyy"} dateFormat="dd/MM/yyyy" selected={endDate} showMonthDropdown showYearDropdown dropdownMode="select" onChange={(date)=>setterHandler({name:'endDate',value:date})}/>
+          <label className="font-serif text-sm">From&nbsp;</label>
+          <DateCalander className="border-solid border-cyan-500 border-2 ms-1 text-center text-sm w-36 py-1 fromto"     timeIntervals={1} timeCaption={"Time"} dateFormat="dd/MM/yyyy" placeholderText={"dd/mm/yyyy"} selected={startDate} showMonthDropdown showYearDropdown dropdownMode="select" onChange={(date)=>setterHandler({name:'startDate',value:date})}/>
+         <span className="ms-1 text-sm">&nbsp;To &nbsp;</span>   
+         <DateCalander className="border-solid border-cyan-500 border-2 text-center text-sm w-36  py-1 fromto"  name="outTime"    timeIntervals={1} timeCaption={"Time"} placeholderText={"dd/mm/yyyy"} dateFormat="dd/MM/yyyy" selected={endDate} showMonthDropdown showYearDropdown dropdownMode="select" onChange={(date)=>setterHandler({name:'endDate',value:date})}/>
       </div> 
       <div className="ps-0 w-44 flex justify-around items-center">
-          <label className="font-semibold font-serif">Status:</label>
-          <select name="status" value = {status} onChange = {(e)=>setterHandler(e.target)} className="py-2 px-2 hover:cursor-pointer">
+          <label className="font-serif text-sm">Status:</label>
+          <select name="status" value = {status} onChange = {(e)=>setterHandler(e.target)} className="py-2 px-2 hover:cursor-pointer text-sm">
             {
               options.map((value)=>( <option value={value.name} selected = {`${value.name==='All'?'selected':''}`}>{value.name}</option>))
             }
@@ -45,15 +45,15 @@ const AttendanceRequestHeader = React.memo(({requestData,setRequestData,searchHa
       </div>
       {roles.has(name.toLowerCase()) &&
       <div>
-      <label className="font-semibold font-serif">Request Type:</label>
-        <select name="request" value={request} onChange = {(e)=>setterHandler(e.target)} className="py-2 px-2 hover:cursor-pointer">
+      <label className="font-serif text-sm">Request Type:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <select name="request" value={request} onChange = {(e)=>setterHandler(e.target)} className="py-2 px-2 hover:cursor-pointer text-sm">
           <option value="1" selected>My Requests</option>
           <option value="2">Other's Requests</option>
         </select>
       </div>
       }
       <div>
-        <button onClick = {validationHandle} className="px-6 py-2 bg-emerald-500 text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
+        <button onClick = {validationHandle} className="px-6 py-1.5 bg-emerald-500 text-white">
             Search
         </button>
       </div>

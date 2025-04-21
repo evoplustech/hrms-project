@@ -100,29 +100,29 @@ const LeaveList = () => {
   
   return (<>
       <div className="text-lg font-bold">
-        <h1 className="text-2xl">LeaveList Module</h1>
+        <h1 className="text-xl">LeaveList Module</h1>
       </div>
       <div className="overflow-x-auto">
-        <div className='flex flex-row my-4 justify-between items-end'>
+        <div className='flex flex-row justify-between items-end'>
           <div>
             <LeaveSearch userRole={userRole} setSearchParams={setSearchParams} searchParams = {searchParams} handleSubmit={handleSubmit} />
           </div>
-          <div className='px-2'><span className='font-semibold'>TotalRecords:</span> {data.totalRecord}</div>
+          <div className='mb-2'><span className='font-semibold'>TotalRecords:</span> {data.totalRecord}</div>
         </div>
        
-        <table className="table-auto border-collapse">
+        <table className="table-auto border-collapse" width="100%">
           <thead>
-            <tr className="bg-[#7fe0bb] text-white">
-              <th className="py-3 px-6 border-b text-left">Name</th>
-              <th className="py-3 px-6 border-b text-left">Leave Type</th>
-              <th className="py-3 px-6 border-b text-left">Start Date</th>
-              <th className="py-3 px-6 border-b text-left">End Date</th>
-              <th className="py-3 px-6 border-b text-left">Number of Days</th>
-              <th className="py-3 px-6 border-b text-left">Leave Reason</th>
-              <th className="py-3 px-6 border-b text-left">Leave Status</th>
-              <th className="py-3 px-6 border-b text-left">Approved By</th>
-              <th className="py-3 px-6 border-b text-left">Applied On</th>
-              <th className="py-3 px-6 border-b text-left">Actions</th>
+            <tr className="bg-slate-300 text-gray-700">
+              <th className="py-3 border-b text-center text-sm">Name</th>
+              <th className="py-3 border-b text-center text-sm">Leave Type</th>
+              <th className="py-3 border-b text-center text-sm">Start Date</th>
+              <th className="py-3 border-b text-center text-sm">End Date</th>
+              <th className="py-3 border-b text-center text-sm">No.of Days</th>
+              <th className="py-3 border-b text-center text-sm">Leave Reason</th>
+              <th className="py-3 border-b text-center text-sm">Leave Status</th>
+              <th className="py-3 border-b text-center text-sm">Approved By</th>
+              <th className="py-3 border-b text-center text-sm">Applied On</th>
+              <th className="py-3 border-b text-center text-sm">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -131,7 +131,7 @@ const LeaveList = () => {
               return (<>
                 <LeaveLineItem  key={index} leave={leave} userDetail={userDetail} handleAction={handleAction} />
               </>)
-            }):<tr><td className='text-center border p-4 border-gray-300' colSpan='10'>No Records Found</td></tr>}
+            }):<tr><td className='text-center border p-4 border-gray-300 text-xl' colSpan='10'>No Records Found</td></tr>}
 
         </tbody>
         </table>

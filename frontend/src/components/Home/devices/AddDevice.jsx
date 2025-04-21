@@ -104,6 +104,8 @@ const AddDevice = () => {
   }
   
   return (
+
+    
     <form onSubmit={(e) => {
       e.preventDefault()}} className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
       <div className="mb-4">
@@ -117,7 +119,7 @@ const AddDevice = () => {
           placeholder="Device Name"
           value={formData.deviceName}
           onChange={handleChange}
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 text-sm block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -133,7 +135,7 @@ const AddDevice = () => {
           value={formData.ipAddress}
           onChange={handleChange}
           placeholder="IP Address"
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 text-sm block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
       
@@ -148,14 +150,14 @@ const AddDevice = () => {
           value={formData.port}
           onChange={handleChange}
           placeholder="Port"
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 block w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
         <p className='text-red-700 text-center m-2 items-center'>{formError}</p>
       <button
         type="submit"
-        className="w-full bg-teal-300 text-white py-2 px-4 rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full  text-white py-2 px-4 rounded-lg hover:bg-green-600 bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
         onClick={handleSubmit}
       >
         {id ? "Update Device" : "Add Device"}

@@ -134,12 +134,13 @@ const formSubmitHandler = async (data)=>{
 
   return (
   <>
-    <form className="max-w-7xl space-y-16" encType="multipart/form-data" onSubmit = {handleSubmit(formSubmitHandler)}>
+    <form className="" encType="multipart/form-data" onSubmit = {handleSubmit(formSubmitHandler)}>
+ <div className='emp-details bg-white shadow-lg rounded-lg p-10'>
       <div className="mb-10">
           <p className="font-semibold text-xl text-gray-700">Employee Professional Details :</p>
       </div>
       <Input type="hidden" value={_id} name="empPersonalId" {...register('empPersonalId')} />
-      <div className="grid  md:grid-cols-4">
+      <div className="grid  md:grid-cols-4 mb-10">
         <div className="">
           <Input label='Username : '  type="email"  name="email" {...register('email')} />
           {errors?.email && <p className="text-red-600">{errors.email.message}</p>}
@@ -156,10 +157,8 @@ const formSubmitHandler = async (data)=>{
           <Input label='Confirm Password : '  type={`${locationPath ==='updateEmployee'? 'hidden':'text'}`}  name="confirmPassword" {...register('confirmPassword')} />
           {errors?.confirmPassword && <p className="text-red-600 w-5">{errors.confirmPassword.message}</p>}
         </div>
-        
-        
       </div>
-      <div className="grid  md:grid-cols-4">
+      <div className="grid  md:grid-cols-4 mb-10">
       <div className="">
           <Select label='Role : ' name="role" options={rolesList} {...register('role')}/>
           {errors?.role && <p className="text-red-600">{errors.role.message}</p>}
@@ -181,25 +180,31 @@ const formSubmitHandler = async (data)=>{
           {errors?.designation && <p className="text-red-600">{errors.designation.message}</p>}
         </div>
         <div className="">
-          <Input label='date Of Joining : '  type="date"  name="dateOfJoining"  {...register('dateOfJoining')} />
-          {errors?.dateOfJoining && <p className="text-red-600">{errors.dateOfJoining.message}</p>}
+          <Input label='Date Of Joining : '  type="date" className="uppercase"  name="dateOfJoining"  {...register('dateOfJoining')} />
+          {errors?.dateOfJoining && <p className="text-red-600 uppercase">{errors.dateOfJoining.message}</p>}
         </div>
       </div>
-      <div className="grid  md:grid-cols-3">
+
+
+      <div className="grid  md:grid-cols-4 mb-5">
         <div>
           <Select label='Employment Type :' name="employmentType"  options = {[{name:'Permanent'},{name:'Temporary'}, {name:'Trainee'}]} {...register('employmentType')}  />
           {errors?.employmentType && <p className="text-red-600 w-5">{errors.employmentType.message}</p>}
         </div>
         <div>
-         
-        </div>
-        <div>
           <Controller control = {control}  name="conformation"   render={({field})=>{
-            return <Checkbox label='Conformation : '  checked={field.value} {...field}/>
+            return <Checkbox label='Conformation'  checked={field.value} {...field}/>
           }} >
           </Controller>
-        </div> 
+        </div>
+        <div>&nbsp;</div>
+        <div>&nbsp;</div> 
+
       </div>
+</div>
+
+
+<div className='emp-details bg-white shadow-lg rounded-lg p-10 mt-10'>
       <div className="mb-10">
             <p className="font-semibold text-xl text-gray-700">Work Location :</p>
         </div>
@@ -209,7 +214,7 @@ const formSubmitHandler = async (data)=>{
           {errors?.office && <p className="text-red-600">{errors.office.message}</p>}
         </div>
         <div className="">
-          <Input label='city : '  type="text"  name="city" {...register('city')} />
+          <Input label='City : '  type="text"  name="city" {...register('city')} />
           {errors?.city && <p className="text-red-600">{errors.city.message}</p>}
         </div>
         <div className="">
@@ -224,7 +229,10 @@ const formSubmitHandler = async (data)=>{
         </div>
         
       </div>
-      
+
+      </div>
+      <div className='emp-details bg-white shadow-lg rounded-lg p-10 mt-10'>
+
       <div className="mb-10">
           <p className="font-semibold text-xl text-gray-700">Salary Details :</p>
       </div>
@@ -247,6 +255,8 @@ const formSubmitHandler = async (data)=>{
           {errors?.total && <p className="text-red-600">{errors.total.message}</p>}
         </div>
       </div>
+      </div>
+
       {/*  */}
       {/* <div className="grid  md:grid-cols-1">
          

@@ -110,23 +110,23 @@ const LeaveRequest = () => {
   }
 
   return (<>
-    <div className="w-4/5 m-auto p-6 bg-white border rounded-2xl">
+    <div className="w-4/5 m-auto bg-white border border-t-0">
       <form onSubmit={(e)=> e.preventDefault()}>
-        <h1 className='font-bold text-center text-3xl p-4'>Leave Request</h1>
+        <h1 className='font-bold text-center text-lg p-2.5 bg-slate-300'>Leave Request</h1>
         <div className='flex flex-col mt-5'>
 
-          <div className='flex flex-row'>
-            <div className='w-1/2 mx-10'>
-              <label className='font-semibold'>Start Date<sup>*</sup></label>
+          <div className='flex flex-row '>
+            <div className='w-1/2 mx-10 mt-4'>
+              <label className='font-semibold text-sm'>Start Date<sup>*</sup></label>
               <div className='my-2'>
-                  <input type="date" name="startDate" value={leaveForm.startDate} className='w-full p-3 border rounded-md bg-white focus:border-2 focus:border-black outline-none' onChange={handleChange} />
+                  <input type="date" name="startDate" value={leaveForm.startDate} className='uppercase text-sm w-full p-2 border rounded-md bg-white focus:border-2 focus:border-black outline-none' onChange={handleChange} />
               </div>
             </div>
 
-            <div className='w-1/2 mx-10'>
-              <label className='font-semibold'>Start Date BreakDown<sup>*</sup></label>
+            <div className='w-1/2 mx-10 mt-4'>
+              <label className='font-semibold  text-sm'>Start Date BreakDown<sup>*</sup></label>
               <div className='my-2'>
-                  <select  name="startDatetype" value={leaveForm.startDatetype} className='w-full p-3 border rounded-md bg-white focus:border-2 focus:border-black' onChange={handleChange}>
+                  <select  name="startDatetype" value={leaveForm.startDatetype} className='text-sm w-full p-2 border rounded-md bg-white focus:border-2 focus:border-black' onChange={handleChange}>
                     <option value="">Select Day Type</option>
                     <option value="First Half">First Half</option>
                     <option value="Second Half">Second Half</option>
@@ -137,18 +137,18 @@ const LeaveRequest = () => {
 
           </div>
 
-          <div className='flex flex-row'>
+          <div className='flex flex-row mt-4'>
             <div className='w-full flex flex-col mx-10'>
-              <label className='font-semibold'>End Date<sup>*</sup></label>
+              <label className='font-semibold text-sm'>End Date<sup>*</sup></label>
               <div className='my-2'>
-                  <input type="date" name="endDate" value={leaveForm.endDate} className='w-full p-3 border rounded-md bg-white' onChange={handleChange} />
+                  <input type="date" name="endDate" value={leaveForm.endDate} className='text-sm w-full p-2 border rounded-md bg-white uppercase' onChange={handleChange} />
               </div>
             </div>
 
-            <div className='w-full flex flex-col mx-10'>
-              <label className='font-semibold'>End Date BreakDown<sup>*</sup></label>
+            <div className='w-full flex flex-col mx-10 mt-4'>
+              <label className='font-semibold text-sm'>End Date BreakDown<sup>*</sup></label>
               <div className='my-2'>
-                  <select  name="endDatetype" value={leaveForm.endDatetype} className='w-full p-3 border rounded-md bg-white' onChange={handleChange}>
+                  <select  name="endDatetype" value={leaveForm.endDatetype} className='text-sm w-full p-2 border rounded-md bg-white' onChange={handleChange}>
                     <option value="">Select Day Type</option>
                     <option value="First Half">First Half</option>
                     <option value="Second Half">Second Half</option>
@@ -159,9 +159,9 @@ const LeaveRequest = () => {
           </div>
 
           <div className='w-full flex flex-col mx-10'>
-            <label className='font-semibold'>Leave Type<sup>*</sup></label>
+            <label className='font-semibold text-sm'>Leave Type<sup>*</sup></label>
             <div className='my-2'>
-                <select name='leaveTypeId' value={leaveForm.leaveTypeId} className='w-[42%] p-3 border rounded-md bg-white' onChange={handleChange}>
+                <select name='leaveTypeId' value={leaveForm.leaveTypeId} className='text-sm w-[43.5%] p-2 border rounded-md bg-white' onChange={handleChange}>
                   <option value="">Select Leave</option>
                   {data.map(leavetype => {
                     return (
@@ -174,15 +174,15 @@ const LeaveRequest = () => {
             </div>
           </div>
 
-          <div className='flex flex-col mx-10'>
-            <label className='font-semibold'>Description<sup>*</sup></label>
+          <div className='flex flex-col mx-10 mt-4'>
+            <label className='font-semibold text-sm'>Description<sup>*</sup></label>
             <div className='my-2'>
-                <textarea  onChange={handleChange} name="reason" value={leaveForm.reason} id="message" rows="4" className="w-full block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave Reason..."></textarea>
+                <textarea  onChange={handleChange} name="reason" value={leaveForm.reason} id="message" rows="4" className="text-sm w-full block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave Reason..."></textarea>
             </div>
           </div>
 
           <div className='text-center'>
-            <button className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-2 mb-2" aria-label="Delete device" onClick={handleApplyLeave}>Apply Leave</button>
+            <button className="text-white hover:bg-green-600 px-8 py-2 mt-4 mb-6 bg-emerald-500 rounded-lg" aria-label="Delete device" onClick={handleApplyLeave}>Apply Leave</button>
           </div>
 
         </div>

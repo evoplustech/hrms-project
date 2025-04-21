@@ -55,12 +55,12 @@ const AddPolicy = () => {
 
   return (
     <>
-      <h1 className='text-3xl'>AddPolicy</h1>
-      <div className="max-w-xl mx-auto p-4 bg-gray-300 rounded-md">
+      {/* <h1 className='text-3xl'>AddPolicy</h1> */}
+      <div className="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-10">
       <form onSubmit={(e) => {
       e.preventDefault()}}>
         <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2" htmlFor="policyName">
+          <label className="block text-gray-700 font-semibold mb-2 text-sm" htmlFor="policyName">
             Policy Name:
           </label>
           <input
@@ -69,12 +69,12 @@ const AddPolicy = () => {
             name="policyName"
             value={policyForm?.policyName}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2" htmlFor="description">
+          <label className="block text-gray-700 font-semibold mb-2 text-sm" htmlFor="description">
             Description:
           </label>
           <textarea
@@ -82,20 +82,20 @@ const AddPolicy = () => {
             name="description"
             value={policyForm?.description}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border text-sm border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="4"
           ></textarea>
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2" htmlFor="complianceType">
+          <label className="block text-gray-700 font-semibold mb-2 text-sm" htmlFor="complianceType">
             Compliance Type:
           </label>
           <select id="complianceType"
             name="complianceType"
             value={policyForm?.complianceType}
             onChange={handleChange}
-            className="w-full px-4 py-2 border bg-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" >
+            className="w-full px-4 py-2 border text-sm bg-white border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" >
               <option value=''>Select</option>
               <option value='HR'  >HR</option>
               <option value='Safety'>Safety</option>

@@ -19,10 +19,10 @@ const AttendanceRequestBody = ({attendanceState,name}) => {
       <div className="mt-8">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr className='bg-stone-300'>
+              <tr className='bg-slate-300'>
                 {
                   Heading.map((value)=>{
-                    return <th key={value} scope="col" className="px-6 py-3 text-slate-600 text-lg font-serif font-bold">
+                    return <th key={value} scope="col" className="px-6 py-3 text-sm font-serif capitalize">
                         {value}
                     </th>
                   })
@@ -34,30 +34,30 @@ const AttendanceRequestBody = ({attendanceState,name}) => {
             attendanceState.length > 0 && 
             attendanceState.map((value,keys)=>{
                 return (<tr key={keys}  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-md font-semibold">
-                  <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <td scope="row" className="px-6 py-4 text-gray-800 whitespace-nowrap dark:text-white text-left">
                       {format(new Date(value.createdAt),'dd-MM-yyyy')}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-left font-normal text-gray-800">
                       {`${value['empPersonalId'].firstName} ${value['empPersonalId'].lastName}`}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-left font-normal text-gray-800">
                     {format(new Date(value.date),'dd-MM-yyyy')}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-left font-normal text-gray-800">
                       {value.inTime || ''}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-left font-normal text-gray-800">
                     {value.outTime || ''}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-left font-normal text-gray-800">
                      <span className={`p-2 rounded-md ${bgcolor[value.status]} text-black`}>{value.status || ''}</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-left font-normal text-gray-800">
                     <button onClick={()=>(setRecord(value),setpopup(!popup))} data-modal-target="select-modal" data-modal-toggle="select-modal" ><PiNotePencilDuotone className="w-7 h-7 text-pink-400"/></button>
                   </td>
                 </tr>)
             })
-              ||  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-xl font-semibold"><td colSpan={7} className="font-semibold text-gray-500 text-center text-2xl p-10">No Records To Display</td></tr>
+              ||  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-xl font-semibold"><td colSpan={7} className="font-semibold text-gray-500 text-center text-xl p-10">No Records To Display</td></tr>
           }
           </tbody>
         </table>

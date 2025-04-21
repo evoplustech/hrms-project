@@ -59,25 +59,25 @@ const sideWidth = {
       }
       <nav className="mt-6">
         <div className="space-y-2">
-          <Link to="/home" className={`px-4 py-2 flex font-semibold  rounded-e-full  ${tab ==='home'? active :''}`}>
+          <Link to="/home" className={`px-4 py-2 flex  rounded-e-full  ${tab ==='home'? active :''}`}>
             <AiOutlinePieChart className="w-6 h-6 me-2 text-orange-600"/>{sidebarToggle ? '':'Dashboard'}
           </Link>
-          <Link to="/home/employee" className= {`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='employee' ? active:''}`}><FaPeopleGroup className="w-6 h-6 me-2 text-orange-600"/>
+          <Link to="/home/employee" className= {`px-4 py-2 flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='employee' ? active:''}`}><FaPeopleGroup className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Employee Management'}
           </Link>
-          <Link to={`/home/attendance/${data.employeeId}`} className={`px-4 py-2  font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='attendance' ? active:''}`}><GiTimeBomb className="w-6 h-6 me-2 text-orange-600"/>
+          <Link to={`/home/attendance/${data.employeeId}`} className={`px-4 py-2 flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='attendance' ? active:''}`}><GiTimeBomb className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Attendance'}</Link>
-          {data.role.name.toLowerCase() === 'admin'&&<Link to="/home/devices" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='devices' ? active:''}`}><IoFingerPrint  className="w-6 h-6 me-2 text-orange-600"/>
+          {data.role.name.toLowerCase() === 'admin'&&<Link to="/home/devices" className={`px-4 py-2 flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='devices' ? active:''}`}><IoFingerPrint  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Bio-Metric'}</Link>}
-          <Link to="/home/leaves" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='leaves' ? active:''}`}><GiIsland  className="w-6 h-6 me-2 text-orange-600"/>
+          <Link to="/home/leaves" className={`px-4 py-2 flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='leaves' ? active:''}`}><GiIsland  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Leave'}</Link>
-          <Link to="/home/configuration" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='configuration' ? active:''}`}><TbSettingsCog  className="w-6 h-6 me-2 text-orange-600"/>
+          <Link to="/home/configuration" className={`px-4 py-2 flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='configuration' ? active:''}`}><TbSettingsCog  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Configuration'}</Link>
 
-          <Link to="/home/policy" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='policy' ? active:''}`}><MdPolicy  className="w-6 h-6 me-2 text-orange-600"/>
+          <Link to="/home/policy" className={`px-4 py-2 flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='policy' ? active:''}`}><MdPolicy  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Policy'}</Link>
 
-          <Link to="/home/holiday" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='holiday' ? active:''}`}>
+          <Link to="/home/holiday" className={`px-4 py-2 flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='holiday' ? active:''}`}>
             <MdOutlineHolidayVillage className='w-6 h-6 me-2 text-orange-600'/>
             {sidebarToggle ? '':'Holiday'}
           </Link>

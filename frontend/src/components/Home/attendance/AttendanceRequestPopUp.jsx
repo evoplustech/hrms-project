@@ -9,6 +9,7 @@ import Select from '../../form/Select';
 import useSelectorHook from '../../../../utils/useSelectorHook';
 import { addAttendanceRequest } from '../../../slices/attendanceRequestSlice';
 import { useDispatch } from 'react-redux';
+import { updateAttendance } from '../../../slices/attendanceSlice';
 
 // import Date from '../../form/Date';
 
@@ -50,6 +51,7 @@ const dateHandler = ({dateparam,time})=>{
 
 const selectHandler=(e)=>{
   const selectValue = e.target.value;
+  console.log(selectValue);
   if(selectValue)
     setfieldError('');
   else
@@ -61,9 +63,14 @@ const submitHandler = async ()=>{
   try{
     const reasonData = reason.current.value;
     const remarkData = remark.current.value; 
+    console.log('reasonData',reasonData,'remarkData',remarkData,fieldError);
     if(reasonData===''){
-      setfieldError('Please Select the Reason')
-      return false;
+      setfieldError('Please Select the Reason');
+      console.log('entereteterterterteretrt');
+      popupHandler(true);
+      throw new Error('Please Select the Reason');
+      // popupHandler(false);
+      // return false;
     }
     if(new Date(outtime) <= new Date(intime)){
       toast.error('out-Time should not be less or equal to in-Time');
@@ -77,14 +84,18 @@ const submitHandler = async ()=>{
       const requestData = {attendanceId:_id,employeeId,date,inTime,outTime,reason:reasonData,remarks:remarkData};
   
       const {payload} = await dispatch(addAttendanceRequest(requestData));
-      if(payload.success)
+      if(payload.success){
+        dispatch(updateAttendance(payload?.data));
         toast.success(`Attendance Request Raised Successfully`);
-      else
+        popupHandler(false);
+      }else{
         toast.error(`${payload.error}`);
+      }
+        
   }catch(error){
     toast.error(`${error.message}`);
   }finally{
-      popupHandler(false);
+      // popupHandler(false);
   }
       
 }
@@ -111,14 +122,14 @@ const submitHandler = async ()=>{
             <div>
               <p className="text-xl text-center text-slate-700 font-bold mb-6">Raise Attendance Request</p>
               <div className="flex flex-col items-start">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" >
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>In-Time</th>
-                    <th>Out-Time</th>
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" width={"100%"}>
+                  <tr className="bg-white" >
+                    <th width={"25%"}>Date</th>
+                    <th width={"25%"}>Status</th>
+                    <th width={"25%"}>In-Time</th>
+                    <th width={"25%"}>Out-Time</th>
                   </tr>
-                  <tr className="font-semibold text-rose-700">
+                  <tr className="font-semibold text-rose-700 text-lg">
                     <td>{record.date.split('T')[0] || ''}</td>
                     <td>{record.status}</td>
                     <td>{record.checkInTime || '00.00.00'}</td>
@@ -126,19 +137,27 @@ const submitHandler = async ()=>{
                   </tr>
                 </table>
                 {/* <div> */}
-                  <div className="font-semibold mt-6 space-x-4 flex flex-row justify-center items-center w-full">
+                  <div className="font-semibold mt-6 space-x-4 flex flex-row w-full">
                     <div className="w-1/4 ">
-                      <DateCalander className="smoke border-2 border-sky-600  border-x-white border-t-white hover:none w-36" selected={intime} onChange={(date)=>dateHandler({dateparam:date,time:'InTime'})} name="inTime" showTimeSelect label={"In-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
+                      <DateCalander className="smoke mt-3 border-2 border-sky-600  border-x-white border-t-white hover:none w-36" selected={intime} onChange={(date)=>dateHandler({dateparam:date,time:'InTime'})} name="inTime" showTimeSelect label={"In-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
                     </div>
                     <div className="w-1/4 ">
-                      <DateCalander className="smoke border-2 border-sky-600  border-x-white border-t-white hover:none w-36" name="outTime" selected={outtime} onChange={(date)=>dateHandler({dateparam:date,time:'outTime'})} showTimeSelect label={"Out-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
+                      <DateCalander className="smoke mt-3 border-2 border-sky-600  border-x-white border-t-white hover:none w-36" name="outTime" selected={outtime} onChange={(date)=>dateHandler({dateparam:date,time:'outTime'})} showTimeSelect label={"Out-Time"} timeIntervals={1} timeCaption={"Time"} placeholderText={"Select a date and time"}/>
                     </div>
                     <div className="w-1/4 relative">
-                    <Select  ref={reason} label='Reasons *' options={data} name='reasons' onChange={selectHandler}/>
+                    {/* <Select  ref={reason} label='Reasons *' options={data} name='reasons' onChange={selectHandler}/> */}
+                    {/* <label for="countries_disabled" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label> */}
+                    <select name='reasons' ref={reason} onChange={selectHandler} id="countries_disabled" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option value=''>Select a Reason</option>
+                      {data.length > 0 && data.map((value)=>{
+                        return <option key={value._id} value={value._id}>{value.name}</option>
+                      })
+                      }
+                    </select>
                     {fieldError && <span className="text-red-500">{fieldError}</span>}
                     </div>
                     <div className="w-1/4 relative">
-                    <Input ref= {remark} type="text" label='Remarks *' name='remark'/>
+                    <Input ref= {remark} remarks="left-14" type="text" label='Remarks *' name='remark' placeholderText=""/>
                     </div>
                   </div>
                   <div className="flex flex-col items-center w-full">
@@ -146,7 +165,7 @@ const submitHandler = async ()=>{
                       <label className="font-bold ">Login Hours : </label><span className=" border-2 w-16 px-2 py-1 font-semibold">{loginHours}</span>
                     </div> 
                     <div className="mt-6">
-                    <button type="button" onClick = {submitHandler} className="flex font-semibold text-md justify-center items-center  bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 text-black rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" >Raise Request <span ><RiSendPlaneFill className="w-6 h-6 ps-2 pt-1 text-white" /></span></button>
+                    <button type="button" onClick = {submitHandler} className="flex rounded-lg font-semibold text-md justify-center items-center hover:bg-green-600 px-6 py-1.5 bg-emerald-500 text-white" >Raise Request <span ><RiSendPlaneFill className="w-6 h-6 ps-2 pt-1 text-white" /></span></button>
                     </div> 
                   </div>
                 {/* </div> */}

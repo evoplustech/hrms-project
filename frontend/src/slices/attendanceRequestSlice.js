@@ -51,10 +51,11 @@ const attendanceRequestSlice = createSlice({
         console.log(action.payload.data,'count',action.payload.count);
         state.data.push(action.payload.data);
         state.error = null;
-      }else{
-        state.data = {};
-        state.error = action.payload.error;
-     }
+      }
+    //   else{
+    //     state.data = {};
+    //     state.error = action.payload.error;
+    //  }
     }).addCase(addAttendanceRequest.rejected,(state,action)=>{
 
     }).addCase(getAttendanceRequest.pending,(state,action)=>{
@@ -67,7 +68,7 @@ const attendanceRequestSlice = createSlice({
       state.data= action.payload.data;
       state.error = null;
     }else{
-      state.data = {};
+      state.data = [];
       state.error = action.payload.error;
    }
   }).addCase(getAttendanceRequest.rejected,(state,action)=>{

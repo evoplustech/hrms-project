@@ -67,104 +67,110 @@ const AttendanceRequestActions = ({popup,setpopup,record}) => {
 
         {/* Body - Form Fields */}
         {/*  */}
-        <div className="space-y-4 text-center">
-          <h1 className="text-xl font-semibold text-neutral-600 underline">Employee Detail :</h1>
-          <div class="grid md:grid-cols-4 md:gap-2 mt-4 ">
+        <div className="space-y-4 text-left">
+          <h1 className="text-base font-semibold text-neutral-600">Employee Detail :</h1>
+          <div class="grid md:grid-cols-5 md:gap-2 mt-4 emp-bo ">
             <div class="relative z-0 w-full mb-5 group">
               <div class="flex flex-col pb-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Employee ID:</dt>
-                  <dd class="text-lg">{record.employeeId}</dd>
+                  <dt class="mb-1 text-gray-500 text-base text-left dark:text-gray-900 font-semibold">Employee ID:</dt>
+                  <dd class="text-base  text-left">{record.employeeId}</dd>
               </div>
             </div>
             <div class="relative z-0 w-full mb-5 group">
               <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Name:</dt>
-                <dd class="text-lg">{`${record['empPersonalId']?.firstName} ${record['empPersonalId']?.lastName}` || ''}</dd>
+                <dt class="mb-1 text-gray-500 text-base dark:text-gray-900 font-semibold text-left">Name:</dt>
+                <dd class="text-base text-left">{`${record['empPersonalId']?.firstName} ${record['empPersonalId']?.lastName}` || ''}</dd>
               </div>
             </div>
             <div class="relative z-0 w-full mb-5 group">
-              <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Department</dt>
-                <dd class="text-lg">{`${record['department']?.name || ''}`}</dd>
+              <div class="flex flex-col pb-3 text-left">
+                <dt class="mb-1 text-gray-500 text-base dark:text-gray-900 font-semibold text-left">Department</dt>
+                <dd class="text-base text-left">{`${record['department']?.name || ''}`}</dd>
               </div>
             </div>
             <div class="relative z-0 w-full mb-5 group">
                 <div class="flex flex-col pb-3">
-                    <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Designation</dt>
-                    <dd class="text-lg">{`${record['designation']?.name || ''}`}</dd>
+                    <dt class="mb-1  text-gray-500 text-base dark:text-gray-900 font-semibold text-left">Designation</dt>
+                    <dd class="text-base text-left">{`${record['designation']?.name || ''}`}</dd>
+                </div>
+            </div>
+            <div class="relative z-0 w-full mb-5 group">
+                <div class="flex flex-col pb-3">
+                    <dt class="mb-1  text-gray-500 text-base dark:text-gray-900 font-semibold text-left">Role</dt>
+                    <dd class="text-base text-left">{`${record['designation']?.name || ''}`}</dd>
                 </div>
             </div>
           </div>
         </div>
           
-        <div className="text-center">
-          <h1 className="text-xl font-semibold text-neutral-600 underline">Request Details :</h1>
-            <div class="grid md:grid-cols-5 md:gap-6 mt-4">
+        <div className="">
+          <h1 className="text-lg font-semibold text-neutral-600">Request Details :</h1>
+            <div class="grid md:grid-cols-5 md:gap-6 mt-4 emp-bo">
               <div class="relative z-0 w-full mb-5 group">
                   <div class="flex flex-col pb-3">
-                      <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">
+                      <dt class="mb-1 text-left text-gray-500 text-base dark:text-gray-900 font-semibold">
                       Shift Date</dt>
-                      <dd class="text-lg"> {record.date ? format(new Date(record.date), 'dd-MM-yyyy') : "20-12-1997"}</dd>
+                      <dd class="text-base text-left"> {record.date ? format(new Date(record.date), 'dd-MM-yyyy') : "20-12-1997"}</dd>
                   </div>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <div class="flex flex-col pb-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Check-In</dt>
-                  <dd class="text-lg">{record['attendanceId']?.checkInTime || '00:00:00'}</dd>
+                  <dt class="mb-1 text-left text-gray-500 text-base dark:text-gray-900 font-semibold">Check-In</dt>
+                  <dd class="text-base text-left">{record['attendanceId']?.checkInTime || '00:00:00'}</dd>
                 </div>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <div class="flex flex-col pb-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Check-Out
+                  <dt class="mb-1 text-left text-gray-500 text-base dark:text-gray-900 font-semibold">Check-Out
                   </dt>
-                  <dd class="text-lg">{record['attendanceId']?.checkOutTime || '00:00:00'}</dd>
+                  <dd class="text-base text-left">{record['attendanceId']?.checkOutTime || '00:00:00'}</dd>
                 </div>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <div class="flex flex-col pb-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg  dark:text-gray-900 font-semibold">Requested Check-in
+                  <dt class="mb-1 text-gray-500 text-base  dark:text-gray-900 font-semibold text-left">Requested Check-in
                   </dt>
-                  <dd class="text-lg rounded-sm">{record?.inTime || '00:00:00'}</dd>
+                  <dd class="text-base rounded-sm text-left">{record?.inTime || '00:00:00'}</dd>
                 </div>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <div class="flex flex-col pb-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Requested Check-Out
+                  <dt class="mb-1 text-gray-500 text-base dark:text-gray-900 font-semibold">Requested Check-Out
                   </dt>
-                  <dd class="text-lg">{record?.outTime || '00:00:00'}</dd>
+                  <dd class="text-base">{record?.outTime || '00:00:00'}</dd>
                 </div>
               </div>
             </div>
             <div class="grid md:grid-cols-3 md:gap-6 mt-4">
-              <div class="relative z-0 w-full mb-5 group">
+              <div class="relative z-0 w-full mb-5 group text-center">
                 <div class="flex flex-col pb-3">
-                    <dt class="mb-1 text-gray-500 md:text-lg  dark:text-gray-900 font-semibold">Status
+                    <dt class="mb-1 text-gray-500 text-base   dark:text-gray-900 font-semibold">Status
                     </dt>
-                    <dd class="text-lg rounded-sm text-rose-500">{record.status || ''}</dd>
+                    <dd class="text-base rounded-sm text-rose-500">{record.status || ''}</dd>
                 </div>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
+              <div class="relative z-0 w-full mb-5 group text-center">
                 <div class="flex flex-col pb-3">
-                  <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Reason
+                  <dt class="mb-1 text-gray-500 text-base dark:text-gray-900 font-semibold">Reason
                   </dt>
-                  <dd class="text-lg">{record['reason']?.name || ''}</dd>
+                  <dd class="text-base">{record['reason']?.name || ''}</dd>
                 </div>
               </div>
-              <div class="relative z-0 w-full mb-5 group">
-                <div class="flex flex-col pb-3 bg-white px-6 rounded-lg shadow-md max-w-sm mx-auto">
-                    <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-900 font-semibold">Remarks
+              <div class="relative z-0 w-full mb-5 group text-center">
+                <div class="flex flex-col pb-3 bg-white px-6 max-w-sm mx-auto">
+                    <dt class="mb-1 text-gray-500 text-base dark:text-gray-900 font-semibold">Remarks
                     </dt>
-                    <dd class="text-lg">{record.remarks || ' '}</dd>
+                    <dd class="text-base">{record.remarks || ' '}</dd>
                 </div>
               </div>
             </div>
         </div>
        
         {/* Footer */}
-        { roles.has(name.toLowerCase()) && <div className="mt-6 flex justify-center space-x-3 w-full rounded-b-lg bg-slate-100  shadow-lg p-4">
-          <button value="Approved" onClick={submitHandler} className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        { roles.has(name.toLowerCase()) && <div className="mt-6 flex justify-center space-x-3 w-full p-4">
+          <button value="Approved" onClick={submitHandler} className="rounded-lg text-sm font-semibold bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
           >Approve Request</button>
-          <button value="Rejected" onClick={submitHandler} className="rounded-lg bg-rose-400 px-4 py-2 text-white hover:bg-rose-500"
+          <button value="Rejected" onClick={submitHandler} className="rounded-lg text-sm font-semibold bg-rose-400 px-4 py-2 text-white hover:bg-rose-500"
           >Reject Request</button>
         </div>
         }

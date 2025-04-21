@@ -116,13 +116,15 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
   return (
    <>
     <div className="">
-      <form className="max-w-7xl" encType="multipart/form-data" onSubmit = {handleSubmit(formSubmitHandler)}>
+      
+      <form className="" encType="multipart/form-data" onSubmit = {handleSubmit(formSubmitHandler)}>
+      <div className='emp-details bg-white shadow-lg rounded-lg p-10'>
         <div className="mb-10">
-            <p className="font-semibold text-xl">Employee Personal Details :</p>
+            <p className="font-semibold text-xl text-gray-700">Employee Personal Details :</p>
         </div>
         <div className="grid  md:grid-cols-3">
           <div className="">
-            <Input label='First Name : '  type="text" {...register('firstName')} />
+            <Input className="text-sm" label='First Name : '  type="text" {...register('firstName')} />
             {errors?.firstName && <p className="text-red-600">{errors.firstName.message}</p>}
           </div>
           <div className="">
@@ -130,11 +132,11 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
             {errors?.lastName && <p className="text-red-600">{errors.lastName.message}</p>}
           </div>
            <div className="">
-            <Input label='Date Of Birth : ' name="dateOfBirth" type="date" {...register('dateOfBirth')} />
-            {errors?.dateOfBirth && <p className="text-red-600">{errors.dateOfBirth.message}</p>}
+            <Input label='Date Of Birth : ' name="dateOfBirth" className=" uppercase" type="date" {...register('dateOfBirth')} />
+            {errors?.dateOfBirth && <p className="text-red-600 uppercase">{errors.dateOfBirth.message}</p>}
           </div>
         </div>
-        <div className="grid  md:grid-cols-3 mt-12">
+        <div className="grid  md:grid-cols-3 mt-8 ">
           <div>
            <Input label='Phone No : ' name="phone" type="text" {...register('phone')} />
            {errors?.phone && <p className="text-red-600">{errors.phone.message}</p>}
@@ -144,7 +146,7 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
            {errors?.email && <p className="text-red-600">{errors.email.message}</p>}
           </div>
           <div className="flex space-x-6"> 
-           <p className="text-gray-500 transform translate-y-2">Gender : </p>
+           {/* <p className="text-gray-500 transform translate-y-2">Gender : </p> */}
            
             <Radio label="Male" value="Male" name="gender" {...register('gender')} />
             <Radio label="Female" value="Female" name="gender" {...register('gender')} />
@@ -153,11 +155,13 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
             {errors?.gender && <p className= "absolute text-red-600 transform translate-y-14">{errors.gender.message}</p>}
           </div>
         </div>
-        <div className="mt-12">
-        <p className="font-semibold">Residential Address :</p>
+        </div>
+        <div className='bg-white shadow-lg rounded-lg pt-1 pr-10 pb-10 pl-10 mt-10'>
+        <div className="mt-10">
+        <p className="font-semibold text-xl text-gray-700">Residential Address :</p>
         </div>
         
-          <div className="grid  md:grid-cols-3 mt-12">
+          <div className="grid  md:grid-cols-3 mt-8">
             <div>
               <Input label='Street : ' name="street" type="text" className="w-1/2" {...register('street')} />
               {errors?.street && <p className="text-red-600">{errors.street.message}</p>}
@@ -167,20 +171,14 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
               {errors?.city && <p className="text-red-600">{errors.city.message}</p>}
             </div>
             <div>
-              <Input label='state : ' name="state" type="text" {...register('state')} />
+              <Input label='State : ' name="state" type="text" {...register('state')} />
               {errors?.state && <p className="text-red-600">{errors.state.message}</p>}
             </div>
+           
           </div>
         
-        <div className="grid  md:grid-cols-2 mt-12">
+        <div className="grid  md:grid-cols-3 mt-8">
           
-          
-        </div>
-        <div className="grid  md:grid-cols-4 mt-12">
-          <div>
-           <Input label='PinCode : ' name="zipCode" type="text" {...register('zipCode')}  />
-           {errors?.zipCode && <p className="text-red-600">{errors.zipCode.message}</p>}
-          </div>
           <div>
            <Input label='Country : ' name="country" type="text" {...register('country')} />
            {errors?.country && <p className="text-red-600">{errors.country.message}</p>}
@@ -194,30 +192,42 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
             {errors?.nationality && <p className="text-red-600">{errors.nationality.message}</p>}
           </div>
         </div>
+<div className='grid  md:grid-cols-3 mt-8'>
+   <div>
+           <Input label='PinCode : ' name="zipCode" type="text" {...register('zipCode')}  />
+           {errors?.zipCode && <p className="text-red-600">{errors.zipCode.message}</p>}
+          </div></div>
+
+
+        </div>
         <div className="grid  md:grid-cols-2 mt-12">
             
         </div>
-        <div className="mt-12">
-          <p className="font-semibold">Emergency Contact Details :</p>
+        <div className='bg-white shadow-lg rounded-lg pt-1 pr-10 pb-10 pl-10'>
+        <div className="mt-10">
+          <p className="font-semibold text-xl text-gray-700">Emergency Contact Details :</p>
         </div>
-        <div className="grid  md:grid-cols-3 mt-12">
+        <div className="grid  md:grid-cols-3 mt-8">
           <div>
            <Input label='Name : ' name="name" type="text" {...register('name')} />
            {errors?.name && <p className="text-red-600">{errors.name.message}</p>}
           </div>
           <div>
-           <Input label='relation : ' name="relationship" type="text" {...register('relationship')} />
+           <Input label='Relation : ' name="relationship" type="text" {...register('relationship')} />
            {errors?.relationship && <p className="text-red-600">{errors.relationship.message}</p>}
           </div>
           <div>
-           <Input label='phone : ' name="emergency_phone" type="text" {...register('emergency_phone')} />
+           <Input label='Phone : ' name="emergency_phone" type="text" {...register('emergency_phone')} />
            {errors?.emergency_phone && <p className="text-red-600">{errors.emergency_phone.message}</p>}
           </div>
         </div>
-        <div className="mt-12">
-          <p className="font-semibold">Id Proofs :</p>
         </div>
-        <div className="grid  md:grid-cols-3 mt-12">
+        <div className='bg-white shadow-lg rounded-lg pt-1 pr-10 pb-10 pl-10 mt-10'>
+        
+        <div className="mt-8">
+          <p className="font-semibold text-xl text-gray-700">Id Proofs :</p>
+        </div>
+        <div className="grid  md:grid-cols-3 mt-8">
           <div>
             <Input label='Aadhar Card No : ' name="aadharCard" type="text" {...register('aadharCard')}  />
             {errors?.aadharCard && <p className="text-red-600">{errors.aadharCard.message}</p>}
@@ -231,9 +241,11 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
            {errors?.panCard && <p className="text-red-600">{errors.panCard.message}</p>}
           </div>
         </div>
+
+        </div>
         <div className="grid  md:grid-cols-1 mt-12">
-          <div><label>Employee Profile Pic :</label></div>
-            <div className="flex items-start justify-start pt-10">
+          <p className="font-semibold text-xl text-gray-700">Employee Profile Pic :</p>
+            <div className="flex items-start justify-start pt-5">
                 <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-1/3 h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                 { file && <div><p className="text-gray-600">{`Uploaded File - ${file.name}`}</p></div> || <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -248,9 +260,9 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
                 {file && <span className="absolute transform translate-x-96" title="Remove File" ><IoCloseCircle onClick={removeFile} className="w-7 h-7 cursor-pointer" /></span>}
             </div> 
         </div>
-        <div className="grid  md:grid-cols-1 mt-20 ">
-            <div className="flex justify-center mt-20">
-              <button className={className}> {button}</button>
+        <div className="grid  md:grid-cols-1 mt-5">
+            <div className="flex justify-left">
+              <button className={`${className}`}> {button}</button>
             </div>
         </div>   
     </form>

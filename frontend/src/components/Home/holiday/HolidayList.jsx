@@ -27,16 +27,16 @@ const HolidayList = () => {
 
   return (
     <div className='w-full py-3 px-5 rounded-lg'>
-        <h1 className='text-3xl font-semibold'>HolidayList</h1>
-        <div className="overflow-x-auto rounded-box border border-gray-500 border-base-content/5 bg-base-100 w-full mx-auto mt-10">
+        {/* <h1 className='text-3xl font-semibold'>HolidayList</h1> */}
+        <div className="overflow-x-auto border-base-content/5 bg-base-100 w-full mx-auto mt-10">
         <table className="table text-center items-center">
             <thead >
-                <tr className='font-bold text-black text-xl border-b border-gray-500'>
-                    <th>SI.NO</th>
-                    <th>Date</th>
-                    <th>Festival</th>
-                    <th>Day</th>
-                    {authenticateUser === 'admin' && <th>Action</th>}
+                <tr className='bg-slate-300 text-gray-700'>
+                    <th className='text-sm'>SI.NO</th>
+                    <th className='text-sm'>Date</th>
+                    <th className='text-sm'>Festival</th>
+                    <th className='text-sm'>Day</th>
+                    {authenticateUser === 'admin' && <th  className='text-sm'>Action</th>}
                 </tr>
             </thead>
             <tbody>

@@ -48,10 +48,10 @@ const EmployeeGrid = () => {
 
   return (
     <>
-      <div className="">
+      {/* <div className="">
           <Input type="text"  name="searchBox" onChange = {(e)=>(searchHandler(e.target.value))} placeholder="Search Here" />
-      </div>
-        <div className="grid md:grid-cols-3 grid-cols-2 mt-2 space-y-4 ">
+      </div> */}
+        <div className="grid md:grid-cols-4 grid-cols-2 mt-2 space-y-4 emp-grid">
             {
               employee.map((value)=>{
                 i++;

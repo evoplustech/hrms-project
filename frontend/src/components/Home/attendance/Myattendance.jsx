@@ -48,17 +48,17 @@ const Myattendance = () => {
  
     return (
       <>
-      <div className="bg-slate-100 w-full box-border border-x-zinc-300">
+      <div className="bg-slate-100 w-full box-border border-x-zinc-300 my-att">
         <div className="relative flex justify-between items-center">
-            <p className="flex justify-start items-start text-2xl font-semibold text-slate-700 ms-2">Attendance History</p>
+            <p className="flex justify-start items-start text-xl font-semibold text-slate-700 ms-2">Attendance History</p>
             <div className="flex justify-end items-end space-x-6 relative">
               <input type="text" value={format(selectedDate,"dd/MM/yyyy")} name="floating_last_name" id="floating_last_name" className="w-20 block py-2.5 px-0  text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
               <IoCalendarNumberSharp onClick={()=>setCalander(!calander)} className="w-12 h-12 text-emerald-400 cursor-pointer " />
             </div>
         </div>
         <div className="space-y-4 mt-2 ms-2">
-        <div className="flex  justify-start items-center"><span className="font-bold text-xl text-slate-500">Employee Name : </span><p className="font-semibold text-xl ms-2 text-teal-700">{`${employeedata['empPersonalId'].firstName} ${employeedata['empPersonalId'].lastName}`}</p></div>
-        <div className="flex  justify-start items-center"><span className="font-bold text-xl text-slate-500">Employee Id : </span><p className="font-semibold text-xl ms-2 text-teal-700">{`${employeedata.employeeId}`}</p></div>
+        <div className="flex  justify-start items-center my-att-name"><span className="text-x text-slate-500">Employee Name : </span><p className="font-bold text-x ms-2 text-teal-700 capitalize">{`${employeedata['empPersonalId'].firstName} ${employeedata['empPersonalId'].lastName}`}</p></div>
+        <div className="flex  justify-start items-center my-att-id"><span className="text-x text-slate-500">Employee Id : </span><p className="font-bold text-x ms-2 text-teal-700 capitalize">{`${employeedata.employeeId}`}</p></div>
         </div>
         <div className="flex justify-end relative">
             {

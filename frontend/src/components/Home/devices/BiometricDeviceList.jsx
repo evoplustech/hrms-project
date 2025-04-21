@@ -37,17 +37,17 @@ const BiometricDeviceList = () => {
     }
     return (
         <>
-          <div className="text-lg font-bold">
+          {/* <div className="text-lg font-bold">
             <h1>Biometric Device List</h1>
-          </div>
+          </div> */}
 
           {error && <div className="text-red-500 w-full text-center p-2">{error}</div>}
 
           {status === 'success' ? (
             data.length > 0 ? (
-              <div className="flex flex-row flex-wrap">
+              <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
                 {data.map((biometric, key) => (
-                  <div key={key} className="m-2 bg-white rounded-lg border-gray-700 border-2 px-2 py-4 w-1/4">
+                  <div key={key} className="">
                     <div className="mb-4 flex flex-row">
                       <label className="font-semibold text-700 w-1/2 text-left">Biometric Device Name:</label>
                       <div className="text-900 ml-4 w-1/2 align-middle">{biometric.deviceName}</div>
@@ -62,13 +62,13 @@ const BiometricDeviceList = () => {
                     </div>
                     <div className="flex justify-center mt-6">
                       <button
-                        className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                        className="text-white hover:bg-green-600 px-6 py-1.5 bg-emerald-500 m-5 rounded-lg"
                         onClick={() => deleteDevice(biometric.deviceName, biometric._id)}
                         aria-label="Delete device"
                       >
                         Delete
                       </button>
-                      <a className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href={`./devices/adddevice/${biometric._id}`}>Edit</a>
+                      <a className="text-white hover:bg-green-600 px-6 py-1.5 bg-emerald-500 m-5 rounded-lg" href={`./devices/adddevice/${biometric._id}`}>Edit</a>
                     </div>
                   </div>
                 ))}

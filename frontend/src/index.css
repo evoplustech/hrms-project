@@ -3,16 +3,101 @@
 @tailwind components;
 @tailwind utilities;
 
+.text-lime-500 {
+  --tw-text-opacity: 1;
+  color: rgb(14, 176, 0);
+}
+
+.MuiBox-root.css-1hbbxs6 {
+  border:
+3px solid #b8b8b8;
+}
+
+.cell-border{ border-right:1px solid #cbd5e1;}
+
+.all-att-btn {
+  font-size: 14px;
+  border-radius:
+0;
+  padding:
+0.5rem 2rem;
+}
+
+.bg-teal-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31, 41, 55);
+  color: #fff;
+}
+
+.tort{display: ruby;
+  line-height: 55px;
+}
+
+.tort img{ margin-left: 5px; position: relative; top:-3px; }
+.hover\:bg-teal-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31, 41, 55) !important;
+  color:#fff;
+
+}
+
+.border-2.w-16.px-2.py-1.font-semibold {
+  border-radius:
+10px;
+  background-color: #f1f1f1;
+}
+.emp-bo{ margin-bottom: 30px !important; border-bottom: 1px solid #eee;}
+
+.des{ font-size: 13px !important;
+  color: #878787;}
+
+.gr-btn{ display: none;}
+
+.p-3 {
+  padding:
+1.3rem 1.5rem 1.5rem 1.5rem;
+}
+
+.emp-grid button p{ font-size: 14px; text-align: left;}
+
+.emp-grid-photo {  padding-left: 10px;}
+
+.emp-grid button:first-child{ margin-top:15px;}
+
+.empgrid-wrap{ width: 23.5rem;background-color: #f1f1f1;border-left-color:rgb(203, 213, 225)}
+
+.empgrid-wrap:hover{ background-color: #e5e7eb;}
+
+.my-att{ background-color: #fff;}
+
+.my-att-name {}
+.my-att-id { margin-top: 0.5rem !important;}
+
+
+.fromto{position: relative;
+  top: -5px;}
+/*Major*/
+  .mr-2{ display: none;}
+  /*Major-End*/
+
 @font-face {
   font-family: 'Product Sans';
   font-style: normal;
   font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
+  src:  url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
 }
 
-h1, h2, h3, h4, h5, h6, p, strong, span, ul, li, ol, table, tr, td, label, input, select, button, a {
+th{font-family: 'Product Sans' !important;
+  font-style: inherit;letter-spacing: .5px;}
+
+  select option{font-family: 'Product Sans' !important;
+    font-style: inherit; font-weight: normal;letter-spacing: .5px;}
+
+  label, span{font-family: 'Product Sans' !important;
+    font-style: inherit; font-weight: normal;letter-spacing: .5px;}
+h1, h2, h3, h4, h5, h6, p, strong, span, ul, li, ol, table, tr, th, td, label, input, select, button, a, option, dt, div {
   font-family: 'Product Sans';
-  font-style: inherit;
+  font-style: inherit;letter-spacing: .5px;
 }
 
 .login-form-wrapper{ padding-top:140px;}
@@ -26,6 +111,13 @@ h1, h2, h3, h4, h5, h6, p, strong, span, ul, li, ol, table, tr, td, label, input
   background-position: center;
   background-attachment: fixed;
 }
+
+.bg-orange-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203, 213, 225);
+}
+
+.lin-he{ }
 
 .login-field { border:1px solid #eee;margin: 0.5em 0;}
 

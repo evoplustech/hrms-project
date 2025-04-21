@@ -24,7 +24,7 @@ const LeavePagination = ({ searchParams, limit, page, totalRecord, prevPage, nex
     <button 
         onClick={(e)=>prevPage(Number(page)-1)} 
         disabled={Number(page) === 1}
-        className={`px-4 py-2 bg-green-500 text-white rounded-md ${Number(page) === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-500'}`}
+        className={`px-4 py-2 bg-emerald-500 text-white rounded-md ${Number(page) === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'}`}
     >
         Prev
     </button>
@@ -32,14 +32,14 @@ const LeavePagination = ({ searchParams, limit, page, totalRecord, prevPage, nex
 
     {Number(page) > Number(1) && <button 
         onClick={(e)=>prevPage(Number(page)-1)} 
-        className={`px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400`}
+        className={`px-4 py-2 mr-2 bg-emerald-500 text-white rounded-md hover:bg-green-600`}
     >
         {Number(page)-1}
     </button>}
     {/* curren page start */}
     <button 
         disabled={Number(page) === Number(searchParams.page)}
-        className={`px-4 py-2 bg-green-800 text-white rounded-md hover:bg-green-500`}
+        className={`px-4 py-2 ml-2 bg-emerald-700 text-white rounded-md hover:bg-green-600`}
     >
         {Number(page)}
     </button>
@@ -47,17 +47,14 @@ const LeavePagination = ({ searchParams, limit, page, totalRecord, prevPage, nex
 
     {Number(page) < Number(lastPage) && <button 
         onClick={(e)=>nextPage(Number(page)+1)} 
-        className={`px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400`}
+        className={`px-4 py-2 ml-2 bg-emerald-500 text-white rounded-md hover:bg-green-500`}
     >
         {Number(page)+1}
     </button>}
-
-
-
     <button 
         onClick={(e)=>nextPage(page+1)} 
         disabled={Number(page) === Number(lastPage)}
-        className={`px-4 py-2 bg-green-500 text-white rounded-md 
+        className={`px-4 py-2 ml-2 bg-emerald-500 text-white rounded-md 
             ${Number(page) === Number(lastPage) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-500'}`}
     >
         Next

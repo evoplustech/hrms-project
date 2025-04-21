@@ -163,16 +163,16 @@ const AddHoliday = () => {
       
       
       {sheetUploadFlag?
-        <div className="w-[90%] sm:w-[60%] md:w-[50%] mt-10 px-6 mx-auto py-12 text-center align-middle border border-gray-300 rounded-3xl flex flex-col bg-white shadow-lg">
-          <div className="mb-10">
-            <h1 className="text-3xl font-semibold mb-8 text-gray-800 underline">Upload Holiday Sheet</h1>
+        <div className="w-[90%] sm:w-[60%] md:w-[50%] mt-5 px-6 mx-auto py-12 text-center align-middle border rounded-2xl flex flex-col bg-white shadow-lg">
+          <div className="mb-5">
+            <h1 className="text-lg font-semibold mb-8 text-gray-800">Upload Holiday Sheet</h1>
           </div>
           <div>
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="flex flex-col items-center">
                 <a
                   href="/samplesheet/holidaysamplesheet.xlsx"
-                  className="text-blue-600 hover:text-blue-800 mb-4 text-lg"
+                  className="text-blue-600 hover:text-blue-800 mb-4 text-base"
                 >
                   (Sample Sheet)
                 </a>
@@ -182,7 +182,7 @@ const AddHoliday = () => {
                   onChange={handleChange}
                 />
                 <div className="mt-6">
-                  <button className="bg-green-600 hover:bg-green-400 py-2 px-6 text-white font-semibold border rounded-2xl transition-all duration-300" onClick={submitHolidaySheet}>
+                  <button className="text-white hover:bg-green-600 px-6 py-1.5 bg-emerald-500 m-5 rounded-lg transition-all duration-300" onClick={submitHolidaySheet}>
                     Upload
                   </button>
                 </div>
@@ -190,13 +190,13 @@ const AddHoliday = () => {
             </form>
           </div>
         </div>
-        :(<><div className='text-3xl text-center'>
-        <h1 className='font-bold underline underline-offset-auto'>Add Holiday</h1>
+        :(<><div className='text-xl text-center'>
+        <h1 className='font-bold'>Add Holiday</h1>
       </div>
-      <form className='w-[75%] mx-auto mt-5 p-6 border border-gray-300 rounded-lg shadow-md' onSubmit={(e)=> e.preventDefault()}>
+      <form className='w-[75%] mx-auto mt-5 p-6 border-gray-300 rounded-lg shadow-lg' onSubmit={(e)=> e.preventDefault()}>
         <div className='grid grid-cols-2 gaps-col'> 
           <div className='my-4'>
-            <label htmlFor='holidayName' className='block text-lg font-semibold text-gray-700'>
+            <label htmlFor='holidayName' className='block text-sm mb-2 font-semibold text-gray-700'>
               Holiday Name
             </label>
             <input
@@ -205,13 +205,13 @@ const AddHoliday = () => {
               id='holidayName'
               value={holidayForm.holidayName}
               onChange={handlechange}
-              className='border w-96 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='border w-96 text-sm border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
               placeholder='Enter holiday name'
             />
           </div>
 
           <div className='my-4'>
-            <label htmlFor='holidayDate' className='block text-lg font-semibold text-gray-700'>
+            <label htmlFor='holidayDate' className='block mb-2 text-sm font-semibold text-gray-700'>
               Holiday Date
             </label>
             <input
@@ -220,12 +220,12 @@ const AddHoliday = () => {
               id='holidayDate'
               value={holidayForm.holidayDate}
               onChange={handlechange}
-              className=' border w-96 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className=' border w-96 border-gray-300 text-sm px-4 py-2 uppercase rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
           <div className='my-4'>
-            <label htmlFor='description' className='block text-lg font-semibold text-gray-700'>
+            <label htmlFor='description' className='block text-sm font-semibold mb-2 text-gray-700'>
               Holiday Type
             </label>
             <select
@@ -233,7 +233,7 @@ const AddHoliday = () => {
               id='holidayType'
               value={holidayForm.holidayType}
               onChange={handlechange}
-              className='border w-96 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
+              className='border w-96 text-sm border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
             >
               <option value="">Select</option>
               <option value="Public">Public</option>
@@ -244,14 +244,14 @@ const AddHoliday = () => {
           </div>
 
           <div className='my-4'>
-            <label htmlFor='Repeated Leave' className='block text-lg font-semibold text-gray-700'>
+            <label htmlFor='Repeated Leave' className='block mb-2 text-sm font-semibold text-gray-700'>
               Repeated Leave
             </label>
             <select name='recurring'
               id='recurring'
               value={holidayForm.recurring}
               onChange={handlechange}
-              className='border w-96 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'>
+              className='border w-96 border-gray-300 text-sm px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'>
                 <option value="">Select</option>
                 <option value={true}>True</option>
                 <option value={false}>False</option>
@@ -261,7 +261,7 @@ const AddHoliday = () => {
 
         {/* Leave For - Start */}
         <div className='my-4'>
-            <label htmlFor='description' className='block text-lg font-semibold text-gray-700'>
+            <label htmlFor='description' className='block mb-2 text-sm font-semibold text-gray-700'>
               Leave For
             </label>
             <select
@@ -269,7 +269,7 @@ const AddHoliday = () => {
               id = 'leavefor'
               value = {holidayForm.leavefor}
               onChange = {handlechange}
-              className = 'border w-96 border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
+              className = 'border w-96 border-gray-300 text-sm px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white'
             >
               <option value="">Select</option>
               {shift.data.map( (shift,index) =>{
@@ -281,7 +281,7 @@ const AddHoliday = () => {
           {/* Leave For end */}
 
         <div className='my-4'>
-          <label htmlFor='holidayDescription' className='block text-lg font-semibold text-gray-700'>
+          <label htmlFor='holidayDescription' className='block mb-2 text-sm font-semibold text-gray-700'>
             Holiday Description
           </label>
           <textarea
@@ -299,7 +299,7 @@ const AddHoliday = () => {
           <button
             ref = {addHolidayBtn}
             type='Add Holiday'
-            className='mt-4 w-40  bg-green-500 text-white py-2 px-6 rounded-lg font-semibold hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500'
+            className='mt-4 w-40 hover:bg-green-600 px-6 py-1.5 text-white bg-emerald-500 rounded-lg'
             onClick={handleAddHoliday}
           >
             Submit

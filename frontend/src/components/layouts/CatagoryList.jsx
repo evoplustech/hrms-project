@@ -19,7 +19,7 @@ const CatagoryList = ({value}) => {
   return (
     <>  
     { show_hide ? 
-      <li><Link className={`${value.isActive?'bg-teal-100':''} hover:cursor-pointer hover:bg-teal-100  py-2 bg-gray-300 px-2 rounded-s-xl rounded-e-xl font-semibold`} to={value.url}>{value.label}</Link></li>:''
+      <li><Link className={`${value.isActive?'bg-teal-100':''} hover:cursor-pointer hover:bg-teal-100  py-2 bg-gray-300 px-2 rounded-s-xl rounded-e-xl font-semibold all-att-btn`} to={value.url}>{value.label}</Link></li>:''
     }
     </>
   )

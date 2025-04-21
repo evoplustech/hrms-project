@@ -13,10 +13,11 @@ const AllAttendance = () => {
     <div className="flex flex-row space-y-2  ">
       <h1 className="text-xl font-semibold w-3/5  justify-center">All Employees</h1>
       
-      <div className="flex justify-center space-x-4">
-      <button type="button" className="text-center align-middle" onClick={()=>setActive('grid')} ><IoGrid  className={`w-7 h-7 ${active==='grid'? 'text-green-600':''}`} /></button>
-      <button type="button" className="text-center align-middle" onClick={()=>setActive('list')}><FaListUl    className={`w-7 h-7 ${active!=='grid'? 'text-green-600':''}`} /></button>
-      </div>
+      {/* <div className="flex justify-center space-x-4">
+      <button type="button" className="text-center gr-btn align-middle" onClick={()=>setActive('grid')} ><IoGrid  className={`w-7 h-7 ${active==='grid'? 'text-green-600':''}`} /></button>
+      <button type="button" className="text-center gr-btn align-middle" onClick={()=>setActive('list')}><FaListUl    className={`w-7 h-7 ${active!=='grid'? 'text-green-600':''}`} /></button> 
+      </div> */}
+      
     </div>
     {
       active ==='list' ?  <ListData/> :<EmployeeGrid/>

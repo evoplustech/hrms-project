@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import categoryModel from "../../models/configuration/Category.model.js";
+import categoryModel from "../../models/configuration/category.model.js";
 import moduleModel from "../../models/configuration/module.model.js";
 import cronModel from "../../models/configuration/cronJob.model.js";
 import { getAttendanceFromDevice } from '../biometricattendance/biometric.attendance.controller.js'; 
@@ -154,4 +154,18 @@ const cronStart = async ({ schedule, isActive }) => {
   console.log(`Cron started with schedule: ${cronTime}`);
 };
 
-export {createModule,getAllModules,createUpdateCron}
+const fetchAllCron = async(request,response)=>{
+  try{
+    const {role:empRole} = request;
+    if(empRole.toLowerCase() !=='admin')
+      return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false});
+
+    const getAllCron = await cronModel.find();
+
+    response.status(200).json({message:'cron fetched Successfully',data:getAllCron,success:true});
+  }catch(error){
+    response.status(500).json({error:error.message,success:false});
+  }
+}
+
+export {createModule,getAllModules,createUpdateCron,fetchAllCron}

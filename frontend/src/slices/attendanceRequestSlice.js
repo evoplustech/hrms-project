@@ -49,11 +49,10 @@ const attendanceRequestSlice = createSlice({
     }).addCase(addAttendanceRequest.fulfilled,(state,action)=>{
       state.status= 'success';
       if(action.payload.success && Object.entries(action.payload.data).length > 0){
-        console.log(action.payload.data,'count',action.payload.count);
         state.data.push(action.payload.data);
         state.error = null;
       }else{
-        state.data = {};
+        state.data = [];
         state.error = action.payload.error;
      }
     }).addCase(addAttendanceRequest.rejected,(state,action)=>{
@@ -68,7 +67,7 @@ const attendanceRequestSlice = createSlice({
       state.data= action.payload.data;
       state.error = null;
     }else{
-      state.data = {};
+      state.data = [];
       state.error = action.payload.error;
    }
   }).addCase(getAttendanceRequest.rejected,(state,action)=>{

@@ -36,10 +36,10 @@ const AttendanceTimesView = ({data,employeedata}) => {
                 <tbody>
                   {
                   data.length > 0 &&  data.map((value)=>{
-                    const dateinTime = new Date(value.checkInTime);
-                    const formattedInTime = format(dateinTime, 'h:mm a');
-                    const dateOutTime = new Date(value.checkOutTime);
-                    const formattedOutTime = format(dateOutTime, 'h:mm a');
+                    // const dateinTime = new Date(value.checkInTime);
+                    // const formattedInTime = format(dateinTime, 'h:mm a');
+                    // const dateOutTime = new Date(value.checkOutTime);
+                    // const formattedOutTime = format(dateOutTime, 'h:mm a');
                      return  (<tr key={value.date} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-xl font-semibold">
                         <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {format(new Date(value.date),'dd-MM-yyyy')}
@@ -52,12 +52,12 @@ const AttendanceTimesView = ({data,employeedata}) => {
                         </td>
                         
                         <td className="px-6 py-4">
-                            {formattedInTime || "00:00:00"}{value.status.toLowerCase()==='late-in' && <span className="text-2xl ml-3">🐌</span>}
-                            {/* {value.checkInTime || ''} */}
+                            {/* {formattedInTime || "00:00:00"}{value.status.toLowerCase()==='late-in' && <span className="text-2xl ml-3">🐌</span>} */}
+                            {value.checkInTime || ''}{value.status.toLowerCase()==='late-in' && <span className="text-2xl ml-3">🐌</span>}
                         </td>
                         <td className="px-6 py-4">
-                           {formattedOutTime || "00:00:00"}
-                           {/* {value.checkOutTime || ''} */}
+                           {/* {formattedOutTime || "00:00:00"} */}
+                           {value.checkOutTime || ''}
                         </td>
                         <td className="px-6 py-4">
                             {value.totalHours}

@@ -27,6 +27,7 @@ import HolidayList from './components/Home/holiday/HolidayList';
 import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
 import currentMonthDates from '../utils/dateOfMonth';
+import CronEditor from './components/Home/cofiguration/CronEditor';
 
 
 
@@ -60,6 +61,7 @@ const EmployeeProfile = React.lazy(()=>import('./components/Home/employee/Employ
 const Myattendance = React.lazy(()=>import('./components/Home/attendance/Myattendance'));
 const AllAttendance = React.lazy(()=>import('./components/Home/attendance/AllAttendance'));
 const AttendanceRequest = React.lazy(()=>import('./components/Home/attendance/AttendanceRequest'));
+const  PicklistEditor = React.lazy(()=> import('./components/Home/cofiguration/PicklistEditor'));
 
 
 const BiometricDeviceList = React.lazy(()=>import('./components/Home/devices/BiometricDeviceList'))
@@ -69,6 +71,8 @@ const PolicyList = React.lazy(()=>import('./components/Home/policy/PolicyList'))
 const AddPolicy  = React.lazy(()=>import('./components/Home/policy/AddPolicy'));
 const LeaveList = React.lazy(()=> import('./components/Home/leave/LeaveList'));
 const LeaveRequest = React.lazy(()=> import('./components/Home/leave/LeaveRequest'));
+
+
 
 const BaseComponent = ()=>{
   const dispatch = useDispatch();
@@ -209,10 +213,16 @@ const BaseComponent = ()=>{
             },{
               path:'/home/configuration',
               element:<Suspense><Configuration/></Suspense>,
-              children:[{
-                path:'/home/configuration/',
-                element:<Suspense><Module/></Suspense>,
-              }]
+              children:[
+                {
+                path:'/home/configuration/picklist',
+                element:<Suspense><PicklistEditor/></Suspense>,
+                },
+                {
+                  path:'/home/configuration/cronsetup',
+                  element:<Suspense><CronEditor/></Suspense>,
+                 }
+              ]
             },{
               path:'/home/policy',
               element:<Suspense><Policy /></Suspense>,
@@ -228,7 +238,6 @@ const BaseComponent = ()=>{
                 },{
                   path:'/home/policy/addpolicy/:polidyId',
                   element:<Suspense><AddPolicy/></Suspense>,
-                  
                 }
               ]
             },{

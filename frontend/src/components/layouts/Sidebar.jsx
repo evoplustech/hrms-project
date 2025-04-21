@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import useSelectorHook from '../../../utils/useSelectorHook';
 import { MdPolicy } from "react-icons/md";
 import { MdOutlineHolidayVillage } from "react-icons/md";
+import ConfigurationTab from './ConfigurationTab';
 
 const Sidebar = ({tab}) => {
 
@@ -75,8 +76,7 @@ const sideWidth = {
           {sidebarToggle ? '':'Leave'}</Link>
           {data.role.name.toLowerCase() === 'admin'&&
           
-          <div to="/home/configuration" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='configuration' ? active:''}`}><TbSettingsCog  className="w-6 h-6 me-2 text-orange-600"/>
-          {sidebarToggle ? '':'Configuration'}<IoMdArrowDropdown className="ms-2 h-6 w-6 pt-1"/> </div>
+              <ConfigurationTab tab= {tab} active={active} sidebarToggle={sidebarToggle}></ConfigurationTab>
           }
           <Link to="/home/policy" className={`px-4 py-2 font-semibold flex hover:bg-orange-100 hover:text-orange-600 rounded-e-full ${tab==='policy' ? active:''}`}><MdPolicy  className="w-6 h-6 me-2 text-orange-600"/>
           {sidebarToggle ? '':'Policy'}</Link>
@@ -85,7 +85,6 @@ const sideWidth = {
             <MdOutlineHolidayVillage className='w-6 h-6 me-2 text-orange-600'/>
             {sidebarToggle ? '':'Holiday'}
           </Link>
-
         </div>
       </nav>
     </aside>

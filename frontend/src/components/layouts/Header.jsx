@@ -23,7 +23,7 @@ const Header = () => {
     <div className=" flex h-16 items-center justify-between">
       <div className="flex flex-1 items-center justify-around sm:items-stretch ">
         <div className="text-white flex justify-end">
-          <div class="marquee-content flex gap-4 items-center animate-marquee">
+          <div className="marquee-content flex gap-4 items-center animate-marquee">
             <p className="text-xl"><span className="text-orange-400"><span className="text-3xl">🌏</span> Evoplus</span> IT <span className="text-cyan-500">Services</span>  <span className="text-green-500">And Solution HRMS </span></p>
           </div>
           {/* <div className="flex space-x-4">

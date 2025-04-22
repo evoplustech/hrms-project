@@ -91,6 +91,12 @@ const useActiveTab = () => {
           catvalue : "leaverequest",
           url : `/home/${tab}/leaverequest`,
           isActive : catagoryLink === 'leaverequest' && true || false
+        },
+        {
+          label  :'Leave Report',
+          catvalue : "leavereport",
+          url : `/home/${tab}/leavereport`,
+          isActive : catagoryLink === 'leavereport' && true || false
         }
       ],
       configuration : [

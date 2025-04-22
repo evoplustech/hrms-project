@@ -11,6 +11,9 @@ const addPolicy = async (req,res) => {
         const effectiveDate = indiaTime.toISOString();
 
         const {policyName, description, complianceType} = req.body;
+        if(policyName === '' || description === "" || complianceType === ""){
+            return res.status(400).json({success: false, message: "All the field must be filled."});
+        }
         const newPolicy = policyModel({policyName, description, effectiveDate, complianceType})
 
         await newPolicy.save();

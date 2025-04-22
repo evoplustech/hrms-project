@@ -69,6 +69,7 @@ const PolicyList = React.lazy(()=>import('./components/Home/policy/PolicyList'))
 const AddPolicy  = React.lazy(()=>import('./components/Home/policy/AddPolicy'));
 const LeaveList = React.lazy(()=> import('./components/Home/leave/LeaveList'));
 const LeaveRequest = React.lazy(()=> import('./components/Home/leave/LeaveRequest'));
+const LeaveReport = React.lazy( () => import('./components/Home/leave/LeaveReport') )
 
 const BaseComponent = ()=>{
   const dispatch = useDispatch();
@@ -207,7 +208,12 @@ const BaseComponent = ()=>{
                 {
                   path:'/home/leaves/leaverequest',
                   element: <Suspense> <LeaveRequest /> </Suspense>
+                },
+                {
+                  path:'/home/leaves/leavereport',
+                  element: <Suspense> <LeaveReport /> </Suspense>
                 }
+                
               ]
             },{
               path:'/home/configuration',

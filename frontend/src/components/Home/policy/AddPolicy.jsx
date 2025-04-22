@@ -40,10 +40,10 @@ const AddPolicy = () => {
     console.log(policyForm)
     if(policyForm.complianceType === '' || policyForm.description === '' || policyForm.policyName === ''){
       setPolicyFormError("All the field must be filled.")
+      return false;
     }
     setPolicyFormError("")
     if (polidyId.polidyId){
-      console.log(policyForm);
       dispatch(updatePolicy(policyForm))
     }else{
       dispatch(addPolicy(policyForm))
@@ -51,7 +51,6 @@ const AddPolicy = () => {
     navigate('/home/policy')
   }
 
-  
 
   return (
     <>

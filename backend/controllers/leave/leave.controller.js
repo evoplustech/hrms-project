@@ -625,4 +625,18 @@ function FormatHolidayList(holidayList){
     return [];
 }
 
-export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails, getLeaveTypes }
+const leaveReport = (req,res) => {
+    try {
+        const { employeeId, startDate, endDate } = req.body;
+        const { role, empId } = req;
+        const authUsers = ['admin','hr','tl'];
+        if(!authUsers.includes(role.toLowerCase())){
+            return res.status(200).json({role,success:false})
+        }
+        return res.status(200).json({ success:true, message: "test leave Reprot function.", employeeId, startDate, endDate })
+    } catch (error) {
+        console.log(`Error in the leave controller leaveReport function :: ${error.message}`)
+        return res.status(400).json({success: false, message:"Internal Server Error."})
+    }
+}
+export { applyLeave, addLeaveType, cancelLeave, leaveAction, getLeaveDetails, getLeaveTypes, leaveReport }

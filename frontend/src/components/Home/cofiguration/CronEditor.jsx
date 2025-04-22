@@ -25,7 +25,8 @@ const CronEditor = () => {
     fetchApi();
     },[]);
     console.log(cronData);
-    
+
+   
   return (
     <>
     
@@ -66,13 +67,13 @@ const CronEditor = () => {
                           {value.name}
                           </th>
                           <td className="px-6 py-4">
-                          1
+                            {value.schedule}
                           </td>
                           <td className="px-6 py-4">
                           {value.isActive ? 'Active' : 'In-Active'}
                           </td>
                           <td className="px-6 py-4 flex space-x-4">
-                          <RiDeleteBin2Line className="cursor-pointer text-rose-500 w-7 h-7"/><FaRegEdit onClick ={()=>setPopup(!popup)}    className="cursor-pointer w-7 h-7 text-teal-600" />
+                          <FaRegEdit onClick ={()=>setPopup(!popup)}    className="cursor-pointer w-7 h-7 text-teal-600" />
                           </td>
                       </tr>
                       </>
@@ -80,7 +81,6 @@ const CronEditor = () => {
                       <td colSpan={4} className=" px-6 py-4 text-center text-xl font-semibold">No Cron Available</td> 
                     </tr>
                     }
-                            
                         </tbody>
                     </table>
                 </div>

@@ -6,11 +6,12 @@ import AttendanceRequestPopUp from './AttendanceRequestPopUp';
 
 
 const AttendanceTimesView = ({data,employeedata}) => {
+  // console.log('attendance data',data, format(new Date()));
   const [popup,setpopup] = useState(false);
   const [record,setRecord] = useState({});
   const color = {"week off":"text-sky-500","absent":"text-rose-500","holiday":"text-teal-500","present":"text-lime-500"}
-  const Heading = ['Date',' Day Status','Shift Name','In Time','Out Time','Hrs Worked','Action'];
-
+  const Heading = ['Date','Day',' Day Status','Shift Name','In Time','Out Time','Hrs Worked','Action'];
+  
     const popupHandler = (value)=>{
         setpopup(value)
     }
@@ -40,9 +41,13 @@ const AttendanceTimesView = ({data,employeedata}) => {
                     // const formattedInTime = format(dateinTime, 'h:mm a');
                     // const dateOutTime = new Date(value.checkOutTime);
                     // const formattedOutTime = format(dateOutTime, 'h:mm a');
+                    const dayName = format(new Date(value.date),'EEEE');
                      return  (<tr key={value.date} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-xl font-semibold">
                         <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {format(new Date(value.date),'dd-MM-yyyy')}
+                        </td>
+                        <td className="px-6 py-4">
+                            <span>{dayName}</span>
                         </td>
                         <td className="px-6 py-4">
                             <span className={`${color[value.status.toLowerCase()]}`}>{value.status}</span>

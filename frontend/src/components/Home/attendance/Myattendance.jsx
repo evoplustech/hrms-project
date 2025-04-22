@@ -19,10 +19,17 @@ const Myattendance = () => {
     const {id} = useParams();
     const {data:employeeDetails}  = useSelectorHook('employee');
     let {data:employeedata}  = useSelectorHook('authenticate');
-    console.log('params',id,employeedata,'id type',typeof id,typeof employeedata['employeeId']);
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+    
 
   if(id !== employeedata['employeeId'])
     employeedata = employeeDetails.length > 0 && employeeDetails.find((value)=>value.employeeId === id);
+
+  const weekOff = new Set(employeedata['shift']?.days);
+  const weekEnds = days.filter((value)=>{
+    return !weekOff.has(value.toLowerCase());
+  })
 
 
     const handleDateChange = async (dateParam) => {
@@ -38,7 +45,7 @@ const Myattendance = () => {
         setSelectedDate(dateParam);
         setCalander(false); 
       }catch(error){
-        console.log(error.message);
+        
       }
     };
  
@@ -55,6 +62,16 @@ const Myattendance = () => {
         <div className="space-y-4 mt-2 ms-2">
         <div className="flex  justify-start items-center"><span className="font-bold text-xl text-slate-500">Employee Name : </span><p className="font-semibold text-xl ms-2 text-teal-700">{`${employeedata['empPersonalId'].firstName} ${employeedata['empPersonalId'].lastName}`}</p></div>
         <div className="flex  justify-start items-center"><span className="font-bold text-xl text-slate-500">Employee Id : </span><p className="font-semibold text-xl ms-2 text-teal-700">{`${employeedata.employeeId}`}</p></div>
+        <div className="flex  justify-start items-center">
+        <span className="font-bold text-xl text-slate-500">Week-Ends : </span>
+        <ul className="flex flex-col">
+            {
+              weekEnds.map((value)=>{
+                return <><li className="font-semibold text-xl ms-2 text-yellow-600 mb-2">{value}</li><br></br></>
+              })
+            }
+          </ul>
+        </div>
         </div>
         <div className="flex justify-end relative">
             {

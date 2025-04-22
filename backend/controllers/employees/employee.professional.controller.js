@@ -241,7 +241,7 @@ const getAllEmployees= async (request,response)=>{
        const searchCondition = {empPersonalId: { $in: Array.from(refIds)}};
        if(empRole.toLowerCase()==='tl')
         searchCondition.managerId = managerId;
-       responseData = await employeeProfessionalModel.find(searchCondition).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name');
+       responseData = await employeeProfessionalModel.find(searchCondition).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name days');
        totalRecords = await employeePersonalModel.countDocuments(filter);
     }else if(+profile===1){
       console.log(skipCount , +limit);
@@ -257,7 +257,7 @@ const getAllEmployees= async (request,response)=>{
       });
     }else{
        totalRecords = await employeeProfessionalModel.countDocuments(filter);
-       responseData = await employeeProfessionalModel.find(filter).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name').skip(skipCount).limit(+limit).lean(true);
+       responseData = await employeeProfessionalModel.find(filter).populate('empPersonalId').populate('department','name').populate('designation','name').populate('role','name').populate('shift','name days').skip(skipCount).limit(+limit).lean(true);
     }
     response.status(200).json({message:'employee Reords',data:responseData,success:true,count:totalRecords});
   }catch(error){

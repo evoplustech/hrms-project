@@ -21,7 +21,7 @@ const loginEmployee = async (request,response)=>{
           return response.status(200).json({error:"Your account is inactive. Please reach out to our support team or admin team for help.",success: false});
         }
 
-        const empRecord = await employeeProfessionalModel.findOne({email:username}).populate('designation','name').populate('department','name').populate('empPersonalId').populate('role','name').populate('managerId','firstName lastName').populate('shift','name');
+        const empRecord = await employeeProfessionalModel.findOne({email:username}).populate('designation','name').populate('department','name').populate('empPersonalId').populate('role','name').populate('managerId','firstName lastName').populate('shift','name days');
         
         if(!empRecord)
           return response.status(401).json({error:"Invalid Credentials",success:false});

@@ -73,7 +73,7 @@ const createUpdateCron = async (request,response)=>{
 
       const updateResult = await cronModel.findOneAndUpdate({_id:id},{name,schedule,isActive},{new:true,upsert:true});
       await cronStart({schedule,isActive});
-      return response.status(201).json({message:"Record Updated Successfully",success:true});
+      return response.status(201).json({message:"Cron Updated Successfully",success:true});
   }else{
       const createRecord = await  cronModel.create({name,schedule,isActive});
       await cronStart({schedule,isActive});
@@ -129,9 +129,18 @@ const cronStart = async ({ schedule, isActive }) => {
     console.log('Cron stopped');
     return;
   }
+  const checkHoursORMin = Math.floor(+schedule/60);
+  console.log(checkHoursORMin);
+  let cronTime = '';
+  if(checkHoursORMin===0)
+    cronTime = `0 */${+schedule} * * * *`;
+  else
+    cronTime = `0 0 */${checkHoursORMin} * * *`;
 
-  const min = +schedule;
-  const cronTime = `0 */${min} * * * *`;
+    console.log(cronTime);
+  // const duration = );
+  // const min = +schedule;
+  
 
   // Create new cron job
   activeCronJob = new CronJob(

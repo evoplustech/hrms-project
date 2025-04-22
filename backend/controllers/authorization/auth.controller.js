@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import generateJWTtoken from "../../helpers/JWT.js";
 import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
 import nodemailer from  'nodemailer';

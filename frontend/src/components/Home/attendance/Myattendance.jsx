@@ -66,9 +66,9 @@ const Myattendance = () => {
         <span className="font-bold text-xl text-slate-500">Week-Ends : </span>
         <ul className="flex flex-col">
             {
-              weekEnds.map((value)=>{
+              weekOff.length >  0 && weekEnds.map((value)=>{
                 return <><li className="font-semibold text-xl ms-2 text-yellow-600 mb-2">{value}</li><br></br></>
-              })
+              }) 
             }
           </ul>
         </div>

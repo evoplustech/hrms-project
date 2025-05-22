@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import dotenv   from 'dotenv';
 import dbConnection from './config/dbConnection.js';
 import cors from 'cors'
@@ -12,7 +12,7 @@ import picklistRouter from './routers/configuration/config.route.js';
 import holidayRouter from './routers/holiday/holiday.route.js';
 import attendanceRouter from './routers/attendance/attendance.router.js';
 import policyRouter from './routers/policy/policy.route.js';
-
+import path from 'path';
 
 const app = express();
 dotenv.config();
@@ -23,11 +23,13 @@ app.use(cookieParser()); // to Access the request Cookie
 
 
 const PORT = process.env.PORT || 8000;
+// to get absolute file Path
+const _dirname = path.resolve();
 
 // testing end points
 app.get('/ten/one',(req,res)=>{
   const x= new Date();
-  console.log(typeof x,x);
+  
   res.status(200).send(x);
   // res.redirect(301,'https://localhost:6500/api/authorize/logout');
 })
@@ -61,10 +63,15 @@ app.use('/api/leaves',leaveRouter)
 
 app.use('/api/policy',policyRouter)
 
+// to host static file 
+app.use(express.static(path.join(_dirname,'frontend','dist')));
 
+app.get('*',(_response)=>{
+    response.status(200).sendFile(path.join(_dirname,'frontend','dist'));
+})
 
 app.listen(PORT,()=>{
-  console.log(`server started to listern on port ${PORT}`);
+  console.log(`server started to listern on porto ${PORT}`);
   dbConnection();
 });
 

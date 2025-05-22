@@ -128,7 +128,6 @@ const getAttendanceRequestbackup2 = async (request,response)=>{
     }
     const selectedRecords = await attendanceRequestModel.find(filter).skip(skipCount).limit(+limit);  // to fetch all attendance
     const totalRecords = await attendanceRequestModel.countDocuments(filter);
-    console.log('this is the levevev',filter,skipCount,limit,startDate,endDate,empRole,totalRecords);
     response.status(200).json({message:'Record fetched Successfully',data:selectedRecords,count:totalRecords,success:true});
   }catch(error){
     response.status(500).json({error:error.message,data:{},success:false});

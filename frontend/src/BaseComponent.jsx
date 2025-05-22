@@ -12,8 +12,8 @@ import { fetchAllDesignation } from './slices/designationSlice';
 import { fetchAllRoles } from './slices/roleSlice';
 import { fetchAllShifts } from './slices/shiftSlice';
 import { fetchBiometricDevice } from './slices/biometricSlice'
-import Module from './components/home/cofiguration/Module';
-import { getModules } from './slices/moduleSlice';
+// import Module from './components/home/cofiguration/Module';
+// import { getModules } from './slices/moduleSlice';
 import { fetchAttendance } from './slices/attendanceSlice';
 import { fetchReasons } from './slices/reasonSlice';
 import { getAttendanceRequest } from './slices/attendanceRequestSlice';
@@ -103,7 +103,7 @@ const BaseComponent = ()=>{
         dispatch(fetchAllRoles());
         dispatch(fetchAllDesignation());
         dispatch(fetchAllShifts());
-        dispatch(getModules());
+        // dispatch(getModules());
         dispatch(fetchAttendance({id:employeeId,dateParam:new Date()}));
         dispatch(fetchReasons());
         dispatch(fetchLeaves({ "status":"", "AppliedStartDate": "", "AppliedEndDate": "", "mine": "", "page": "1", "limit": "10"}))

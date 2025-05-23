@@ -8,7 +8,7 @@ async function generateJWTtoken (payload,response){
     maxAge:9*60*60*1000,
     httpOnly : true,
     strict : true,
-    secure : false
+    secure : process.env.STATUS !=='development'
   });
 
 }

@@ -51,7 +51,6 @@ const ResetPassword = React.lazy(()=>import('./components/Login/ResetPassword'))
 const EmployeeManagement = React.lazy(()=>import('./components/Home/employee/EmployeeManagement'));
 const Dashboard = React.lazy(()=>import('./components/Home/dashboard/Dashboard'));
 const Attendance = React.lazy(()=>import('./components/Home/attendance/Attendance'));
-// const Biometric = React.lazy(()=>import('./components/Home/devices/Biometric'));
 const Leave = React.lazy(()=>import('./components/Home/leave/Leave'));
 const Configuration = React.lazy(()=>import('./components/Home/cofiguration/Configuration'));
 const PersonalDetailsForm = React.lazy(()=>import('./components/Home/employee/PersonalDetailsForm'));

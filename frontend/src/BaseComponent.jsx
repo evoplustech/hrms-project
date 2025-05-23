@@ -126,132 +126,132 @@ const BaseComponent = ()=>{
     children : [
         {
           path:'/',
-          element:<Suspense>{isLogged ?<Navigate to="/home"><Home/></Navigate>:<Login/>}</Suspense>
+          element:<Suspense>{isLogged ?<Navigate to="/Home"><Home/></Navigate>:<Login/>}</Suspense>
         },{
-          path:'/home',
+          path:'/Home',
           element:<Suspense>{isLogged ?<Home/>:<Navigate to="/"><Login/></Navigate>}</Suspense>,
           children:[
             {
-              path:'/home/',
+              path:'/Home/',
               element:<Suspense><Dashboard/></Suspense>
             },
             {
-              path:'/home/employee',
+              path:'/Home/employee',
               element:<Suspense><EmployeeManagement/></Suspense>,
               children:[
                 {
-                  path:'/home/employee/',
+                  path:'/Home/employee/',
                   element:<Suspense><EmployeeProfile/></Suspense>
                 },
                 {
-                  path:'/home/employee/createEmployee',
+                  path:'/Home/employee/createEmployee',
                   element:<Suspense><PersonalDetailsForm/></Suspense>
                 },
                 {
-                  path:'/home/employee/createEmployee/:id',
+                  path:'/Home/employee/createEmployee/:id',
                   element:<Suspense><ProfessionalDetailsForm/></Suspense>
                 },
                 {
-                  path:'/home/employee/employeeList',
+                  path:'/Home/employee/employeeList',
                   element:<Suspense><EmployeeList/></Suspense>
                 }
                 ,
                 {
-                  path:'/home/employee/updateEmployee/:empObj',
+                  path:'/Home/employee/updateEmployee/:empObj',
                   element:<Suspense><UpdateEmployee/></Suspense>
                 }
               ]
              
             },
             {
-              path:'/home/attendance',
+              path:'/Home/attendance',
               element:<Suspense><Attendance/></Suspense>,
               children:[
                 {
-                  path:'/home/attendance/:id/',
+                  path:'/Home/attendance/:id/',
                   element:<Suspense><Myattendance/></Suspense>
                 },
                 {
-                  path:'/home/attendance/allAttendance',
+                  path:'/Home/attendance/allAttendance',
                   element:<Suspense><AllAttendance/></Suspense>
                 },{
-                  path:'/home/attendance/AttendanceRequest',
+                  path:'/Home/attendance/AttendanceRequest',
                   element:<Suspense><AttendanceRequest/></Suspense>
                 }
               ]
             },
             {
-              path:'/home/devices',
+              path:'/Home/devices',
               element:<Suspense><Biometric/></Suspense>,
               children:[
                 {
-                  path:'/home/devices/',
+                  path:'/Home/devices/',
                   element:<Suspense><BiometricDeviceList /></Suspense>
                 },{
-                  path:'/home/devices/adddevice',
+                  path:'/Home/devices/adddevice',
                   element:<Suspense><AddDevice/></Suspense>,
                 },{
-                  path:'/home/devices/adddevice/:id',
+                  path:'/Home/devices/adddevice/:id',
                   element:<Suspense><AddDevice/></Suspense>,
                 }
               ]
             },
             {
-              path:'/home/leaves',
+              path:'/Home/leaves',
               element:<Suspense> <Leave/> </Suspense>,
               children: [
                 {
-                  path:'/home/leaves/',
+                  path:'/Home/leaves/',
                   element: <Suspense> <LeaveList /> </Suspense>
                 },
                 {
-                  path:'/home/leaves/leaverequest',
+                  path:'/Home/leaves/leaverequest',
                   element: <Suspense> <LeaveRequest /> </Suspense>
                 }
               ]
             },{
-              path:'/home/configuration',
+              path:'/Home/configuration',
               element:<Suspense><Configuration/></Suspense>,
               children:[
                 {
-                path:'/home/configuration/picklist',
+                path:'/Home/configuration/picklist',
                 element:<Suspense><PicklistEditor/></Suspense>,
                 },
                 {
-                  path:'/home/configuration/cronsetup',
+                  path:'/Home/configuration/cronsetup',
                   element:<Suspense><CronEditor/></Suspense>,
                  }
               ]
             },{
-              path:'/home/policy',
+              path:'/Home/policy',
               element:<Suspense><Policy /></Suspense>,
               children:[
                 {
-                  path:'/home/policy',
+                  path:'/Home/policy',
                   element:<Suspense><PolicyList/></Suspense>,
                 },
                 {
-                  path:'/home/policy/addpolicy',
+                  path:'/Home/policy/addpolicy',
                   element:<Suspense><AddPolicy/></Suspense>,
                   
                 },{
-                  path:'/home/policy/addpolicy/:polidyId',
+                  path:'/Home/policy/addpolicy/:polidyId',
                   element:<Suspense><AddPolicy/></Suspense>,
                 }
               ]
             },{
-              path: "/home/holiday",
+              path: "/Home/holiday",
               element: <Suspense><HolidayLayout /></Suspense>,
               children: [
                 {
-                  path: "/home/holiday",
+                  path: "/Home/holiday",
                   element: <Suspense><HolidayList /></Suspense>
                 },
                 {
-                  path: "/home/holiday/addholiday",
+                  path: "/Home/holiday/addholiday",
                   element: <Suspense><AddHoliday /></Suspense>
                 },{
-                  path: "/home/holiday/addholiday/:id",
+                  path: "/Home/holiday/addholiday/:id",
                   element: <Suspense><AddHoliday /></Suspense>
                 }
               ]
@@ -260,10 +260,10 @@ const BaseComponent = ()=>{
           ]
         },{
           path:'/forget-password',
-          element:<Suspense>{isLogged ?<Navigate to="/home"><Home/></Navigate>:<ForgetPassword/>}</Suspense>
+          element:<Suspense>{isLogged ?<Navigate to="/Home"><Home/></Navigate>:<ForgetPassword/>}</Suspense>
         },{
           path:'/reset-password/:empId/:token',
-          element:<Suspense>{isLogged ?<Navigate to="/home"><Home/></Navigate>:<ResetPassword/>}</Suspense>
+          element:<Suspense>{isLogged ?<Navigate to="/Home"><Home/></Navigate>:<ResetPassword/>}</Suspense>
         }
     ]
     },{

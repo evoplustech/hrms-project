@@ -7,7 +7,7 @@ const getEmployeeAttendance = async (request,response)=>{
   try{
     const {employeeId,date} = request.query;
 
-    // console.log('date===>',new Date(date));
+    
     const givendate = new Date(date);
 
     let startDate = new Date(givendate.getFullYear(), givendate.getMonth(), 1);
@@ -15,13 +15,12 @@ const getEmployeeAttendance = async (request,response)=>{
   
     startDate= format(startDate, 'yyyy-MM-dd');  // Using date-fns format function
     endDate= format(endDate, 'yyyy-MM-dd');  // Using date-fns format function
-    // console.log('startDate',startDate,'endDate',endDate);
-    // console.log(new Date(startDate),new Date(endDate));
+    
     if(!employeeId || !date)
       return response.status(400).json({ error: 'Missing required parameter: param' });
 
     const attendanceData = await attendanceModel.find({employeeId,isActive:true,date:{$gte:new Date(startDate),$lte:new Date(endDate)}}).sort({ date: 1 }).lean(true);
-    console.log('date ==->',attendanceData);
+    
     if(attendanceData.length < 1)
        return response.status(204).json({data:attendanceData,success:true,message:'No Records Found for the Employee'});
 
@@ -40,7 +39,7 @@ const getEmployeeAttendancebackup = async (request,response)=>{
   try{
     const {employeeId,date} = request.query;
 
-    console.log('date===>',new Date(date));
+   
     const givendate = new Date(date);
 
     let startDate = new Date(givendate.getFullYear(), givendate.getMonth(), 1);
@@ -48,14 +47,13 @@ const getEmployeeAttendancebackup = async (request,response)=>{
   
     startDate= format(startDate, 'yyyy-MM-dd');  // Using date-fns format function
     endDate= format(endDate, 'yyyy-MM-dd');  // Using date-fns format function
-    // console.log('startDate',startDate,'endDate',endDate);
-    // console.log(new Date(startDate),new Date(endDate));
+   
     if(!employeeId || !date)
       return response.status(400).json({ error: 'Missing required parameter: param' });
 
     const attendanceData = await attendanceModel.find({employeeId,isActive:true,date:{$gte:new Date(startDate),$lte:new Date(endDate)}},{ sort: { date: 1 } });
 
-    console.log(employeeId,'attendance data',attendanceData);
+    
 
     if(attendanceData.length < 1)
        return response.status(204).json({data:attendanceData,success:true,message:'No Records Found for the Employee'});

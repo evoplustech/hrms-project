@@ -28,7 +28,7 @@ import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
 import currentMonthDates from '../utils/dateOfMonth';
 import CronEditor from './components/Home/cofiguration/CronEditor';
-import BIometric from './components/Home/devices/BIometric';
+import Biometric from './components/Home/devices/BIometric';
 
 
 

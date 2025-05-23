@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import employeeProfessionalModel from '../../models/employee/employeeProfessional.model.js';
 import employeePersonalModel from '../../models/employee/employeePersonal.model.js';
 

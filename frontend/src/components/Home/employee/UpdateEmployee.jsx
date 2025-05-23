@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import PersonalForm from './personalForm';
+import PersonalForm from './PersonalForm';
 import useSelectorHook from '../../../../utils/useSelectorHook';
 import { ImOffice } from "react-icons/im";
 import ProfessionalForm from './ProfessionalForm';

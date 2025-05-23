@@ -111,7 +111,6 @@ const BaseComponent = ()=>{
         dispatch(fetchPolicy())
 
         if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
-        console.log(firstDayOfMonth,lastDayOfMonth,'ooooohhhhhhhhhhhhhhhhhhhhhhohhhhhh');
         const urlData = {empid:empPersonalId._id,id:employeeId,startDate:firstDayOfMonth,endDate:lastDayOfMonth,status:'All',requestType:1,page:1,limit:10};
         dispatch(getAttendanceRequest(urlData));
       }

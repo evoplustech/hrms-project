@@ -28,6 +28,7 @@ import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
 import currentMonthDates from '../utils/dateOfMonth';
 import CronEditor from './components/Home/cofiguration/CronEditor';
+import Batinda from './components/Home/devices/Batinda'; 
 import Biometric from './components/Home/devices/Biometric';
 
 

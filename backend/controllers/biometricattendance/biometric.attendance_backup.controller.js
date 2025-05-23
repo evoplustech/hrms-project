@@ -1,7 +1,7 @@
 import ZKLib  from 'node-zklib';
 import biometricModel from '../../models/biometric/biometric.model.js';
 import attendanceModel from '../../models/attendance/attendance.model.js';
-import employeeProfessionalModel from '../../models/employee/EmployeeProfessional.model.js';
+import employeeProfessionalModel from '../../models/employee/employeeProfessional.model.js';
 import {parse,isWithinInterval,parseISO,subDays  } from 'date-fns';
 import  moment from 'moment-timezone';
 import shiftModel from '../../models/attendance/shift.model.js';
@@ -41,7 +41,7 @@ const fetchAttendance = async (request,response)=>{
         // const attendanceLog = await zkInstance.getUsers();
         const attendanceLog =  await zkInstance.getAttendances();
 
-      //  console.log(attendanceLog);
+      
 
       
 
@@ -54,7 +54,7 @@ const fetchAttendance = async (request,response)=>{
           
           const attendanceRecords = await groupAttendance(attendanceList, userids);
           return response.status(200).json(attendanceRecords);
-          console.log(attendanceRecords);
+          
           // const {date}
           // attendance insertion in the db
 
@@ -108,12 +108,12 @@ const groupAttendance = async (attendanceList,empid)=>{
       const attendanceListObj = {}; // formted attendance Object List
 
       attendanceList.forEach((object)=>{
-        // console.log(object.recordTime);
+        
         const dateString = object.recordTime.toISOString();
         const newDate = moment.utc(dateString).tz('Asia/Kolkata').format('YYYY-MM-DD hh:mm:ss A');
-        console.log('istDate',newDate);
+       
         let date= newDate.split(/[ ]/)[0];
-        console.log('splittt',date);
+        
         // const newDate=  date.split('T')[0];
         if(!attendanceListObj[date])
           attendanceListObj[date] = [];
@@ -200,7 +200,6 @@ const groupAttendance = async (attendanceList,empid)=>{
         // await createAttendance.save();
     }
   })
-  console.log(finalAttendanceObject);
    return dataaa;
 }
 

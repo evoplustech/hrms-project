@@ -1,7 +1,7 @@
 import ZKLib  from 'node-zklib';
 import biometricModel from '../../models/biometric/biometric.model.js';
 import attendanceModel from '../../models/attendance/attendance.model.js';
-import employeeProfessionalModel from '../../models/employee/EmployeeProfessional.model.js';
+import employeeProfessionalModel from '../../models/employee/employeeProfessional.model.js';
 import {parse,isWithinInterval,parseISO,subDays, addDays,isSameDay  } from 'date-fns';
 import { toZonedTime, format } from 'date-fns-tz';
 import  moment from 'moment-timezone';
@@ -42,12 +42,12 @@ try{
   await zkInstance.createSocket();
   // const attendanceLog = await zkInstance.getUsers();
   const attendanceLog =  await zkInstance.getAttendances();
-  // console.log('this is attendanceLog==>',attendanceLog);
+  
   // return attendanceLog;
   for(const employeeData of userId) {
     const attendanceLogs = attendanceLog.data.filter((value)=>{
        recordTime = attendanceData?.trackingTime ? moment.utc(attendanceData.trackingTime).tz('Asia/Kolkata').toDate() : new Date("2025-04-01");
-      // console.log('recordTime jolllksldkflskdlfklskd',recordTime);
+      
       return (
         employeeData.employeeId === value.deviceUserId
          &&
@@ -61,7 +61,7 @@ try{
   }        
   await zkInstance.disconnect();
   const documentPresent = await attendanceModel.countDocuments();
-  // console.log('documentPresent',documentPresent);
+  
   // return documentPresent;
   }catch(error){
     console.log(error.message);

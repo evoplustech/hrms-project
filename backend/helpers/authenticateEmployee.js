@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import employeeProfessionalModel from '../models/employee/EmployeeProfessional.model.js';
+import employeeProfessionalModel from '../models/employee/employeeProfessional.model.js';
 const authenticate = async (request,response,next)=>{
     try{
       const {webtoken} = request.cookies;

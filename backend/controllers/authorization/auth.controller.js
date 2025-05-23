@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import generateJWTtoken from "../../helpers/JWT.js";
-import employeeProfessionalModel from "../../models/employee/EmployeeProfessional.model.js";
+import employeeProfessionalModel from "../../models/employee/employeeProfessional.model.js";
 import nodemailer from  'nodemailer';
 import jwt from 'jsonwebtoken'
 import ip from 'ip'
@@ -37,7 +37,7 @@ const loginEmployee = async (request,response)=>{
         // creating JWT for the user
         generateJWTtoken({_id,role},response);
 
-        // console.log(empRecord);
+        
         const {firstName,lastName,profilepic} = empRecord.empPersonalId;
         
         response.status(200).json({data:empRecord,success:true});
@@ -97,7 +97,7 @@ const processPasswordRequest = async(request,response)=>{
         html:`<h2 style="color:navy,fontSize:12px">Click On the Below Link To Reset Your Hrms Password<h2><br/><a href="http://${ip_address}:5173/reset-password/${empRecord._id}/${token}">http://localhost:5173/reset-password/${empRecord._id}/${token}</a>`
       }
 
-      // console.log(receiver);
+      
 
       await  transporter.sendMail(receiver,(error,emailResponse)=>{
          if(error)

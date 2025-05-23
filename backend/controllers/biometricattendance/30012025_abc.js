@@ -1,7 +1,7 @@
 import ZKLib  from 'node-zklib';
 import biometricModel from '../../models/biometric/biometric.model.js';
 import attendanceModel from '../../models/attendance/attendance.model.js';
-import employeeProfessionalModel from '../../models/employee/EmployeeProfessional.model.js';
+import employeeProfessionalModel from '../../models/employee/employeeProfessional.model.js';
 import {parse,isWithinInterval,parseISO,subDays, addDays,isSameDay  } from 'date-fns';
 import { toZonedTime, format } from 'date-fns-tz';
 import  moment from 'moment-timezone';
@@ -29,7 +29,7 @@ const fetchAttendance = async (request,response)=>{
 }
 
 const getAttendanceFromDevice= async ({ip,port})=>{
-  console.log('triggered this is ');
+  
   // const attendanceData = await  attendanceModel.find();
   const attendanceData = await  attendanceModel.findOne().sort({ trackingTime: -1 });
 
@@ -42,11 +42,11 @@ const getAttendanceFromDevice= async ({ip,port})=>{
   const attendanceLog =  await zkInstance.getAttendances();
   // return attendanceLog;
   for(const userids of userId) {
-    console.log('useridsuserids',userids);
+   
     const attendanceList = attendanceLog.data.filter((value)=>{
       const recordTime = attendanceData?.trackingTime ? moment.utc(attendanceData.trackingTime).tz('Asia/Kolkata').toDate() : new Date("2024-12-01");
 
-      // console.log('recordTime jolllksldkflskdlfklskd',recordTime);
+      
       return (
         userids.employeeId === value.deviceUserId
          &&
@@ -54,9 +54,9 @@ const getAttendanceFromDevice= async ({ip,port})=>{
          
       );
   });
-  // console.log('attendanceList this is gpgpgpgpgpgp',attendanceList);
+  
   //   // return attendanceList;
-  //   console.log('recordTime this is recordTime',recordTime);
+  
   if(attendanceList.length > 0){
     const attendanceRecords = await groupAttendance(attendanceList, userids );
     // return attendanceRecords;
@@ -66,7 +66,7 @@ const getAttendanceFromDevice= async ({ip,port})=>{
   }        
   await zkInstance.disconnect();
   const documentPresent = await attendanceModel.countDocuments();
-  // console.log('documentPresent',documentPresent);
+  
   return documentPresent;
 }
 
@@ -78,9 +78,9 @@ const initialDate = new Date("2024-12-01");
 let attendanceList =attendanceListData;
 // return attendanceList;
 for(let dateNow = new Date(initialDate) ; dateNow <= new Date();dateNow = addDays(dateNow,1)){
-    // console.log('dateNow]]>',dateNow);
+    
     const format_today = dateNow.toISOString().split("T")[0];
-    // console.log('this isn jjsformat_today->',format_today);
+    
     let arr = [];
     attendanceListData.find((value)=>{
       if(value.recordTime.toISOString().includes(format_today)){
@@ -153,7 +153,7 @@ for(let dateNow = new Date(initialDate) ; dateNow <= new Date();dateNow = addDay
         totalHours = `${hours}:${minutes}`;
         const punchInTime = moment(InTime, 'hh:mm:ss A'); 
         const shiftTime =moment(employeeRecords['shift'].cumulativeStartTime, 'hh:mm:ss A');
-        //  console.log('cumulative timeeeeeeff',employeeRecords['shift'].cumulativeStartTime);
+       
         status = hours < 9 ? 'Early Left' : 'Present';
         if(punchInTime.isAfter(shiftTime)) 
           status = 'Late-In';
@@ -173,8 +173,6 @@ for(let dateNow = new Date(initialDate) ; dateNow <= new Date();dateNow = addDay
       // const holidayDate = holidayModel?.holidayDate || '1970-01-01T00:00:00.000+00:00';
       if(!workingDays.includes(todayDay)){  // for cron change to the current time 
         status = "Week Off";
-        // console.log(workingDays);
-        // console.log(date,'todayDay',todayDay);
       }
 
      const leaveStartDate =  moment.utc(checkStartDate).tz('Asia/Kolkata').format('YYYY-MM-DD');
@@ -195,9 +193,9 @@ for(let dateNow = new Date(initialDate) ; dateNow <= new Date();dateNow = addDay
         status = 'Holiday';
     }
       const selectRecord = await attendanceModel.findOne({ employeeId : empid.employeeId,date :new Date(`${date}T00:00:00Z`)});
-      console.log('employeeId',empid.employeeId,'selectRecord',selectRecord);
+     
       if(selectRecord){
-        console.log('ifconditionnnnn',selectRecord.checkInTime,OutTime);
+        
           await attendanceModel.updateOne({
             employeeId : empid.employeeId,
             date :new Date(`${date}T00:00:00Z`)
@@ -214,7 +212,6 @@ for(let dateNow = new Date(initialDate) ; dateNow <= new Date();dateNow = addDay
             }
           });
       }else{
-        console.log('elseefdfsdfsdf',InTime,OutTime);
            // insert the Records in the db
           await attendanceModel.create({
             employeeId : empid.employeeId,
@@ -226,7 +223,7 @@ for(let dateNow = new Date(initialDate) ; dateNow <= new Date();dateNow = addDay
             trackingTime: new Date()
           });
       }
-    // console.log('hello worldsshshdghgdsgdjgs ',updateResult);
+    
 
    
     

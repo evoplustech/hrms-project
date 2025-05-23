@@ -50,7 +50,7 @@ const ResetPassword = React.lazy(()=>import('./components/Login/ResetPassword'))
 const EmployeeManagement = React.lazy(()=>import('./components/Home/employee/EmployeeManagement'));
 const Dashboard = React.lazy(()=>import('./components/Home/dashboard/Dashboard'));
 const Attendance = React.lazy(()=>import('./components/Home/attendance/Attendance'));
-const Biometric = React.lazy(()=>import('./components/Home/devices/Biometric'));
+// const Biometric = React.lazy(()=>import('./components/Home/devices/Biometric'));
 const Leave = React.lazy(()=>import('./components/Home/leave/Leave'));
 const Configuration = React.lazy(()=>import('./components/Home/cofiguration/Configuration'));
 const PersonalDetailsForm = React.lazy(()=>import('./components/Home/employee/PersonalDetailsForm'));
@@ -180,22 +180,22 @@ const BaseComponent = ()=>{
                 }
               ]
             },
-            {
-              path:'/Home/devices',
-              element:<Suspense><Biometric/></Suspense>,
-              children:[
-                {
-                  path:'/Home/devices/',
-                  element:<Suspense><BiometricDeviceList /></Suspense>
-                },{
-                  path:'/Home/devices/adddevice',
-                  element:<Suspense><AddDevice/></Suspense>,
-                },{
-                  path:'/Home/devices/adddevice/:id',
-                  element:<Suspense><AddDevice/></Suspense>,
-                }
-              ]
-            },
+            // {
+            //   path:'/Home/devices',
+            //   element:<Suspense><Biometric/></Suspense>,
+            //   children:[
+            //     {
+            //       path:'/Home/devices/',
+            //       element:<Suspense><BiometricDeviceList /></Suspense>
+            //     },{
+            //       path:'/Home/devices/adddevice',
+            //       element:<Suspense><AddDevice/></Suspense>,
+            //     },{
+            //       path:'/Home/devices/adddevice/:id',
+            //       element:<Suspense><AddDevice/></Suspense>,
+            //     }
+            //   ]
+            // },
             {
               path:'/Home/leaves',
               element:<Suspense> <Leave/> </Suspense>,

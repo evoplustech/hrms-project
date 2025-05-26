@@ -1,7 +1,5 @@
 import React from 'react'
 import { FcApproval } from "react-icons/fc";
-import approveIcon from '../../../src/assets/approve.png';
-import cancelIcon from '../../../src/assets/cancel.png';
 
 export const LeaveLineItem = React.memo(({ leave, handleAction, userDetail }) => {
     // console.log('test')
@@ -35,10 +33,10 @@ export const LeaveLineItem = React.memo(({ leave, handleAction, userDetail }) =>
             <td className="py-3 px-6 border-b">
                 <div className='flex flex-row items-end justify-center' >
                     {approveBtnshow && <p title='Approved' onClick={()=>handleAction('Approved',leave)} >
-                        <img src={approveIcon} width={40} className='cursor-pointer' />
+                        <img src={`../../../src/assets/approve.png`} width={40} className='cursor-pointer' />
                     </p>}
                     {cancelBtnshow && <p title='Cancelled' onClick={()=>handleAction('Cancelled',leave)} >
-                        <img src={cancelIcon} width={40} className='cursor-pointer' />
+                        <img src={`/src/assets/cancel.png`} width={40} className='cursor-pointer' />
                     </p>}
                     {rejectBtnshow && <p title='Reject'  onClick={()=>handleAction('Rejected',leave)} >
                         <img src={`../../../src/assets/reject.png`} width={40} className='cursor-pointer' />

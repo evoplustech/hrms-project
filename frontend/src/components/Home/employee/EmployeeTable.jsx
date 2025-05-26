@@ -33,7 +33,7 @@ const EmployeeTable = ({data,count,loading}) => {
           <tr className='bg-slate-300'>
             {
               Heading.map((value)=>{
-                return <th key={value} scope="col" className="px-6 py-3 text-slate-600 text-sm font-serif font-bold">
+                return <th key={value} scope="col" className="px-6 py-3 text-slate-600 text-sm font-bold">
                     {value}
                 </th>
               })

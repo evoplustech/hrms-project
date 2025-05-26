@@ -1,7 +1,7 @@
 import ZKLib  from 'node-zklib';
 import biometricModel from '../../models/biometric/biometric.model.js';
 import attendanceModel from '../../models/attendance/attendance.model.js';
-import employeeProfessionalModel from '../../models/employee/EmployeeProfessional.model.js';
+import employeeProfessionalModel from '../../models/employee/employeeProfessional.model.js';
 import {parse,isWithinInterval,parseISO,subDays  } from 'date-fns';
 import  moment from 'moment-timezone';
 import shiftModel from '../../models/attendance/shift.model.js';

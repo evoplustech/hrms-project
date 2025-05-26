@@ -1,21 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useSelectorHook from '../../../utils/useSelectorHook';
+import accessPrivilages from '../../../utils/userPrivilages';
 
-const CatagoryList = ({value}) => {
-  console.log('catlistststsststt',value);
-  
+const CatagoryList = ({value}) => {  
+ 
   const {isLogged, data} = useSelectorHook('authenticate');
-  let show_hide = false;
-
-  const hide_component = ['Add Policy','Add Holiday'];
-  if(hide_component.includes(value.label) && data.role.name.toLowerCase() !== 'admin' ){
-    show_hide = false;
-  }else{
-    show_hide = true;
-  }
-  console.log("Catagory")
-  console.log(value.isActive)
+  const roleAccess = accessPrivilages(data.role.name || '');
+  const show_hide = roleAccess.includes(value.catvalue) ? true : false;
+  // let show_hide = false;
+  // const hide_component = ['Add Policy','Add Holiday'];
+  // if(hide_component.includes(value.label) && data.role.name.toLowerCase() !== 'admin' ){
+  //   show_hide = false;
+  // }else{
+  //   show_hide = true;
+  // }
   return (
     <>  
     { show_hide ? 

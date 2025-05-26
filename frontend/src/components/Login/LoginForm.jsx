@@ -66,7 +66,7 @@ const LoginForm = () => {
           </div>
           <div>
             <div>
-              <Link to="/forget-password" className="hover:text-blue-500 hover:cursor-pointer hover:text-md">Forget Password ? Let's Reset </Link>
+              <Link to="/forget-password" className="hover:text-blue-500 hover:cursor-pointer text-xs">Forget Password ? Let's Reset </Link>
             </div>
           <button disabled={status==="pending"?true:false} className='w-full p-2 mt-4 rounded-md login-btn'>
             {

@@ -19,10 +19,10 @@ const createShift = async (request,response)=>{
     const newShift=  new shiftModel({name,startTime,endTime,graceTime,cumulativeStartTime,days});
     await newShift.save();
 
-     response.status(200).json({newShift,"success": true});
+     response.status(200).json({message:"Record Created Successfully",data:newShift,"success": true});
 
   }catch(error){
-    console.log(error.message);
+    console.log('shift error====',error.message);
     response.status(500).json({error:"Internal Server Error",success: false});
   }
 
@@ -34,8 +34,8 @@ const calculateStartTime = (time1,time2)=>{
   const [hours,minutes,seconds,amorpm] = time1.split(/[: ]/);
   const [hours2,minutes2] = time2.split(':').map(Number);
 
-  const inhours = parseInt(hours,10);
-  const inMinutes = parseInt(minutes,10);
+  let inhours = parseInt(hours,10);
+  let inMinutes = parseInt(minutes,10);
 
   if(inhours !==12 && amorpm=='PM') inhours += 12;
   if(inhours==12 && amorpm==='AM')inhours =0;
@@ -57,16 +57,16 @@ const updateShift = async (request,response)=>{
     const isValid = validateFormFields(request);
     const {role:empRole} = request;
 
-    if(empRole !=='admin')
+    if(empRole.toLowerCase() !=='admin')
       return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
 
     if(!isValid)
       return response.status(422).json({error:"Validation failed Form Fields Missing",success: false});
 
     const {shiftId} = request.params;
-    const {name,startTime,endTime,days} = request.body;
+    const {name,startTime,endTime,days,graceTime} = request.body;
 
-    const editShift = await shiftModel.findOneAndUpdate({_id:shiftId},{name,startTime,endTime,days},{
+    const editShift = await shiftModel.findOneAndUpdate({_id:shiftId},{name,startTime,endTime,days,graceTime},{
       new:true
     });
 
@@ -74,7 +74,7 @@ const updateShift = async (request,response)=>{
       return response.status(404).json({error:"Updation Failed.!Shift Not Updated",success: false});
 
 
-    response.status(200).json({message:"Shift Updated",success: true});
+    response.status(200).json({message:"Shift Updated Successfully",data:editShift,success: true});
 
   }catch(error){
     console.log(error.message);
@@ -89,15 +89,18 @@ const deleteShift = async (request,response)=>{
       const {shiftId}  = request.params;
       const {role:empRole} = request;
 
-      if(empRole !=='admin')
+      if(empRole.toLowerCase() !=='admin')
         return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false });
 
       if(!shiftId)
         return response.status(400).json({error:"Shift To Delete Need To Be Specified",success:false});
 
-        await shiftModel.updateOne({_id:shiftId},{isActive:false});
+        const data = await shiftModel.findOneAndUpdate({_id:shiftId},{isActive:false},{
+          new:true
+        });
 
-        return response.status(200).json({message:"Shift Deleted Successfully",success:true});
+
+        return response.status(200).json({message:"Shift Deleted Successfully",data,success:true});
 
     }catch(error){
       console.log(error.message);
@@ -111,7 +114,7 @@ const getAllShifts = async (request,response)=>{
 
   try{
     // validate The User
-    const allShifts = await shiftModel.find();
+    const allShifts = await shiftModel.find({isActive:true});
     const {role:empRole} = request;
 
     // console.log(request);
@@ -123,7 +126,7 @@ const getAllShifts = async (request,response)=>{
         return response.status(400).json({error:"no Shifts Found",success:false});
 
     
-    response.status(200).json({data:allShifts,success:true});
+    response.status(200).json({message:"fetched all records",data:allShifts,success:true});
 
   }catch(error){
     console.log(error.message);

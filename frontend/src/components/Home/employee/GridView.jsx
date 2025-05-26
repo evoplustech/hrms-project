@@ -25,10 +25,10 @@ const GridView = ({employeeId,name,email,designation,department,pic}) => {
                   </div>
                   
                 
-                  <div className="">
-                        <p className="text-xl font-semibold capitalize">{name}</p>
-                        <p className="text-xl">{email}</p>
-                        <p className="des">{designation}</p>
+                  <div className="empgrid-wrap-text-wrap">
+                        <p className="text-lg capitalize font-semibold">{name}</p>
+                        <p className="text-base">{email}</p>
+                        <p className="des capitalize">{designation}</p>
                         {/* <p className="text-xl">{department}</p> */}
                   </div>
               </div>

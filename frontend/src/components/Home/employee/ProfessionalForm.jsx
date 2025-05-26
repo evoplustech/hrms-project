@@ -13,6 +13,7 @@ import Options from './Options';
 import { fetchAllEmployees } from '../../../slices/employeeSlice.js';
 import { useDispatch } from 'react-redux';
 import useSelectorHook from '../../../../utils/useSelectorHook.jsx';
+import Meter from './Meter.jsx';
 
 const ProfessionalForm = ({params={},path="",method="",buttontext="",className="",navigation=""}) => {
 
@@ -120,7 +121,9 @@ const formSubmitHandler = async (data)=>{
   console.log('clicked');
   const result = await httpRequest({path,method,data});
   if(result.success){
-    await dispatch(fetchAllEmployees());
+    await dispatch(fetchAllEmployees({
+      designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
+    }));
     if(navigation){
       await navigate(navigation);
     }else{
@@ -134,6 +137,9 @@ const formSubmitHandler = async (data)=>{
 
   return (
   <>
+    {
+      method ==='post' && <div className="flex justify-center items-center pers-wrapp-line"><Meter component={2}></Meter></div>
+    }
     <form className="" encType="multipart/form-data" onSubmit = {handleSubmit(formSubmitHandler)}>
  <div className='emp-details bg-white shadow-lg rounded-lg p-10'>
       <div className="mb-10">
@@ -142,30 +148,30 @@ const formSubmitHandler = async (data)=>{
       <Input type="hidden" value={_id} name="empPersonalId" {...register('empPersonalId')} />
       <div className="grid  md:grid-cols-4 mb-10">
         <div className="">
-          <Input label='Username : '  type="email"  name="email" {...register('email')} />
+          <Input label='Username'  type="email"  name="email" {...register('email')} />
           {errors?.email && <p className="text-red-600">{errors.email.message}</p>}
         </div>
         <div className="">
-          <Input label='Employee Id : ' type="text" name="employeeId" {...register('employeeId')} />
+          <Input label='Employee Id' type="text" name="employeeId" {...register('employeeId')} />
           {errors?.employeeId && <p className="text-red-600">{errors.employeeId.message}</p>}
         </div>
         <div className="">
-          <Input label='Password : '  type={`${locationPath ==='updateEmployee'? 'hidden':'text'}`}  name="password" {...register('password')} />
+          <Input label='Password'  type={`${locationPath ==='updateEmployee'? 'hidden':'text'}`}  name="password" {...register('password')} />
           {errors?.password && <p className="text-red-600 w-5">{errors.password.message}</p>}
         </div>
         <div className="">
-          <Input label='Confirm Password : '  type={`${locationPath ==='updateEmployee'? 'hidden':'text'}`}  name="confirmPassword" {...register('confirmPassword')} />
+          <Input label='Confirm Password'  type={`${locationPath ==='updateEmployee'? 'hidden':'text'}`}  name="confirmPassword" {...register('confirmPassword')} />
           {errors?.confirmPassword && <p className="text-red-600 w-5">{errors.confirmPassword.message}</p>}
         </div>
       </div>
       <div className="grid  md:grid-cols-4 mb-10">
       <div className="">
-          <Select label='Role : ' name="role" options={rolesList} {...register('role')}/>
+          <Select label='Role' name="role" options={rolesList} {...register('role')}/>
           {errors?.role && <p className="text-red-600">{errors.role.message}</p>}
         </div>
         <div className="">
         <Controller  name="department"  control={control}  render={({ field }) => (
-            <Select  label="Department : "  {...field} // register the select with react-hook-form
+            <Select  label="Department"  {...field} // register the select with react-hook-form
                   options={deptList}   onChange={(e) => {
                     field.onChange(e); // Call react-hook-form's internal onChange
                     deptHandle(e); // Call your custom handler
@@ -176,11 +182,11 @@ const formSubmitHandler = async (data)=>{
       {errors?.department && <p className="text-red-600">{errors.department.message}</p>}
         </div>
         <div className="">
-          <Select label='Designation : '  name="designation" options={designationOption.length > 0 ? designationOption:desigList}   {...register('designation')} />
+          <Select label='Designation'  name="designation" options={designationOption.length > 0 ? designationOption:desigList}   {...register('designation')} />
           {errors?.designation && <p className="text-red-600">{errors.designation.message}</p>}
         </div>
         <div className="">
-          <Input label='Date Of Joining : '  type="date" className="uppercase"  name="dateOfJoining"  {...register('dateOfJoining')} />
+          <Input label='Date Of Joining'  type="date" className="uppercase"  name="dateOfJoining"  {...register('dateOfJoining')} />
           {errors?.dateOfJoining && <p className="text-red-600 uppercase">{errors.dateOfJoining.message}</p>}
         </div>
       </div>
@@ -188,7 +194,7 @@ const formSubmitHandler = async (data)=>{
 
       <div className="grid  md:grid-cols-4 mb-5">
         <div>
-          <Select label='Employment Type :' name="employmentType"  options = {[{name:'Permanent'},{name:'Temporary'}, {name:'Trainee'}]} {...register('employmentType')}  />
+          <Select label='Employment Type' name="employmentType"  options = {[{name:'Permanent'},{name:'Temporary'}, {name:'Trainee'}]} {...register('employmentType')}  />
           {errors?.employmentType && <p className="text-red-600 w-5">{errors.employmentType.message}</p>}
         </div>
         <div>
@@ -210,16 +216,16 @@ const formSubmitHandler = async (data)=>{
         </div>
       <div className="grid  md:grid-cols-4">
         <div className="">
-          <Input label='Office : '  type="text"  name="office" {...register('office')} />
+          <Input label='Office'  type="text"  name="office" {...register('office')} />
           {errors?.office && <p className="text-red-600">{errors.office.message}</p>}
         </div>
         <div className="">
-          <Input label='City : '  type="text"  name="city" {...register('city')} />
+          <Input label='City'  type="text"  name="city" {...register('city')} />
           {errors?.city && <p className="text-red-600">{errors.city.message}</p>}
         </div>
         <div className="">
         <select className="block py-2.5 px-0 w-1/2 text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer overflow-auto"  type="text"  name="managerId" {...register('managerId')}>
-            <Options label='Reporting Manager : ' options={reportingList} ></Options>
+            <Options label='Reporting Manager' options={reportingList} ></Options>
         </select>
         {errors?.managerId && <p className="text-red-600">{errors.managerId.message}</p>}
         </div>
@@ -239,19 +245,19 @@ const formSubmitHandler = async (data)=>{
       <Input type="hidden" value={id} name="empPersonalId"  {...register('empPersonalId')}/>
       <div className="grid  md:grid-cols-4">
         <div className="">
-          <Input label='Basic : ' type="number"  name="basic" {...register('basic')} />
+          <Input label='Basic' type="number"  name="basic" {...register('basic')} />
           {errors?.basic && <p className="text-red-600">{errors.basic.message}</p>}
         </div>
         <div className="">
-          <Input label='HRA : '  type="number"  name="hra" {...register('hra')} />
+          <Input label='HRA'  type="number"  name="hra" {...register('hra')} />
           {errors?.hra && <p className="text-red-600">{errors.hra.message}</p>}
         </div>
         <div className="">
-          <Input label='Allowances : '  type="number"  name="allowances" {...register('allowances')} />
+          <Input label='Allowances'  type="number"  name="allowances" {...register('allowances')} />
           {errors?.allowances && <p className="text-red-600">{errors.allowances.message}</p>}
         </div>
         <div className="">
-          <Input label='Total : '  type="number"  name="total" {...register('total')} />
+          <Input label='Total'  type="number"  name="total" {...register('total')} />
           {errors?.total && <p className="text-red-600">{errors.total.message}</p>}
         </div>
       </div>

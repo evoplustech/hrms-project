@@ -1,4 +1,5 @@
 
+import React from 'react'
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import  { Toaster } from 'react-hot-toast';
 
@@ -8,8 +9,6 @@ function App() {
  
   const url = useLocation();
   const urlparam = url.pathname.split('/');
-  
-
 
   return (
     <>

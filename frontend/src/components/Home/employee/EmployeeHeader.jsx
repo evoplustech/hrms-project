@@ -46,7 +46,7 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
       <>
       <div className="ps-0 flex justify-around items-center">
           <label className="font-semibold text-sm">Department:</label>
-          <select name="department" value={searchFilter.department} onChange={(e)=>(setterHandler(e.target))}  className="w-fit ml-2 py-2 px-2 hover:cursor-pointer text-sm">
+          <select name="department" value={searchFilter.department} onChange={(e)=>(setterHandler(e.target))}  className="ml-2 py-2 px-2 hover:cursor-pointer text-sm">
             <option value="All">All</option>
             {
               department.length > 1 && department.map((value,key)=>(
@@ -57,8 +57,8 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
       </div>
       <div className="ps-0 flex justify-around items-center">
       <label className="font-semibold text-sm">Designation:</label>
-        <select name="designation"  value={searchFilter.designation}  onChange = {(e)=>setterHandler(e.target)} className="py-2 ml-2 px-2 hover:cursor-pointer">
-        <option value="All">All</option>
+        <select name="designation"  value={searchFilter.designation}  onChange = {(e)=>setterHandler(e.target)} className="py-2 ml-2 px-2 hover:cursor-pointer text-sm">
+        <option value="All" >All</option>
             {
               designation.length > 1 && designation.filter((value)=>(value.department === searchFilter.department)).map((value,key)=>(
                 <option key = {key} value={value._id}>{value.name}</option>
@@ -66,10 +66,11 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
             }
         </select>
       </div>
+      
       <div className="ps-0 flex justify-around items-center">
       <label className="font-semibold text-sm">Role:</label>
         <select name="role"  value={searchFilter.role}  onChange = {(e)=>setterHandler(e.target)} className="py-2 px-2 hover:cursor-pointer text-sm ml-2">
-        <option value="All">All</option>
+        <option className='text-sm' value="All">All</option>
             {
               role.length > 1 && role.map((value,key)=>(
                 <option key = {key} value={value._id}>{value.name}</option>
@@ -80,7 +81,7 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
       
       <div className="ps-0 flex justify-around items-center">
         <label className="font-semibold text-sm">Status:</label>
-          <select name="status"  value={searchFilter.status}  onChange = {(e)=>setterHandler(e.target)} className="py-2 text-sm ml-2 px-2 hover:cursor-pointer">
+          <select name="status"  value={searchFilter.status}  onChange = {(e)=>setterHandler(e.target)} className="py-2 text-sm ml-2 px-2 hover:cursor-pointer w-2/3">
             <option value={true}>Active <span>🟢</span></option>
             <option value={false}>In-Active <span>🔴</span></option>
           </select>
@@ -95,7 +96,7 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
         
        
       <div>
-        <button onClick = {submitHandler} className="px-6 py-2 bg-emerald-500 text-white duration-400 text-sm">
+        <button onClick = {submitHandler} className="px-6 py-2 bg-emerald-500 text-white duration-400 text-sm w-full">
             Search
         </button>
       </div>

@@ -11,8 +11,10 @@ export const addAttendanceRequest = createAsyncThunk('/create/attendanceRequest'
   }
 });
 
-export const getAttendanceRequest = createAsyncThunk('/get/attendanceRequest',async (path)=>{
+export const getAttendanceRequest = createAsyncThunk('/get/attendanceRequest',async (urlData)=>{
   try{
+    const  {empid,id,startDate,endDate,status,requestType,page,limit} = urlData; 
+    const path = `/api/attendance/getRequest?empid=${empid}&id=${id}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${requestType}&page=${page}&limit=${limit}`;
     const response =  await httpRequest({path,method:"GET"});
     console.log('attendance response',response);
     return  response;
@@ -27,7 +29,6 @@ export const approveAttendanceRequest = createAsyncThunk('/update/attendanceRequ
     console.log('attendance response',response);
     return  response;
   }catch(error){
-
   }
 })
 
@@ -48,14 +49,12 @@ const attendanceRequestSlice = createSlice({
     }).addCase(addAttendanceRequest.fulfilled,(state,action)=>{
       state.status= 'success';
       if(action.payload.success && Object.entries(action.payload.data).length > 0){
-        console.log(action.payload.data,'count',action.payload.count);
         state.data.push(action.payload.data);
         state.error = null;
-      }
-    //   else{
-    //     state.data = {};
-    //     state.error = action.payload.error;
-    //  }
+      }else{
+        state.data = [];
+        state.error = action.payload.error;
+     }
     }).addCase(addAttendanceRequest.rejected,(state,action)=>{
 
     }).addCase(getAttendanceRequest.pending,(state,action)=>{

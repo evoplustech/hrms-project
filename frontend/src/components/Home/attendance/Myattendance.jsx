@@ -17,17 +17,20 @@ const Myattendance = () => {
     const {data} = useSelectorHook("attendance");
     const dispatch = useDispatch();
     const {id} = useParams();
-    const employeeDetails  = useSelectorHook('employee');
-    const employeeDetailss  = useSelectorHook('authenticate');
-    console.log('params',id,employeeDetailss);
+    const {data:employeeDetails}  = useSelectorHook('employee');
+    let {data:employeedata}  = useSelectorHook('authenticate');
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
+    
 
-    const employeedata = employeeDetailss['data'].role.name.toLowerCase()=== 'admin' ? employeeDetails['data'].find((value)=>{
-          return value.employeeId === id;
-        }) : employeeDetailss['data'] ;
-    // const employeedata= employeeDetails['data'].find((value)=>{
-    //     return value.employeeId === id;
-    //   });
+  if(id !== employeedata['employeeId'])
+    employeedata = employeeDetails.length > 0 && employeeDetails.find((value)=>value.employeeId === id);
+
+  const weekOff = new Set(employeedata['shift']?.days);
+  const weekEnds = days.filter((value)=>{
+    return !weekOff.has(value.toLowerCase());
+  })
+
 
     const handleDateChange = async (dateParam) => {
       try{
@@ -42,7 +45,7 @@ const Myattendance = () => {
         setSelectedDate(dateParam);
         setCalander(false); 
       }catch(error){
-        console.log(error.message);
+        
       }
     };
  
@@ -57,8 +60,18 @@ const Myattendance = () => {
             </div>
         </div>
         <div className="space-y-4 mt-2 ms-2">
-        <div className="flex  justify-start items-center my-att-name"><span className="text-x text-slate-500">Employee Name : </span><p className="font-bold text-x ms-2 text-teal-700 capitalize">{`${employeedata['empPersonalId'].firstName} ${employeedata['empPersonalId'].lastName}`}</p></div>
-        <div className="flex  justify-start items-center my-att-id"><span className="text-x text-slate-500">Employee Id : </span><p className="font-bold text-x ms-2 text-teal-700 capitalize">{`${employeedata.employeeId}`}</p></div>
+        <div className="flex  justify-start items-center"><span className="text-base text-slate-500">Employee Name : </span><p className="font-semibold text-base capitalize ms-2 text-teal-700">{`${employeedata['empPersonalId'].firstName} ${employeedata['empPersonalId'].lastName}`}</p></div>
+        <div className="flex  justify-start items-center"><span className="text-base text-slate-500">Employee Id : </span><p className="font-semibold text-base ms-2 text-teal-700">{`${employeedata.employeeId}`}</p></div>
+        <div className="flex  justify-start items-center">
+        {/* <span className="font-bold text-base">Week-Ends : </span> */}
+        <ul className="flex flex-col">
+            {
+              weekOff.length >  0 && weekEnds.map((value)=>{
+                return <><li className="font-semibold text-xl ms-2 text-yellow-600 mb-2">{value}</li><br></br></>
+              }) 
+            }
+          </ul>
+        </div>
         </div>
         <div className="flex justify-end relative">
             {

@@ -22,7 +22,7 @@ const AttendanceRequestBody = ({attendanceState,name}) => {
               <tr className='bg-slate-300'>
                 {
                   Heading.map((value)=>{
-                    return <th key={value} scope="col" className="px-6 py-3 text-sm font-serif capitalize">
+                    return <th key={value} scope="col" className="px-6 py-3 text-base capitalize">
                         {value}
                     </th>
                   })
@@ -33,11 +33,11 @@ const AttendanceRequestBody = ({attendanceState,name}) => {
           {
             attendanceState.length > 0 && 
             attendanceState.map((value,keys)=>{
-                return (<tr key={keys}  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-md font-semibold">
+                return (<tr key={keys}  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-md">
                   <td scope="row" className="px-6 py-4 text-gray-800 whitespace-nowrap dark:text-white text-left">
                       {format(new Date(value.createdAt),'dd-MM-yyyy')}
                   </td>
-                  <td className="px-6 py-4 text-left font-normal text-gray-800">
+                  <td className="px-6 py-4 text-left font-normal text-gray-800 capitalize">
                       {`${value['empPersonalId'].firstName} ${value['empPersonalId'].lastName}`}
                   </td>
                   <td className="px-6 py-4 text-left font-normal text-gray-800">

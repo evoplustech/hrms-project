@@ -39,7 +39,7 @@ const AttendanceRequestHeader = React.memo(({requestData,setRequestData,searchHa
           <label className="font-serif text-sm">Status:</label>
           <select name="status" value = {status} onChange = {(e)=>setterHandler(e.target)} className="py-2 px-2 hover:cursor-pointer text-sm">
             {
-              options.map((value)=>( <option value={value.name} selected = {`${value.name==='All'?'selected':''}`}>{value.name}</option>))
+              options.map((value)=>( <option className='options' value={value.name} selected = {`${value.name==='All'?'selected':''}`}>{value.name}</option>))
             }
         </select>
       </div>

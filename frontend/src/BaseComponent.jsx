@@ -27,6 +27,8 @@ import HolidayLayout from './components/Home/holiday/HolidayLayout';
 import HolidayList from './components/Home/holiday/HolidayList';
 import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
+import currentMonthDates from '../utils/dateOfMonth';
+import CronEditor from './components/Home/cofiguration/CronEditor';
 
 
 
@@ -49,7 +51,7 @@ const ResetPassword = React.lazy(()=>import('./components/Login/ResetPassword'))
 const EmployeeManagement = React.lazy(()=>import('./components/Home/employee/EmployeeManagement'));
 const Dashboard = React.lazy(()=>import('./components/Home/dashboard/Dashboard'));
 const Attendance = React.lazy(()=>import('./components/Home/attendance/Attendance'));
-const Biometric = React.lazy(()=>import('./components/Home/devices/BIometric'));
+const Biometric = React.lazy(()=>import('./components/Home/devices/Biometric'));
 const Leave = React.lazy(()=>import('./components/Home/leave/Leave'));
 const Configuration = React.lazy(()=>import('./components/Home/cofiguration/Configuration'));
 const PersonalDetailsForm = React.lazy(()=>import('./components/Home/employee/PersonalDetailsForm'));
@@ -60,6 +62,7 @@ const EmployeeProfile = React.lazy(()=>import('./components/Home/employee/Employ
 const Myattendance = React.lazy(()=>import('./components/Home/attendance/Myattendance'));
 const AllAttendance = React.lazy(()=>import('./components/Home/attendance/AllAttendance'));
 const AttendanceRequest = React.lazy(()=>import('./components/Home/attendance/AttendanceRequest'));
+const  PicklistEditor = React.lazy(()=> import('./components/Home/cofiguration/PicklistEditor'));
 
 
 const BiometricDeviceList = React.lazy(()=>import('./components/Home/devices/BiometricDeviceList'))
@@ -70,24 +73,33 @@ const AddPolicy  = React.lazy(()=>import('./components/Home/policy/AddPolicy'));
 const LeaveList = React.lazy(()=> import('./components/Home/leave/LeaveList'));
 const LeaveRequest = React.lazy(()=> import('./components/Home/leave/LeaveRequest'));
 
+
+
 const BaseComponent = ()=>{
   const dispatch = useDispatch();
   const loggedData =(localStorage.getItem("emplog") || '');
   const {employeeId,empPersonalId} = JSON.parse(loggedData || '{}') ;
+   const [firstDayOfMonth,lastDayOfMonth] = currentMonthDates();
+  
   // console.log('loggedData',empPersonalId );
 
-  useEffect(()=>{
+  useEffect(()=> {
     // console.log('hello world');
-    async function storeData(){
+    function storeData(){
       const user = JSON.parse(localStorage.getItem("emplog"));
       const year = new Date().getFullYear();
       const holidaystartDate = `${year}-01-01`;
       const holidayendDate = `${year}-12-31`;
+      const roleType= new Set(['manager','admin','hr','tl']);
       const params = { "startDate":holidaystartDate, "endDate":holidayendDate };
 
       if(user !== null){
         dispatch(getHolidayList(params))
-        dispatch(fetchAllEmployees());
+      
+        if(roleType.has(user.role.name.toLowerCase())) dispatch(fetchAllEmployees({
+          designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
+        }));
+      
         dispatch(fetchAllDepartment());
         dispatch(fetchAllRoles());
         dispatch(fetchAllDesignation());
@@ -100,20 +112,10 @@ const BaseComponent = ()=>{
         dispatch(fetchPolicy())
 
         if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
-        dispatch(getAttendanceRequest({
-          empid:empPersonalId._id,
-          id:employeeId,
-          status:'All',
-          requestType:1,
-          page:1,
-          limit:10
-        }));
+        console.log(firstDayOfMonth,lastDayOfMonth,'ooooohhhhhhhhhhhhhhhhhhhhhhohhhhhh');
+        const urlData = {empid:empPersonalId._id,id:employeeId,startDate:firstDayOfMonth,endDate:lastDayOfMonth,status:'All',requestType:1,page:1,limit:10};
+        dispatch(getAttendanceRequest(urlData));
       }
-
-      // /api/attendance/getRequest?empid=${empid}&id=${id}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${requestType}&page=2&limit=1`
-
-      // api/attendance/getRequest?empid=${empid}&id=${id}&page=${page}&limit=${limit}
-      
     }
     storeData();
   },[loggedData]);
@@ -212,10 +214,16 @@ const BaseComponent = ()=>{
             },{
               path:'/home/configuration',
               element:<Suspense><Configuration/></Suspense>,
-              children:[{
-                path:'/home/configuration/',
-                element:<Suspense><Module/></Suspense>,
-              }]
+              children:[
+                {
+                path:'/home/configuration/picklist',
+                element:<Suspense><PicklistEditor/></Suspense>,
+                },
+                {
+                  path:'/home/configuration/cronsetup',
+                  element:<Suspense><CronEditor/></Suspense>,
+                 }
+              ]
             },{
               path:'/home/policy',
               element:<Suspense><Policy /></Suspense>,
@@ -231,7 +239,6 @@ const BaseComponent = ()=>{
                 },{
                   path:'/home/policy/addpolicy/:polidyId',
                   element:<Suspense><AddPolicy/></Suspense>,
-                  
                 }
               ]
             },{

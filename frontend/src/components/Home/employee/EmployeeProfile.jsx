@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaCog } from 'react-icons/fa';
 import useSelectorHook from '../../../../utils/useSelectorHook';
+import { format } from 'date-fns';
 
 const EmployeeProfile = () => {
 
     const {data}= useSelectorHook('authenticate');
     const {empPersonalId:{firstName,lastName,dateOfBirth,gender,contactInfo,maritalStatus,nationality,profilepic},department,designation,role,managerId,employeeId,shift,dateOfJoining,employmentType} = data;
-    console.log(contactInfo)
-    console.log(firstName);
+    const joinDate = format(new Date(dateOfJoining || "2025-01-01"), 'dd-MM-yyyy');
+    const birthDate  = format(new Date(dateOfBirth || "2025-01-01"), 'dd-MM-yyyy');
+    console.log(joinDate,'fhskjdhfkjshdfs',birthDate);
+
     return (<>
 
         <section className="w-full overflow-hidden dark:bg-gray-900">
@@ -22,7 +25,7 @@ const EmployeeProfile = () => {
 
 
         <h1
-            className="w-full text-left my-4 sm:mx-4 xs:pl-4 text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl font-serif">
+            className="w-full text-left my-4 sm:mx-4 xs:pl-4 text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl capitalize">
             {`${firstName} ${lastName}`}</h1>
 
         </div>
@@ -51,7 +54,7 @@ const EmployeeProfile = () => {
                         </div>
                         <div className="flex flex-col py-3">
                             <dt className="mb-1 text-gray-500 md:text-base dark:text-gray-400">Date Of Birth</dt>
-                            <dd className="text-lg font-medium min-h-7 capitalize">{dateOfBirth}</dd>
+                            <dd className="text-lg font-medium min-h-7 capitalize">{birthDate}</dd>
                         </div>
                         <div className="flex flex-col py-3">
                             <dt className="mb-1 text-gray-500 md:text-base dark:text-gray-400">Gender</dt>
@@ -127,7 +130,7 @@ const EmployeeProfile = () => {
                         </div>
                         <div className="flex flex-col py-3">
                             <dt className="mb-1 text-gray-500 md:text-base dark:text-gray-400">Date Of Joining</dt>
-                            <dd className="text-lg font-medium min-h-7 capitalize">{dateOfJoining}</dd>
+                            <dd className="text-lg font-medium min-h-7 capitalize">{joinDate}</dd>
                         </div>
 
                         <div className="flex flex-col py-3">

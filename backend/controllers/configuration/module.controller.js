@@ -73,7 +73,7 @@ const createUpdateCron = async (request,response)=>{
 
       const updateResult = await cronModel.findOneAndUpdate({_id:id},{name,schedule,isActive},{new:true,upsert:true});
       await cronStart({schedule,isActive});
-      return response.status(201).json({message:"Record Updated Successfully",success:true});
+      return response.status(201).json({message:"Cron Updated Successfully",success:true});
   }else{
       const createRecord = await  cronModel.create({name,schedule,isActive});
       await cronStart({schedule,isActive});
@@ -85,39 +85,96 @@ const createUpdateCron = async (request,response)=>{
   }
 }
 
-const cronStart  = async({schedule,isActive})=>{
+
+// const cronStart  = async({schedule,isActive})=>{
   
-  // const id = data._id;
-  const min = +schedule;
-  const time = `0 */${min} * * * *`;
-  const cron = new CronJob(time,async ()=>{
-    console.log("Cron job started...");
-    try{
-      console.log(`the cron shedule time is ${time}`);
-      // to trigger the fetch attendace
+//   // const id = data._id;
+//   const min = +schedule;
+//   const time = `0 */${min} * * * *`;
+//   const cron = new CronJob(time,async ()=>{
+//     console.log("Cron job started...");
+//     try{
+//       console.log(`the cron shedule time is ${time}`);
+//       // to trigger the fetch attendace
+//       await getAttendanceFromDevice({"port":4370,"ip":"10.101.0.7"});
+//       console.log("Cron job running...");
+//       // await cronModel.findOneAndUpdate({_id:id},{status:"running"});
+//     }catch(error){
+//       console.log('cron job failed',error);
+//       // await cronModel.findOneAndUpdate({_id:id},{status:"failed"});
+//     }
+//   }, null, false, 'Asia/Kolkata');
 
-      await getAttendanceFromDevice({"port":4370,"ip":"10.101.0.7"});
+//   // cron.start();
 
+//   if(isActive){
+//     console.log('cron started to run')
+//     cron.start();
 
-      console.log("Cron job running...");
-      // await cronModel.findOneAndUpdate({_id:id},{status:"running"});
-    }catch(error){
-      console.log('cron job failed',error);
-      // await cronModel.findOneAndUpdate({_id:id},{status:"failed"});
-    }
-  }, null, false, 'Asia/Kolkata');
-
-  // cron.start();
-
-  if(isActive){
-    console.log('cron started to run')
-    cron.start();
-
-  }else{
-   console.log('cron stopped')
-   cron.stop();
+//   }else{
+//    console.log('cron stopped')
+//    cron.stop();
+//   }
+  
+// }
+let activeCronJob = null;
+const cronStart = async ({ schedule, isActive }) => {
+  // Cleanup previous cron job
+  if (activeCronJob) {
+    activeCronJob.stop();
+    activeCronJob = null;
   }
+
+  if (!isActive) {
+    console.log('Cron stopped');
+    return;
+  }
+  const checkHoursORMin = Math.floor(+schedule/60);
+  console.log(checkHoursORMin);
+  let cronTime = '';
+  if(checkHoursORMin===0)
+    cronTime = `0 */${+schedule} * * * *`;
+  else
+    cronTime = `0 0 */${checkHoursORMin} * * *`;
+
+    console.log(cronTime);
+  // const duration = );
+  // const min = +schedule;
   
+
+  // Create new cron job
+  activeCronJob = new CronJob(
+    cronTime,
+    async () => {
+      console.log("Executing cron job...");
+      try {
+        await getAttendanceFromDevice({ port: 4370, ip: "10.101.0.7" });
+      } catch (error) {
+        console.error('Cron job failed:', error);
+      }
+    },
+    null, // onComplete
+    false, // don't start immediately
+    'Asia/Kolkata'
+  );
+
+  // Start the new instance
+  activeCronJob.start();
+  console.log(`Cron started with schedule: ${cronTime}`);
+};
+
+const fetchAllCron = async(request,response)=>{
+  try{
+    const {role:empRole} = request;
+    if(empRole.toLowerCase() !=='admin')
+      return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false});
+
+    const getAllCron = await cronModel.find();
+
+    response.status(200).json({message:'cron fetched Successfully',data:getAllCron,success:true});
+  }catch(error){
+    response.status(500).json({error:error.message,success:false});
+  }
 }
 
-export {createModule,getAllModules,createUpdateCron}
+export {createModule,getAllModules,createUpdateCron,fetchAllCron}

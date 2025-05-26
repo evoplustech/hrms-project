@@ -60,7 +60,7 @@ const AttendanceRequestActions = ({popup,setpopup,record}) => {
         {/* Header */}
         <div className="mb-6">
           <div className="flex justify-end "><button onClick={() => setpopup(!popup)}><IoCloseSharp className="w-6 h-6 p-1 mb-1 bg-slate-300 rounded-full  translate-x-6 -translate-y-4" /></button></div>
-          <div className="w-full rounded-t-lg bg-gray-200 p-4">
+          <div className="w-full">
             <h1 className="text-xl font-semibold text-gray-700 text-center">Attendance Request History Details</h1>
           </div>
         </div>

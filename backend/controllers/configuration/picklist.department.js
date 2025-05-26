@@ -7,7 +7,7 @@ const getAllDept = async (request,response)=>{
     if(empRole.toLowerCase() !== 'admin')
       return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false});
 
-    const allRecords = await departmentModel.find();
+    const allRecords = await departmentModel.find({isActive:true});
     response.status(200).json({data:allRecords,success:true})
 
   }catch(error){
@@ -33,7 +33,7 @@ const createDept = async (request,response)=>{
 
     const saveRecord = await departmentModel.create({name,description});
 
-    return response.status(201).json({message:"Record Inserted Successfullt",success:true,data: saveRecord});
+    return response.status(201).json({message:"Record Created Successfully",success:true,data: saveRecord});
 
   }catch(error){
     console.error(`Error Message : ${error.message}`);
@@ -92,7 +92,7 @@ const deleteAndRestoreDept = async (request,response)=>{
     if(isActive)
       return response.status(200).json({message:"Records Restored Successfully",success:true})
     
-    response.status(200).json({message:"Records Deleted Successfully",success:true})
+    response.status(200).json({message:"Records Deleted Successfully",data:updateRecord,success:true})
   }catch(error){
     console.error(`Error Message : ${error.message}`);
     response.status(500).json({error:"Internal Server Error",success:false})

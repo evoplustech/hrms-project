@@ -1,5 +1,8 @@
 import React from 'react'
 import { FcApproval } from "react-icons/fc";
+import {cancel} from '../../../src/assets/cancel.png';
+import {approve} from '../../../src/assets/approve.png';
+import {reject} from '../../../src/assets/reject.png';
 
 export const LeaveLineItem = React.memo(({ leave, handleAction, userDetail }) => {
     // console.log('test')
@@ -33,13 +36,13 @@ export const LeaveLineItem = React.memo(({ leave, handleAction, userDetail }) =>
             <td className="py-3 px-6 border-b">
                 <div className='flex flex-row items-end justify-center' >
                     {approveBtnshow && <p title='Approved' onClick={()=>handleAction('Approved',leave)} >
-                        <img src={`../../../src/assets/approve.png`} width={40} className='cursor-pointer' />
+                        <img src={`${approve}`} width={40} className='cursor-pointer' />
                     </p>}
                     {cancelBtnshow && <p title='Cancelled' onClick={()=>handleAction('Cancelled',leave)} >
-                        <img src={`/src/assets/cancel.png`} width={40} className='cursor-pointer' />
+                        <img src={`${cancel}`} width={40} className='cursor-pointer' />
                     </p>}
                     {rejectBtnshow && <p title='Reject'  onClick={()=>handleAction('Rejected',leave)} >
-                        <img src={`../../../src/assets/reject.png`} width={40} className='cursor-pointer' />
+                        <img src={`${reject}`} width={40} className='cursor-pointer' />
                     </p>}
                 </div>
             </td>

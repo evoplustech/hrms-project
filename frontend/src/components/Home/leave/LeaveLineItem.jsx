@@ -1,8 +1,8 @@
 import React from 'react'
 import { FcApproval } from "react-icons/fc";
-import {cancel} from '../../../src/assets/cancel.png';
-import {approve} from '../../../src/assets/approve.png';
-import {reject} from '../../../src/assets/reject.png';
+import cancel from '../../../src/assets/cancel.png';
+import approve from '../../../src/assets/approve.png';
+import reject from '../../../src/assets/reject.png';
 
 export const LeaveLineItem = React.memo(({ leave, handleAction, userDetail }) => {
     // console.log('test')

@@ -213,7 +213,6 @@ const BaseComponent = ()=>{
                   path:'/home/leaves/leavereport',
                   element: <Suspense> <LeaveReport /> </Suspense>
                 }
-                
               ]
             },{
               path:'/home/configuration',
@@ -237,7 +236,6 @@ const BaseComponent = ()=>{
                 },{
                   path:'/home/policy/addpolicy/:polidyId',
                   element:<Suspense><AddPolicy/></Suspense>,
-                  
                 }
               ]
             },{

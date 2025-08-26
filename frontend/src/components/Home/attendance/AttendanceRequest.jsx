@@ -17,6 +17,7 @@ const AttendanceRequest = () => {
   const {data : attendanceState,count} = useSelectorHook("attendancerequest");
   const totalPages = Math.ceil(count/requestData.limit || 0);
   const searchHandler = async({name='',value=''})=>{
+    console.log('Request Data=>',requestData);
     try{
       let {startDate,endDate,request,status,page,limit} = requestData;
       if(name==='page'){
@@ -25,6 +26,7 @@ const AttendanceRequest = () => {
         limit = value;
         page=1;
       }
+      setRequestData({...requestData,page,limit});
       // const url = `/api/attendance/getRequest?empid=${data["empPersonalId"]._id}&id=${data.employeeId}&startDate=${startDate}&endDate=${endDate}&status=${status}&requestType=${request}&page=${page}&limit=${limit}`;
       const urlData = {empid:data["empPersonalId"]._id,id:data.employeeId,startDate,endDate,status,requestType:request,page,limit};
       await dispatch(getAttendanceRequest(urlData));

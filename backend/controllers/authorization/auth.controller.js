@@ -4,7 +4,7 @@ import employeeProfessionalModel from "../../models/employee/employeeProfessiona
 import nodemailer from  'nodemailer';
 import jwt from 'jsonwebtoken'
 import ip6  from 'ip6'
-
+import postmark from 'postmark';
 
 
 const loginEmployee = async (request,response)=>{
@@ -67,9 +67,10 @@ const logOutEmployee = async (request,response)=>{
 const processPasswordRequest = async(request,response)=>{
   try{
 
-    const ip_address = ip6.address();
+    // const ip_address = ip6.address();
+    // console.log(ip_address,' ---> this is the ap address');
     const {username} = request.body;
-
+    
     if(!username)
       return response.status(400).json({error:"Username is Missing",success:false});
 
@@ -78,7 +79,7 @@ const processPasswordRequest = async(request,response)=>{
       if(!empRecord)
         return response.status(401).json({error:"Invalid Credentials",success:false});
 
-      const token = jwt.sign({id:empRecord._id},process.env.RESET_KEY,{expiresIn:24*60*60*1000});
+      const token = jwt.sign({id:empRecord._id},process.env.RESET_KEY,{expiresIn:60*60*1000});
 
       const transporter = nodemailer.createTransport({
         host:"smtp.gmail.com",
@@ -94,7 +95,7 @@ const processPasswordRequest = async(request,response)=>{
         from:"hadleydavid46@gmail.com",
         to:username,
         subject:"Password Reset Link",
-        html:`<h2 style="color:navy,fontSize:12px">Click On the Below Link To Reset Your Hrms Password<h2><br/><a href="http://${ip_address}:5173/reset-password/${empRecord._id}/${token}">http://localhost:5173/reset-password/${empRecord._id}/${token}</a>`
+        html:`<h2 style="color:navy,fontSize:12px">Click On the Below Link To Reset Your Hrms Password<h2><br/><a href="http://localhost:5173/reset-password/${empRecord._id}/${token}">http://localhost:5173/reset-password/${empRecord._id}/${token}</a>`
       }
 
       // console.log(receiver);
@@ -113,6 +114,42 @@ const processPasswordRequest = async(request,response)=>{
     response.status(500).json({error:"Internal Server Error",success:false});
   }
 }
+
+// const processPasswordRequest = async(request,response)=>{
+//   try{
+
+//     // const ip_address = ip6.address();
+//     const {username} = request.body;
+//     const postmarkClient = new postmark.ServerClient(process.env.POSTMARK_API_TOKEN);
+
+//     if(!username)
+//       return response.status(400).json({error:"Username is Missing",success:false});
+
+//       const empRecord = await employeeProfessionalModel.findOne({email:username,isActive:true});
+
+//       if(!empRecord)
+//         return response.status(401).json({error:"Invalid Credentials",success:false});
+
+//       const token = jwt.sign({id:empRecord._id},process.env.RESET_KEY,{expiresIn:60*60*1000});
+
+//       const emailResponse = await postmarkClient.sendEmail({
+//       "From": "hrrecruiter@blubridge.com", // This must be your verified sender signature
+//       "To": username,
+//       "Subject": "Password Reset Link",
+//       "HtmlBody": `<h2 style="color:navy,fontSize:12px">Click On the Below Link To Reset Your Hrms Password<h2><br/><a href="http://localhost:5173/reset-password/${empRecord._id}/${token}">http://localhost:5173/reset-password/${empRecord._id}/${token}</a>`
+//     });
+
+//     return response.status(200).json({message:"Password Resest Link Sent To Your Email Account",success:true});
+    
+//   }catch(error){
+//     console.log(error.message);
+//     if (error.name === 'PostmarkError') {           
+//         response.status(500).json({ error: 'Failed to send email. Please try again later.', success: false });
+//       }else{
+//         response.status(500).json({error:"Internal Server Error",success:false});
+//       }
+//   }
+// }
 
 const resetPassword = async (request,response)=>{
   try{

@@ -21,6 +21,7 @@ const AllAttendance = () => {
   const [searchFilter,setsearchFilter] = useState ({
     designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
   });
+  const {page} = searchFilter;
   const totalPages = Math.ceil(count/searchFilter.limit || 0);
   const fetchEmployees = async ({name='',value=''})=>{
     try{
@@ -56,7 +57,7 @@ const AllAttendance = () => {
     } */}
     <div>
       <EmployeeHeader searchFilter={searchFilter} setsearchFilter={setsearchFilter} fetchEmployees={fetchEmployees}></EmployeeHeader>
-      <EmployeeGrid  data={data} count={count} loading = {status}></EmployeeGrid>
+      <EmployeeGrid  data={data} count={count} loading = {status} page={page}></EmployeeGrid>
       <EmployeePagination searchFilter={searchFilter} setsearchFilter={setsearchFilter} fetchEmployees={fetchEmployees} totalPages={totalPages}></EmployeePagination>
     </div>
 

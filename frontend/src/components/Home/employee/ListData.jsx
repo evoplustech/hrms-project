@@ -16,18 +16,15 @@ const ListData = ({route}) => {
     let columns;let data;
 
   const employeeHandler = async (param)=>{
-    console.log('tharakkioioioioi',param,'route',route);
     if(route ==='Employee'){
       localStorage.removeItem('employeeTab');
       const navLink = `/home/employee/updateEmployee/${param}`;
       navigate(navLink);
     }else{
-      console.log('ddddddddddddd',empData['data'].employeeId);
       const navLink = `/home/attendance/${empData['data'].employeeId}`;
       await dispatch(fetchAttendance({id:param,dateParam:new Date()}));
       navigate(navLink);
     }
-    
     // route to the updating component
   }
   columns = [

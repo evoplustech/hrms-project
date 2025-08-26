@@ -10,10 +10,12 @@ import { useNavigate } from 'react-router-dom';
 import httpRequest from '../../../../utils/httpRequest';
 import toast from 'react-hot-toast';
 import Meter from './Meter';
+import { useDispatch } from 'react-redux';
+import { updateEmployees } from '../../../slices/employeeSlice';
 
 
 const PersonalForm = ({params={},path="",method="",button="",className="",navigation=""}) => {
-  console.log('personal form',params);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   let {firstName,lastName,dateOfBirth,gender,contactInfo,nationality,maritalStatus,emergencyContact,idProofs} = params || {};
    dateOfBirth = dateOfBirth?.split('T')[0];
@@ -81,22 +83,29 @@ const PersonalForm = ({params={},path="",method="",button="",className="",naviga
       contactInfo
     }
     try{
-        const response = await httpRequest({path,method,data:formData});
-        if(response.success){
+        const params = {path,method,data:formData}; 
+        if(navigation){
+            // To Create A new Employee Record
+            const response = await httpRequest(params);
+          if(response.success){
             const {_id} = await response.data;
-            console.log(response.data);
-            console.log(navigation,_id);
-            if(navigation){
-              navigate(`${navigation}/${_id}`);
-            }
-            toast.success('Employee Details Updated Successfully');
-        }else{
+            navigate(`${navigation}/${_id}`);
+            toast.success('Employee Personal Details Created And Saved ');
+          }else{
             throw new Error(response.message);
+          }
+        }else{
+          // to Update Employee Record
+          const response = await dispatch(updateEmployees(params));
+          if(response.payload.success){
+            toast.success('Employee Details Updated Successfully');
+            navigate(`/home/employee/employeeList`);
+          }else{
+            throw new Error(response.payload.error);
+          } 
         }
-        
     }catch(error){
-      console.error(`Error : ${error.message}`);
-      toast.error(`Error Updation Failed`);
+      toast.error(error);
     }
 }
 

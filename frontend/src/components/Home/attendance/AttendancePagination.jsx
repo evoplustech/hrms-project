@@ -9,18 +9,19 @@ const {limit,page} = requestData;
 const {prev, next} = paginationNo(page,totalPages);
 
 const setterHandlers =  ({name,value})=>{
-  let updatedQuery = {[name]:value}
-  if(name==='limit')
-    updatedQuery = {[name]:value,page:1} 
-  setRequestData({...requestData,...updatedQuery});
+  // let updatedQuery = {[name]:value}
+  // if(name==='limit')
+  //   updatedQuery = {[name]:value,page:1} 
+  // setRequestData({...requestData,...updatedQuery});
   searchHandler({name,value});
 }
   return (
     <>
     <div className="flex justify-between mt-10">
       <div>
-        <label>Per-Page : </label>
+        <label>Page Limit : </label>
         <select value={limit} name="limit" onChange={(e)=>{setterHandlers(e.target)}} className="px-4 py-2">
+            <option value="4">4</option>
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="30">30</option>
@@ -56,6 +57,16 @@ const setterHandlers =  ({name,value})=>{
               </button>
             </li>
             }
+            {
+            totalPages===1 &&<li  disabled="disabled">
+            <button disabled="disabled"   className={`flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white  cursor-not-allowed`}>
+              <span className="sr-only">Previous</span>
+              <svg className="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 1 1 5l4 4"/>
+              </svg>
+            </button>
+          </li>
+          }
            { totalPages > 0 && Array(totalPages).fill(0).map((value,key)=>{
                 const pageNo = key + 1;
                
@@ -70,6 +81,16 @@ const setterHandlers =  ({name,value})=>{
                 }
               })
            }
+           {
+             totalPages===1 && <li>
+             <button disabled="disabled" className={`flex items-center  justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-not-allowed`}>
+               <span className="sr-only">Next</span>
+               <svg className="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
+               </svg>
+             </button>
+             </li>
+          }
           {
           totalPages !== +page &&
           <li>

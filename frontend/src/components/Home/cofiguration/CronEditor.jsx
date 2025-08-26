@@ -8,9 +8,10 @@ const CronEditor = () => {
 
     const [cronData,setCronData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [record,setRecord] = useState({});
     const [popup,setPopup] = useState(false);
   
-
+    console.log('Gofffffffff=====>',cronData);
     useEffect(()=>{
       const fetchApi = async ()=>{
         try{
@@ -61,7 +62,7 @@ const CronEditor = () => {
                     cronData.map((value)=>{
                     
                     return <>
-                    { popup && <CronPopup setPopup={setPopup} popup={popup} cronData={cronData} values={value} setCronData={setCronData}></CronPopup>}
+                    { popup && <CronPopup setPopup={setPopup} record={record} popup={popup} cronData={cronData} values={value} setCronData={setCronData}></CronPopup>}
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                           <th scope="row" className="px-6 py-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                           {value.name}
@@ -73,7 +74,7 @@ const CronEditor = () => {
                           {value.isActive ? 'Active' : 'In-Active'}
                           </td>
                           <td className="px-6 py-4 flex space-x-4 text-base">
-                          <FaRegEdit onClick ={()=>setPopup(!popup)}    className="cursor-pointer w-5 h-5 text-teal-600" />
+                          <FaRegEdit onClick ={()=>(setRecord(value),setPopup(!popup))}    className="cursor-pointer w-5 h-5 text-teal-600" />
                           </td>
                       </tr>
                       </>

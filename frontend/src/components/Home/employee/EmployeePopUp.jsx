@@ -6,7 +6,7 @@ import { BsFillPersonCheckFill } from "react-icons/bs";
 import toast from 'react-hot-toast';
 import httpRequest from '../../../../utils/httpRequest';
 import { useDispatch } from 'react-redux';
-import { fetchAllEmployees } from '../../../slices/employeeSlice';
+import { deleteEmployees, fetchAllEmployees } from '../../../slices/employeeSlice';
 import { TbPasswordFingerprint } from 'react-icons/tb';
 import Input from '../../form/Input';
 import * as z from 'zod';
@@ -37,18 +37,41 @@ const EmployeePopUp = ({personId,isActive}) => {
   const handleClose = () => setOpen(false);
 
   const performDeleteAction = async ()=>{
-        // delee the employee
-        const response = await httpRequest({path:'/api/employee/delete/personal',method:'delete',params:personId});
-        if(response.success){
-          let msg=response.message;
-          await dispatch(fetchAllEmployees());
-          if(!isActive)
-            msg='Employee Activated Successfully';
-          toast.success(msg);
+      try{
+        
+        const response = await dispatch(deleteEmployees({params:personId}));
+        let {success,message} = response.payload;
+        if(success){
+          if(response.payload.data.isActive){
+            message = 'Employee Activated Successfully'
+          }
+          toast.success(message);
           setOpen(false);
         }else{
-            toast.error(response.error);
+          throw new Error(response.payload.error);
         }
+       
+
+       
+        // if(response.payload.success){
+
+
+
+        // }
+       
+        // if(response.payload){
+        //   let msg=response.message;
+        //   await dispatch(fetchAllEmployees()); // causing issue of no required params passed
+        //   if(!isActive)
+        //     msg='Employee Activated Successfully';
+        //   toast.success(msg);
+        //   setOpen(false);
+        // }else{
+        //   toast.error(response.error);
+        // }
+      }catch(error){
+        toast.error(response.error);
+      }
   }
 
   const deleteHandler= (param)=>{

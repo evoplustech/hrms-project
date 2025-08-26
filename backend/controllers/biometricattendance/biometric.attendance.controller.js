@@ -32,15 +32,18 @@ const fetchAttendance = async (request,response)=>{
 
 const getAttendanceFromDevice = async ({ ip, port }) => {
   try {
+    console.log('attendance library triggered');
     // Get the most recent attendance record
     const lastAttendance = await attendanceModel.findOne().sort({ trackingTime: -1 });
-    const recordTime = lastAttendance?.trackingTime 
-      ? moment.utc(lastAttendance.trackingTime).tz('Asia/Kolkata').toDate() 
-      : new Date("2025-04-01");
+    // const recordTime = lastAttendance?.trackingTime 
+    //   ? moment.utc(lastAttendance.trackingTime).tz('Asia/Kolkata').toDate() 
+    //   : new Date("2025-04-01");
+
+    const recordTime =new Date("2025-08-01");
     
     // Get employees with specific IDs and populate shift information
     const employees = await employeeProfessionalModel.find({ 
-      employeeId: { $in: ['208', '1069'] } 
+      employeeId: { $in: ['204'] } 
     }).populate('shift');
     
     // Connect to ZK device

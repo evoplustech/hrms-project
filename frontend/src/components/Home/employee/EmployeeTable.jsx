@@ -6,9 +6,8 @@ import { FaRegDotCircle } from "react-icons/fa";
 import EmployeePopUp from './EmployeePopUp';
 import { useNavigate } from 'react-router-dom';
 
-const EmployeeTable = ({data,count,loading}) => {
-  
-  
+const EmployeeTable = ({searchFilter,data,count,loading}) => {
+ 
   const Heading = ['Employee Name','User Name','Department','Designation','Role','Status','Action'];
   const bgcolor = {'Rejected' : "bg-rose-400",'Pending':"bg-sky-400",'Approved':"bg-lime-400"}
   const navigate = useNavigate();
@@ -18,7 +17,7 @@ const EmployeeTable = ({data,count,loading}) => {
 
   const rowClick = (param)=>{
     localStorage.removeItem('employeeTab');
-    const navLink = `/home/employee/updateEmployee/${param}`;
+    const navLink = `/home/employee/updateEmployee/${param}?page=${searchFilter.page}`;
     navigate(navLink);
   }
 
@@ -76,7 +75,7 @@ const EmployeeTable = ({data,count,loading}) => {
               </td>
             </tr>})
             ||  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-xl font-semibold"><td colSpan={7} className="font-semibold text-gray-500 text-center text-2xl p-10">No Records To Display</td></tr>
-                 ) : <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-xl font-semibold"><td colSpan={7} className="font-semibold text-gray-500 text-center text-2xl p-10"><span class="loading loading-bars loading-xl"></span></td></tr>}
+                 ) : <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600  text-center text-xl font-semibold"><td colSpan={7} className="font-semibold text-gray-500 text-center text-2xl p-10"><span className="loading loading-bars loading-xl"></span></td></tr>}
             
       </tbody>
     </table>

@@ -11,14 +11,32 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
   const {data:role} = useSelectorHook('role');
   const debounced =  useDebounce(fetchEmployees,1000);
   const setRole = new Set(['admin','hr']);
+  const fields = new Set(['department','designation','role','status']);
+  console.log('this is the search filter ',searchFilter.designation);
+
   const setterHandler = (params)=>{
-  const {name,value} = params;
-    if(name==='profile' && value===1){
-      setsearchFilter({
-        designation : "All",department:"All",status : true,role : "All",search :"",profile: value,page:1,limit:10
-      })
-    }else{
-      setsearchFilter({...searchFilter,[name]:value});
+    try{
+      const {name,value} = params;
+      const searchObject = {...searchFilter,[name]:value,filter:1};
+      if(name==='profile' && value==='1'){
+        searchObject.designation = "All";
+        searchObject.department="All";
+        searchObject.status= true;
+        searchObject.role="All";
+        searchObject.search ="";
+        // searchObject.page=1;
+        // searchObject.limit=10;
+        // searchObject.filter=1;
+      }else if(fields.has(name.toLowerCase())){
+        // searchObject.page=1;
+        // searchObject.filter=1;
+        if(name==='department'){
+          searchObject.designation="All";
+        }
+      }
+      setsearchFilter(searchObject);
+    }catch(error){
+      console.log(`Error : ${error.message}`);
     }
   }
 
@@ -32,6 +50,7 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
 
   const submitHandler = ()=>{
     fetchEmployees({});
+    setsearchFilter({...searchFilter,filter:0,page:1});
   }
  
   return (
@@ -39,7 +58,7 @@ const EmployeeHeader = ({searchFilter,setsearchFilter,fetchEmployees}) => {
     <div className="flex  md:space-x-4 justify-center items-center">
       {/* Search Button */}
       <div className="text-sm">
-        <Input type="text"  name="search" onChange={(e)=>searchHandler(e.target)} value={searchFilter.search} placeHolder="Firstname/Lastname" className="ps-1 pe-1 text-sm w-48"></Input>
+        <Input type="text"  name="search" onChange={(e)=>searchHandler(e.target)} value={searchFilter.search} placeholder="Firstname/Lastname" className="ps-1 pe-1 text-sm w-48"></Input>
       </div> 
       {
       setRole.has(authData['role'].name.toLowerCase()) && 

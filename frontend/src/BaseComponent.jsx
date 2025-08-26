@@ -1,5 +1,5 @@
 import React ,{Suspense, useEffect, useMemo} from 'react'
-import { createBrowserRouter,Navigate,RouterProvider } from 'react-router-dom';
+import { createBrowserRouter,Navigate,RouterProvider, useSearchParams } from 'react-router-dom';
 // import App from './App';
 // import Home from './Home';
 // import Test from './Test';
@@ -29,6 +29,7 @@ import AddHoliday from './components/Home/holiday/AddHoliday';
 import { getHolidayList } from './slices/holidaySlice';
 import currentMonthDates from '../utils/dateOfMonth';
 import CronEditor from './components/Home/cofiguration/CronEditor';
+import pageNumberFromUrl from '../utils/pageNumberFromUrl';
 
 
 
@@ -80,9 +81,8 @@ const BaseComponent = ()=>{
   const loggedData =(localStorage.getItem("emplog") || '');
   const {employeeId,empPersonalId} = JSON.parse(loggedData || '{}') ;
    const [firstDayOfMonth,lastDayOfMonth] = currentMonthDates();
-  
-  // console.log('loggedData',empPersonalId );
-
+  //  To Get The Page Number
+   const pageNo = pageNumberFromUrl(window.location.href);
   useEffect(()=> {
     // console.log('hello world');
     function storeData(){
@@ -92,12 +92,13 @@ const BaseComponent = ()=>{
       const holidayendDate = `${year}-12-31`;
       const roleType= new Set(['manager','admin','hr','tl']);
       const params = { "startDate":holidaystartDate, "endDate":holidayendDate };
+     
 
       if(user !== null){
         dispatch(getHolidayList(params))
       
         if(roleType.has(user.role.name.toLowerCase())) dispatch(fetchAllEmployees({
-          designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
+          designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :pageNo,limit:10
         }));
       
         dispatch(fetchAllDepartment());
@@ -112,7 +113,6 @@ const BaseComponent = ()=>{
         dispatch(fetchPolicy())
 
         if(user.role.name.toLowerCase() === 'admin') dispatch(fetchBiometricDevice());
-        console.log(firstDayOfMonth,lastDayOfMonth,'ooooohhhhhhhhhhhhhhhhhhhhhhohhhhhh');
         const urlData = {empid:empPersonalId._id,id:employeeId,startDate:firstDayOfMonth,endDate:lastDayOfMonth,status:'All',requestType:1,page:1,limit:10};
         dispatch(getAttendanceRequest(urlData));
       }

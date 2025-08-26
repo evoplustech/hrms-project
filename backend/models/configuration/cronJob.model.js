@@ -1,6 +1,16 @@
 import mongoose from 'mongoose'
 
 const cronSchema = new mongoose.Schema({
+  cronType :{
+    type:String,
+    enum:['biometric'],
+    required : true
+  },
+  deviceId:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'BiometricDevice',
+    default:null
+  },
   name: {
     type: String,
     required: true,
@@ -16,8 +26,8 @@ const cronSchema = new mongoose.Schema({
     default: "pending",
   },
   lastRunAt: {
-    type: Date, // Stores the last execution time
-    default: null,
+    type: Date ,// Stores the last execution time
+    default: null
   },
   isActive : {
     type:Boolean,
@@ -26,6 +36,6 @@ const cronSchema = new mongoose.Schema({
 },{timestamps:true});
 
 
-const cronModel = mongoose.model('cronJob',cronSchema);
+const cronModel = mongoose.model('CronJob',cronSchema);
 
 export default cronModel;

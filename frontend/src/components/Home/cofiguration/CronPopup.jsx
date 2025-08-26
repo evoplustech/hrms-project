@@ -4,8 +4,9 @@ import toast from 'react-hot-toast';
 import { IoCloseSharp } from 'react-icons/io5'
 import httpRequest from '../../../../utils/httpRequest';
 
-const CronPopup = ({setPopup,popup,cronData,values,setCronData}) =>{
-
+const CronPopup = ({setPopup,popup,record,cronData,values,setCronData}) =>{
+  console.log('this is Record cronData - -> ',cronData);
+  const [cronRecord,setcronRecord] = useState(record);
   const [error,setError] = useState({name:false,schedule:false});
   const updateError = {...error};
   let checkError = false;
@@ -16,21 +17,19 @@ const CronPopup = ({setPopup,popup,cronData,values,setCronData}) =>{
    if(name==='isActive'){
     value = element.target.checked;
    }      
+   setcronRecord({...cronRecord,[name]:value});
    if(error[name] !==undefined){
     const errorValue =value.length <= 0 ? true:false;
     setError({...error,[name]:errorValue});
    }
-   const updatedObject = {...values,[name]:value};
-   const updataCronData = cronData.map((objValue)=>{
-        return objValue._id === updatedObject._id ? updatedObject : objValue
-   });
-   setCronData(updataCronData);
+   
+  //  setCronData(updataCronData);
   }
 
   //form submit handler function
   const submitHandler = async()=>{
     try{
-      Object.entries(values).forEach(([name,value])=>{
+      Object.entries(cronRecord).forEach(([name,value])=>{
         console.log('name',name);
         if(error[name] !==undefined && value.length===0){
           updateError[name] = true; 
@@ -42,7 +41,15 @@ const CronPopup = ({setPopup,popup,cronData,values,setCronData}) =>{
         return false;
       }
 
-      const response = await httpRequest({path:'/api/configure/cron/update',data:values,method:'put',params:values._id});
+      
+       const updataCronData = cronData.map((objValue)=>{
+        return objValue._id === cronRecord._id ? cronRecord : objValue
+        });
+
+        setCronData(updataCronData);
+        // return 1;
+
+      const response = await httpRequest({path:'/api/configure/cron/update',data:cronRecord,method:'put',params:cronRecord._id});
       
       if(response.success){
         toast.success(response.message);
@@ -55,7 +62,7 @@ const CronPopup = ({setPopup,popup,cronData,values,setCronData}) =>{
       
     }
   }
-console.log(error.name ,'||||||||||',error.schedule);
+
 
   return (
     <div>
@@ -81,12 +88,12 @@ console.log(error.name ,'||||||||||',error.schedule);
             <div className="grid grid-cols-3 w-2/3 cron-p">
                 <div>
                   <label htmlFor="Name" className="block mb-2 text-base font-semibold text-gray-900 dark:text-white">Cron Name</label>
-                  <input type="text" id="Name" onChange={setterFunction} value={values.name} name="name"  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w- p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Name" />
+                  <input type="text" id="Name" onChange={setterFunction} value={cronRecord.name} name="name"  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w- p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Name" />
                   <p className="text-rose-500">{error.name ? 'Enter Name' :''}</p>
                 </div>
                 <div>
                   <label htmlFor="Name" className="block mb-2 text-base font-semibold text-gray-900 dark:text-white">Name</label>
-                  <select onChange={setterFunction} name="schedule" value={values.schedule}  className="bg-gray-50 border cron-s border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-full">
+                  <select onChange={setterFunction} name="schedule" value={cronRecord.schedule}  className="bg-gray-50 border cron-s border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-full">
                     <option value="">Select Time Duration</option>  
                     <option value="1">1 min</option>  
                     <option value="15">15 min</option>  
@@ -100,7 +107,7 @@ console.log(error.name ,'||||||||||',error.schedule);
                 </div>
                 <div>
                   <label htmlFor="Name" className="block mb-2 text-base font-semibold text-gray-900 dark:text-white ml-3">Status</label>
-                  <input type="checkbox" onChange={setterFunction} checked={values.isActive ? true : false}  id="Name" value={values.isActive} name="isActive"  className="bg-gray-50 mt-2 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-5 h-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 ml-3 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Name" />
+                  <input type="checkbox" onChange={setterFunction} checked={cronRecord.isActive ? true : false}  id="Name" value={cronRecord.isActive} name="isActive"  className="bg-gray-50 mt-2 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-5 h-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 ml-3 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Name" />
                 </div>
             </div>
             <div className="flex justify-center mt-10">

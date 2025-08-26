@@ -3,7 +3,7 @@ import GridView from './GridView';
 import { TbFaceIdError } from "react-icons/tb";
 
 
-const EmployeeGrid = ({data,count,loading}) => {
+const EmployeeGrid = ({data,count,loading,page}) => {
 
   const activeEmployee = data.filter((value)=> value.empPersonalId );
  
@@ -15,7 +15,7 @@ const EmployeeGrid = ({data,count,loading}) => {
             {
               activeEmployee.map((value)=>{
                 
-                  return <GridView key={value._id} employeeId={value.employeeId} name={`${value['empPersonalId'].firstName} ${value['empPersonalId'].lastName}`} email = {value.email} department={value['department'].name} designation={value['designation'].name} pic={value['empPersonalId'].profilepic}/>
+                  return <GridView key={value._id} page={page} employeeId={value.employeeId} name={`${value['empPersonalId'].firstName} ${value['empPersonalId'].lastName}`} email = {value.email} department={value['department'].name} designation={value['designation'].name} pic={value['empPersonalId'].profilepic}/>
               })  
               
             }

@@ -3,14 +3,14 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
 import { fetchAttendance } from '../../../slices/attendanceSlice';
 
-const GridView = ({employeeId,name,email,designation,department,pic}) => {
+const GridView = ({employeeId,name,email,designation,department,pic,page}) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const dataSubmitHandler = async (param)=>{
       console.log(param);
       await dispatch(fetchAttendance({id:param,dateParam:new Date()}));
-      navigate(`/home/attendance/${employeeId}`);
+      navigate(`/home/attendance/${employeeId}?page=${page}`);
 
   }
 

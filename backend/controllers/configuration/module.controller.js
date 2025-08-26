@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import categoryModel from "../../models/configuration/category.model.js";
 import moduleModel from "../../models/configuration/module.model.js";
 import cronModel from "../../models/configuration/cronJob.model.js";
+import { cronJobSchedule } from '../../scripts/cronSchedule.js';
 import { getAttendanceFromDevice } from '../biometricattendance/biometric.attendance.controller.js'; 
 import {CronJob} from 'cron';
 import fs from 'fs';
@@ -56,7 +57,7 @@ const getAllModules = async (request,response)=>{
 const createUpdateCron = async (request,response)=>{
   try{
     // return response.status(200).json({ msg: "Access denied."});
-    let {name,schedule,isActive} = request.body;
+    let {name,schedule,cronType,deviceId,isActive} = request.body;
 
     
     let {role:empRole}= request;
@@ -66,23 +67,35 @@ const createUpdateCron = async (request,response)=>{
       return response.status(403).json({ error: "Access denied. You do not have permission to perform this action.",success:false});
 
 
-    if(!name || !schedule || isActive===undefined)
+    if(!name || !schedule || isActive===undefined || !cronType)
       return response.status(422).json({error:"Validation failed Form Fields Missing",success:false});
    
   if(mongoose.Types.ObjectId.isValid(id)){
 
-      const updateResult = await cronModel.findOneAndUpdate({_id:id},{name,schedule,isActive},{new:true,upsert:true});
+      const updateResult = await cronModel.findOneAndUpdate({_id:id},{name,schedule,cronType,deviceId,isActive},{new:true,upsert:true});
+      console.log('this is the ',updateResult);
       await cronStart({schedule,isActive});
       return response.status(201).json({message:"Cron Updated Successfully",success:true});
   }else{
-      const createRecord = await  cronModel.create({name,schedule,isActive});
-      await cronStart({schedule,isActive});
+      const createRecord = await  cronModel.create({name,schedule,cronType,deviceId,isActive});
+      // await cronStart({schedule,isActive});
       response.status(201).json({message:"New Record inserted",success:true});
     }
   }catch(error){
     console.log(error);
     response.status(500).json({error:"Internal Server Error",success:false});
   }
+}
+
+
+
+const cronTrigger = ()=>{
+
+
+
+
+
+
 }
 
 
@@ -133,9 +146,9 @@ const cronStart = async ({ schedule, isActive }) => {
   console.log(checkHoursORMin);
   let cronTime = '';
   if(checkHoursORMin===0)
-    cronTime = `0 */${+schedule} * * * *`;
+    cronTime = `0 */1 * * * *`;
   else
-    cronTime = `0 0 */${checkHoursORMin} * * *`;
+    cronTime = `0 0 */1 * * *`;
 
     console.log(cronTime);
   // const duration = );
@@ -148,7 +161,8 @@ const cronStart = async ({ schedule, isActive }) => {
     async () => {
       console.log("Executing cron job...");
       try {
-        await getAttendanceFromDevice({ port: 4370, ip: "10.101.0.7" });
+        cronJobSchedule();
+        // await getAttendanceFromDevice({ port: 4370, ip: "10.101.0.7" });
       } catch (error) {
         console.error('Cron job failed:', error);
       }

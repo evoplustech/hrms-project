@@ -17,7 +17,7 @@ const AttendanceRequestHeader = React.memo(({requestData,setRequestData,searchHa
       toast.error(<span>From  Date Should Not Be Smaller Than To Date</span>);
       return false;
     }
-    searchHandler({});
+    searchHandler({name:'page',value:1});
   }
 
   const options = [{name:'All'},{name:'Pending'},{name:'Approved'}, {name:'Rejected'}];

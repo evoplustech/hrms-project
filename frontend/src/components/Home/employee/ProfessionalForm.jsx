@@ -10,7 +10,7 @@ import useGetData from '../../../hooks/useGetData.js';
 import httpRequest from '../../../../utils/httpRequest';
 import toast from 'react-hot-toast';
 import Options from './Options'; 
-import { fetchAllEmployees } from '../../../slices/employeeSlice.js';
+import { fetchAllEmployees, updateEmployees } from '../../../slices/employeeSlice.js';
 import { useDispatch } from 'react-redux';
 import useSelectorHook from '../../../../utils/useSelectorHook.jsx';
 import Meter from './Meter.jsx';
@@ -91,6 +91,7 @@ console.log(locationPath);
       const roleId = paramRoles?._id;
       const shiftId = shift?._id;
       const managerIdValue = managerId;
+      console.log('manager reporting Id',managerIdValue);
       // Set values only once all conditions are met
       // setValue('department', departmentId);
       setValue('designation', designationId);
@@ -118,20 +119,32 @@ const dispatch = useDispatch();
 const navigate = useNavigate();
 // form submit handler
 const formSubmitHandler = async (data)=>{
-  console.log('clicked');
-  const result = await httpRequest({path,method,data});
-  if(result.success){
-    await dispatch(fetchAllEmployees({
-      designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
-    }));
+  try{
+    
+    const params = {path,method,data}; 
     if(navigation){
-      await navigate(navigation);
+      const response = await httpRequest(params);
+      if(response.success){
+        dispatch(fetchAllEmployees({
+          designation : "All",department:"All",status : true,role : "All",search :"",profile: "0",page :1,limit:10
+        }));
+        toast.success('Employee Profile Created Successfully');
+        navigate(navigation);
+      }else{
+        throw new Error(response.message);
+      }
     }else{
-      toast.success('Employee Details Updated Successfully');
+      const response = await dispatch(updateEmployees(params));
+      if(response.payload.success){
+        toast.success('Employee Details Updated Successfully');
+        navigate(`/home/employee/employeeList`);
+      }else{
+        throw new Error(response.payload.error);
+      }
     }
-  }else{
-    toast.error('Server Error , Try again Later');
-  } 
+  }catch(error){
+    toast.error(error);
+  }
 }
  
 
@@ -156,11 +169,11 @@ const formSubmitHandler = async (data)=>{
           {errors?.employeeId && <p className="text-red-600">{errors.employeeId.message}</p>}
         </div>
         <div className="">
-          <Input label='Password'  type={`${locationPath ==='updateEmployee'? 'hidden':'text'}`}  name="password" {...register('password')} />
+          <Input label='Password'  type={`${locationPath ==='updateEmployee'? 'hidden':'password'}`}  name="password" {...register('password')} />
           {errors?.password && <p className="text-red-600 w-5">{errors.password.message}</p>}
         </div>
         <div className="">
-          <Input label='Confirm Password'  type={`${locationPath ==='updateEmployee'? 'hidden':'text'}`}  name="confirmPassword" {...register('confirmPassword')} />
+          <Input label='Confirm Password'  type={`${locationPath ==='updateEmployee'? 'hidden':'password'}`}  name="confirmPassword" {...register('confirmPassword')} />
           {errors?.confirmPassword && <p className="text-red-600 w-5">{errors.confirmPassword.message}</p>}
         </div>
       </div>

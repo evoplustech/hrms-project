@@ -50,7 +50,7 @@ const updatePersonalDetail = async (request,response)=>{
     if(!updatedRecord)
       return response.status(404).json({error:"User Not Found,updation Failed",success:false});
 
-    response.status(200).json({data:updatedRecord,success:true});
+    response.status(200).json({message:"Record Updated Successfully",data:updatedRecord,success:true});
 
   }catch(error){
     console.log(error.message);
@@ -74,8 +74,9 @@ const deletePersonalDetail = async(request,response)=>{
     if(!empData || !empProfessionalData)
       return response.status(404).json({error:"User not found",success: false});
 
-    await Promise.all([employeePersonalModel.updateOne({_id:empID},{$set:{isActive:!empData.isActive}}),employeeProfessionalModel.updateOne({_id:empProfessionalData._id},{$set:{isActive:!empProfessionalData.isActive}})])
-    return response.status(200).json({message:"Employee Deleted Successfully",success: true});
+   const [deleted_data1,deleted_data2] =  await Promise.all([employeePersonalModel.findOneAndUpdate({_id:empID},{$set:{isActive:!empData.isActive}},{new:true}),employeeProfessionalModel.findOneAndUpdate({_id:empProfessionalData._id},{$set:{isActive:!empProfessionalData.isActive}},{new:true})]);
+   
+    return response.status(200).json({message:"Employee Deleted Successfully",data:deleted_data2,success: true});
 
   }catch(error){
     console.log(error.message);

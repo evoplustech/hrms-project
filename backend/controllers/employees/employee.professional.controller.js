@@ -106,10 +106,12 @@ async function updateProRecord(request,response){
 
       // return response.status(200).json({message:"Record Updated Successfully",data:updateData,"success": true});
       await employeeProfessionalModel.updateOne({_id:empId}, {$set:updateData});
-      response.status(200).json({message:"Record Updated Successfully",success: true});
+      const data = await employeeProfessionalModel.findOne({_id:empId}).populate([
+        {path:'empPersonalId'},{path:'department',select:'name'},{path:'designation',select:'name'},{path:'role',select:'name'},{path:'shift',select:'name days'}]).lean(true);
+      response.status(200).json({message:"Record Updated Successfully",data,success: true});
   }catch(error){
     console.log(error.message);
-    response.status(500).json({"error":"Internal Server Error","success": false});
+    response.status(500).json({error:"Internal Server Error",success: false});
   }
 }
 
